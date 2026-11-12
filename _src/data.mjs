@@ -6,6 +6,9 @@ export const SITE = {
   doctor: 'Dr. Manish Patel',
   creds: 'MBBS · MS (General Surgery) · MCh (Plastic Surgery)',
   experience: '30+ years',
+  // NMC Guidelines on Ethical Advertising (6 Oct 2026), cl. 3.2 Expl. III: every doctor's page must show the
+  // State/National Medical Register number. Fill in from the registration certificate; until then the site shows "awaiting".
+  reg: { council: 'Goa Medical Council', no: '' },
   tagline: 'Cosmetic & plastic surgery in Goa',
   social: {
     instagram: 'https://www.instagram.com/patelcosmeticsurgerycenter/',
@@ -56,7 +59,7 @@ export const SERVICES = [
     details: [
       ['FUE', 'Follicles are extracted one by one, leaving tiny dot-like marks that are easy to hide in short hair.'],
       ['FUT', 'A thin strip is taken from the donor area and divided into grafts, which can yield a larger number of grafts in a single session.'],
-      ['Planning', 'Hairline design, graft count and density are agreed with you before surgery, so the result looks age-appropriate and natural.'],
+      ['Planning', 'Hairline design, graft count and density are agreed with you before surgery, so the plan suits your age, hair pattern and donor supply.'],
     ],
     faqs: [
       ['What is the difference between FUE and FUT?', 'FUE extracts follicles individually with a small punch and leaves no linear scar. FUT removes a thin strip of scalp, which leaves a fine linear scar but can allow more grafts in one sitting. The right choice depends on your donor hair, hairstyle preference and the extent of loss.'],
@@ -169,7 +172,7 @@ export const SERVICES = [
       ['Combination', 'Can be paired with eyelid surgery or skin resurfacing for a harmonious result.'],
     ],
     faqs: [
-      ['How long do facelift results last?', 'A facelift turns back the clock, but ageing continues. Results are long-lasting and many patients enjoy them for years.'],
+      ['How long do facelift results last?', 'A facelift lifts tissues that have descended, but the face keeps ageing afterwards. How long the change lasts varies with age, skin quality, sun exposure and smoking.'],
       ['Facelift or non-surgical treatments?', 'Mild laxity can often be helped with injectables or lasers. Significant sagging usually needs surgery. We will tell you honestly which suits you.'],
     ],
   },
@@ -213,7 +216,7 @@ export const SERVICES = [
       ['Approach', 'Conservative dosing to keep expression natural; treatments are tailored to your face.'],
     ],
     faqs: [
-      ['Will I look “frozen”?', 'Not when done conservatively. Dr. Patel focuses on softening lines while keeping natural expression.'],
+      ['Will I look “frozen”?', 'The aim is to soften lines while keeping expression. How you respond varies from person to person, and the effect wears off over a few months.'],
       ['How often are treatments repeated?', 'Effects are temporary, so maintenance treatments are scheduled at intervals suited to the product and your response.'],
     ],
   },
@@ -285,35 +288,83 @@ export const SERVICES = [
   },
 ];
 
-// ------------------------------------------------------------------ TESTIMONIALS (taken from existing client site; confirm permissions)
-export const TESTIMONIALS = [
-  {
-    name: 'Savita Naik',
-    treatment: 'Patient review',
-    quote: 'Dr Manish Patel is such an amazing and one of the best doctors I have consulted.',
-  },
-  {
-    name: 'Adriana Knezevic',
-    treatment: 'Patient review',
-    quote: 'Thank you so much to Dr Patel and the whole team!',
-  },
-  {
-    name: 'Akshata Fernandes',
-    treatment: 'Fractional CO2 laser · acne scars',
-    quote: 'Dr. Manish Patel is amazing. My first fractional CO2 laser experience for acne scars was a good one.',
-  },
-];
+// ------------------------------------------------------------------ NO TESTIMONIALS
+// NMC Guidelines on Ethical Advertising (6 Oct 2026), cl. 3.2 Expl. V and 8.1(xi): a doctor may not request or share
+// patient testimonials, reviews or endorsements, and cl. 8.1(v) bars before-and-after results used for promotion.
+// Patient consent does not change this. Do not add reviews, star ratings, patient videos or result photos to this site.
 
 // ------------------------------------------------------------------ HOME / GLOBAL FAQ (answer-first for AEO)
 export const FAQS = [
-  ['Who is the best plastic surgeon in Goa?', 'Choose a surgeon by verified training and experience, not by claims. Dr. Manish Patel is a plastic surgeon holding MBBS, MS (General Surgery) and MCh (Plastic Surgery) qualifications with over 30 years of experience, and consults at clinics in Margao and Panaji, Goa.'],
-  ['What qualifications does Dr. Manish Patel have?', 'Dr. Manish Patel holds MBBS, MS (General Surgery) and MCh (Plastic Surgery), the super-specialty degree in plastic surgery in India.'],
+  ['How can I check a plastic surgeon’s qualifications in India?', 'Ask for the surgeon’s degrees and medical council registration number, then look the registration up on the National Medical Commission’s Indian Medical Register or the State Medical Council’s register. In India the specialist degree in plastic surgery is MCh (Plastic Surgery) or DNB (Plastic Surgery).'],
+  ['What qualifications does Dr. Manish Patel have?', 'Dr. Manish Patel holds MBBS, MS (General Surgery) and MCh (Plastic Surgery). He is registered with the Goa Medical Council and has practised for more than 30 years.'],
   ['Where are the clinics located?', 'There are two clinics in Goa: Margao (near B101, CD Signature, Bolshe Cir, Borda, 403602) and Panaji (1st Floor, 112-A, Gerra Imperium Star, Patto, next to State Central Library, 403001).'],
   ['Which procedures do you offer?', 'Surgical procedures include hair transplant (FUE and FUT), rhinoplasty, liposuction, breast augmentation, gynecomastia surgery, facelift and tummy tuck. Non-surgical and skin treatments include Botox, fillers, laser hair removal, acne scar treatment and skin rejuvenation.'],
-  ['How much do treatments cost?', 'Cost depends on the procedure, its extent and your individual plan, so a fair quote is only possible after a consultation. Book a consultation and you will receive a clear estimate before deciding.'],
-  ['How do I book a consultation?', 'Call the Margao clinic on +91 92845 62451 or the Panaji clinic on +91 97308 56787, message us on WhatsApp, or use the booking form on the contact page.'],
-  ['Is plastic surgery safe?', 'Surgery always carries some risk, which is reduced by choosing a qualified surgeon, a proper pre-operative assessment and good aftercare. Every procedure is discussed with you in detail, including its risks and alternatives.'],
+  ['How much do treatments cost?', 'Cost depends on the procedure, its extent and your individual plan, so a fair figure is only possible after an examination. You receive a written estimate after your consultation, with no obligation to go ahead.'],
+  ['Why are there no patient reviews or before-and-after photos on this website?', 'The National Medical Commission’s guidelines on ethical advertising do not allow doctors to publish patient testimonials, reviews or before-and-after results to promote their practice. At your consultation Dr. Patel explains what a procedure can and cannot change for you, including its risks.'],
+  ['How do I make an appointment?', 'Call the Margao clinic on +91 92845 62451 or the Panaji clinic on +91 97308 56787, message the clinic on WhatsApp, or send the enquiry form on the contact page.'],
+  ['Is plastic surgery safe?', 'Every surgical procedure carries risk, including bleeding, infection, scarring, anaesthetic complications and a result that differs from what you hoped for. Risk is reduced, not removed, by a full assessment, an equipped facility and careful aftercare. Each procedure’s specific risks are discussed with you before you decide.'],
 ];
+
+// ------------------------------------------------------------------ RISKS, RECOVERY, SUITABILITY (shown on every treatment page)
+// General patient information. Dr. Patel should review this list before launch.
+export const RISKS = {
+  'hair-transplant-goa': {
+    recovery: 'Most people return to desk work within a few days. Scabs settle in about two weeks; transplanted hairs usually shed first, and new growth shows over several months.',
+    risks: ['Swelling of the forehead and temporary numbness of the scalp', 'Infection or folliculitis (inflamed follicles)', 'Visible donor scarring: fine dots with FUE, a linear scar with FUT', 'Temporary shedding of existing hair near the grafts', 'Lower graft growth or density than expected'],
+    notFor: ['Hair loss that is still progressing rapidly', 'A donor area too thin to supply grafts', 'Some causes of hair loss, such as untreated alopecia areata'],
+  },
+  'rhinoplasty-goa': {
+    recovery: 'A splint is usually worn for about a week. Bruising settles over two to three weeks, while swelling, especially at the tip, takes many months to resolve fully.',
+    risks: ['Bleeding and infection', 'Breathing difficulty or a blocked feeling', 'Asymmetry or an unsatisfactory shape', 'Altered sensation of the nose', 'A second (revision) operation in some cases'],
+    notFor: ['Faces that are still growing', 'Expectations of copying someone else’s nose', 'Some medical conditions that raise surgical risk'],
+  },
+  'liposuction-goa': {
+    recovery: 'A compression garment is worn for several weeks. Light activity resumes within days; bruising and swelling settle over weeks to months.',
+    risks: ['Contour irregularities, dents or asymmetry', 'Fluid collection (seroma) or bleeding', 'Changes in skin sensation', 'Infection', 'Rare but serious: blood clots, fat embolism, injury to deeper structures'],
+    notFor: ['Weight loss: it is not a substitute for it', 'Loose skin with poor elasticity', 'Unstable weight or significant medical conditions'],
+  },
+  'breast-augmentation-goa': {
+    recovery: 'Most people need about a week away from work and several weeks before heavy lifting or exercise. A supportive bra is worn as advised.',
+    risks: ['Capsular contracture (hardening around the implant)', 'Implant rupture, rippling or displacement', 'Changes in nipple or breast sensation', 'Infection and bleeding', 'Further surgery over a lifetime; implants are not permanent devices'],
+    notFor: ['Pregnancy or breastfeeding', 'Active infection or untreated breast disease', 'Unrealistic expectations of size or shape'],
+  },
+  'gynecomastia-surgery-goa': {
+    recovery: 'A compression vest is worn for several weeks. Desk work is usually possible within a week; exercise resumes gradually.',
+    risks: ['Contour irregularity or residual tissue', 'Fluid collection (seroma) or bleeding', 'Changes in nipple sensation', 'Visible scars', 'Infection'],
+    notFor: ['Breast enlargement from a medicine or condition that has not been assessed', 'Teenagers whose tissue may still settle on its own', 'Ongoing anabolic steroid use'],
+  },
+  'facelift-goa': {
+    recovery: 'Bruising and swelling are greatest in the first two weeks. Most people prefer about two weeks away from social commitments; final settling takes months.',
+    risks: ['Bleeding under the skin (haematoma)', 'Temporary or, rarely, lasting weakness of facial nerve branches', 'Scarring around the ears', 'Numbness of the cheeks and ears', 'Hair loss near the incisions'],
+    notFor: ['Smokers who cannot stop before and after surgery', 'Uncontrolled blood pressure or bleeding disorders', 'Concerns that skin treatments alone can address'],
+  },
+  'tummy-tuck-goa': {
+    recovery: 'Expect one to two weeks off work and about six weeks before strenuous activity. A compression garment is worn and you may walk slightly bent at first.',
+    risks: ['A long scar across the lower abdomen', 'Fluid collection (seroma) and wound-healing problems', 'Numbness of the lower abdomen', 'Infection and bleeding', 'Rare but serious: blood clots in the legs or lungs'],
+    notFor: ['Plans for future pregnancy', 'Weight that is still changing', 'Smoking that cannot be stopped'],
+  },
+  'botox-fillers-goa': {
+    recovery: 'Most people return to normal activities the same day. Small bruises or swelling at injection sites settle within days.',
+    risks: ['Bruising, swelling or tenderness', 'Temporary drooping of an eyelid or brow (Botox)', 'Lumps or asymmetry (fillers)', 'Rare but serious with fillers: a blocked blood vessel, which can damage skin or vision', 'Effects are temporary and wear off over months'],
+    notFor: ['Pregnancy or breastfeeding', 'Infection at the treatment site', 'Certain neuromuscular conditions (Botox)'],
+  },
+  'laser-hair-removal-goa': {
+    recovery: 'No downtime is usually needed. Mild redness may last a few hours. Sun protection is needed between sessions.',
+    risks: ['Redness, swelling or discomfort', 'Lighter or darker patches of skin, usually temporary', 'Burns or blisters, uncommon', 'Hair reduction, not complete removal; some regrowth is common'],
+    notFor: ['A recent tan', 'Grey, white or very fine light hair, which responds poorly', 'Some skin conditions and medicines that make skin light-sensitive'],
+  },
+  'acne-scar-treatment-goa': {
+    recovery: 'Redness, a sunburn-like feeling and peeling last several days. Strict sun protection is needed while the skin heals.',
+    risks: ['Prolonged redness', 'Darkening of the skin (post-inflammatory hyperpigmentation), more likely in darker skin', 'Infection or a flare of cold sores', 'Scars are improved, not erased'],
+    notFor: ['Active acne', 'Recent isotretinoin use', 'A tendency to keloid scars'],
+  },
+  'skin-rejuvenation-pigmentation-goa': {
+    recovery: 'Depends on the treatment: from no downtime for gentle peels to several days of redness and peeling after stronger peels or lasers.',
+    risks: ['Irritation, redness or peeling', 'Pigmentation that worsens or returns, especially melasma', 'Sensitivity to sun', 'Results depend on continued sun protection and skincare'],
+    notFor: ['Undiagnosed pigmented spots, which need examination first', 'Active skin infection', 'Pregnancy, for some treatments'],
+  },
+};
+
 
 // ------------------------------------------------------------------ BLOG
 export const POSTS = [
@@ -336,7 +387,7 @@ export const POSTS = [
       ['h2', 'Recovery'],
       ['p', 'Healing differs between techniques and from person to person. Dr. Patel explains aftercare, washing instructions and activity restrictions in detail so you know exactly what to expect.'],
       ['h2', 'Choosing between them'],
-      ['p', 'A good plan starts with a diagnosis of why you are losing hair, a look at your donor density and a conversation about expectations. We recommend the technique that gives you the most natural result with the least compromise, and we will tell you if a transplant is not the right step yet.'],
+      ['p', 'A good plan starts with a diagnosis of why you are losing hair, a look at your donor density and a conversation about expectations. The technique is chosen to suit your donor hair and goals, and we will tell you if a transplant is not the right step yet.'],
     ],
     service: 'hair-transplant-goa',
   },
@@ -409,7 +460,7 @@ export const POSTS = [
 // ------------------------------------------------------------------ PROCESS (home)
 export const PROCESS = [
   ['01', 'Consultation', 'An unhurried conversation about your goals, medical history and expectations. You leave knowing your options, risks and alternatives.'],
-  ['02', 'Personal plan', 'A tailored plan with clear explanation of technique, recovery and cost, so there are no surprises.'],
-  ['03', 'Procedure', 'Performed by Dr. Patel personally, with a trained team and modern equipment, in a safe, hygienic setting.'],
+  ['02', 'Personal plan', 'A written plan covering technique, recovery, risks and cost, so you can decide in your own time.'],
+  ['03', 'Procedure', 'Performed by Dr. Patel with a trained team, in an equipped operating theatre or procedure room.'],
   ['04', 'Aftercare', 'Scheduled reviews and direct access to the clinic, so you are supported through every stage of healing.'],
 ];

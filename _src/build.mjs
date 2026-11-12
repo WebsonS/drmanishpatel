@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SITE, SERVICES, TESTIMONIALS, FAQS, POSTS, PROCESS } from './data.mjs';
+import { SITE, SERVICES, FAQS, POSTS, PROCESS, RISKS } from './data.mjs';
 import { homePage } from './home.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -11,6 +11,9 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const jsonld = (o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`;
 const fmtDate = (d) => new Date(d).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
 const urls = [];
+// Medical register number, required on every doctor's page (NMC advertising guidelines, cl. 3.2 Expl. III).
+const regNo = (n) => (n ? `Reg. No. ${esc(n)}` : 'Reg. No. awaiting confirmation');
+const REG_LINE = `${SITE.doctor}, ${SITE.creds}. ${SITE.reg.council}, ${regNo(SITE.reg.no)}.`;
 
 // ---------- real imagery (from the clinic's own site, optimised to WebP) ----------
 const I = (n) => `/assets/img/p/${n}.webp`;
@@ -29,14 +32,14 @@ const SVC_IMG = {
 };
 // Search-result descriptions, written to fit ~155 characters.
 const SVC_META = {
-  'hair-transplant-goa': 'FUE and FUT hair transplant in Goa by Dr. Manish Patel, MCh plastic surgeon. Natural hairlines, real patient results. Clinics in Margao and Panaji.',
+  'hair-transplant-goa': 'FUE and FUT hair transplant in Goa by Dr. Manish Patel, MCh plastic surgeon. Technique chosen after assessing your donor hair. Margao and Panaji.',
   'rhinoplasty-goa': 'Rhinoplasty in Goa to refine the shape of the nose, improve breathing, or both. Planned and performed by Dr. Manish Patel in Margao and Panaji.',
   'liposuction-goa': 'Liposuction in Goa removes stubborn fat that resists diet and exercise, to refine your body contour. Dr. Manish Patel, Margao and Panaji clinics.',
   'breast-augmentation-goa': 'Breast augmentation in Goa with implants, for size and shape that suit your frame. Consult Dr. Manish Patel, MCh plastic surgeon, Margao or Panaji.',
   'gynecomastia-surgery-goa': 'Gynecomastia surgery in Goa to remove enlarged male breast tissue for a flatter, firmer chest. Dr. Manish Patel, plastic surgeon, Margao and Panaji.',
-  'facelift-goa': 'Facelift and mini facelift in Goa to lift jowls, deep folds and loose neck skin for a natural, rested look. Dr. Manish Patel, Margao and Panaji.',
+  'facelift-goa': 'Facelift and mini facelift in Goa to lift jowls, deep folds and loose neck skin. Recovery and risks explained. Dr. Manish Patel, Margao and Panaji.',
   'tummy-tuck-goa': 'Tummy tuck (abdominoplasty) in Goa removes loose skin and fat and repairs separated muscles after pregnancy or weight loss. Dr. Manish Patel.',
-  'botox-fillers-goa': 'Botox and dermal fillers in Goa for frown lines, crow’s feet, lips and lost volume, with a natural result. By Dr. Manish Patel in Margao and Panaji.',
+  'botox-fillers-goa': 'Botox and dermal fillers in Goa for frown lines, crow’s feet, lips and lost volume, with risks explained first. Dr. Manish Patel, Margao and Panaji.',
   'laser-hair-removal-goa': 'Laser hair removal in Goa for long-term reduction of unwanted hair on face and body, planned for your skin type. Patel Cosmetic Center, Margao and Panaji.',
   'acne-scar-treatment-goa': 'Acne scar treatment in Goa with fractional CO2 laser, which stimulates collagen to smooth pitted scars. Dr. Manish Patel’s clinics in Margao and Panaji.',
   'skin-rejuvenation-pigmentation-goa': 'Pigmentation and skin rejuvenation in Goa: lasers, peels and medical skincare for melasma, dark spots and dull skin. Margao and Panaji clinics.',
@@ -147,8 +150,7 @@ const ico = {
 const NAV = [
   ['/services/', 'Treatments'],
   ['/about/', 'Dr. Patel'],
-  ['/results/', 'Results'],
-  ['/testimonials/', 'Stories'],
+  ['/faq/', 'FAQ'],
   ['/blog/', 'Journal'],
   ['/contact/', 'Contact'],
 ];
@@ -161,6 +163,7 @@ function bookForm(id, withMsg = false) {
     <fieldset class="bform__clinic"><legend>Clinic</legend>${SITE.locations.map((l, i) => `<label><input type="radio" name="clinic" value="${l.city}"${i ? '' : ' checked'}><span>${l.city}</span></label>`).join('')}</fieldset>
     <label class="bform__f"><span>Treatment</span><select name="treatment" id="${id}-t"><option value="">Not sure yet</option>${SERVICES.map((s) => `<option>${s.name}</option>`).join('')}</select></label>
     ${withMsg ? `<label class="bform__f"><span>Message (optional)</span><textarea name="msg" rows="3" id="${id}-msg"></textarea></label>` : ''}
+    <label class="bform__ok"><input type="checkbox" name="ok" required id="${id}-ok"><span>I agree to send these details to the clinic on WhatsApp so the team can arrange an appointment. <a href="/privacy/">Privacy notice</a></span></label>
     <button class="btn btn--leaf bform__go" type="submit"><span>Continue on WhatsApp</span>${ico.arrow}</button>
     <p class="bform__note">Opens WhatsApp with your details filled in. Prefer to talk? <a href="tel:${SITE.locations[0].phone}">Call ${SITE.locations[0].phoneShow}</a></p>
   </form>`;
@@ -211,7 +214,7 @@ ${schema.map(jsonld).join('\n')}
   <nav class="hdr__nav" aria-label="Primary">${nav}</nav>
   <div class="hdr__cta">
     <a class="hdr__tel" href="tel:${M.phone}">${M.phoneShow}</a>
-    <a class="btn btn--sm" href="/contact/" data-book data-magnetic><span>Book consultation</span></a>
+    <a class="btn btn--sm" href="/contact/" data-book data-magnetic><span>Appointments</span></a>
     <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><i></i><i></i></button>
   </div>
 </header>
@@ -221,7 +224,7 @@ ${schema.map(jsonld).join('\n')}
     <nav class="drawer__nav" aria-label="Mobile">${[['/', 'Home'], ...NAV].map(([h, t]) => `<a href="${h}"${p.startsWith(h) && (h !== '/' || p === '/') ? ' aria-current="page"' : ''}><span>${t}</span>${ico.arrow}</a>`).join('')}</nav>
     <div class="drawer__svc"><p>Popular</p><div>${SERVICES.slice(0, 6).map((s) => `<a href="/services/${s.slug}/">${s.name.replace(/ \(.*\)/, '')}</a>`).join('')}</div></div>
     <div class="drawer__foot">
-      <a class="btn btn--leaf" href="/contact/" data-book><span>Book consultation</span>${ico.arrow}</a>
+      <a class="btn btn--leaf" href="/contact/" data-book><span>Request an appointment</span>${ico.arrow}</a>
       <div class="drawer__calls">${SITE.locations.map((l) => `<a href="tel:${l.phone}"><small>${l.city}</small>${l.phoneShow}</a>`).join('')}</div>
       <div class="social"><a href="${SITE.social.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp">${ico.wa}</a><a href="${SITE.social.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${ico.ig}</a><a href="${SITE.social.facebook}" target="_blank" rel="noopener" aria-label="Facebook">${ico.fb}</a><a href="${SITE.social.youtube}" target="_blank" rel="noopener" aria-label="YouTube">${ico.yt}</a></div>
     </div>
@@ -235,13 +238,13 @@ ${footer()}
 <nav class="mbar" aria-label="Quick actions">
   <a href="tel:${M.phone}" class="mbar__i">${ico.phone}<span>Call</span></a>
   <a href="${SITE.social.whatsapp}" target="_blank" rel="noopener" class="mbar__i">${ico.wa}<span>WhatsApp</span></a>
-  <a href="/contact/" class="mbar__book" data-book><span>Book consultation</span>${ico.arrow}</a>
+  <a href="/contact/" class="mbar__book" data-book><span>Appointment</span>${ico.arrow}</a>
 </nav>
 <div class="book" id="book-modal" role="dialog" aria-modal="true" aria-labelledby="book-h" aria-hidden="true">
   <div class="book__scrim" data-close></div>
   <div class="book__panel">
     <button class="book__x" type="button" aria-label="Close" data-close><i></i><i></i></button>
-    <div class="book__head"><img src="${I('dr-portrait-sm')}" alt="" width="64" height="64" loading="lazy"><div><p class="eyebrow">Free to enquire</p><h2 id="book-h">Book a consultation with <em>Dr. Patel</em></h2></div></div>
+    <div class="book__head"><img src="${I('dr-portrait-sm')}" alt="" width="64" height="64" loading="lazy"><div><h2 id="book-h">Request an appointment</h2><p class="book__sub">${SITE.doctor} · ${SITE.reg.council}, ${regNo(SITE.reg.no)}</p></div></div>
     ${bookForm('m')}
   </div>
 </div>
@@ -253,7 +256,8 @@ ${footer()}
       <div class="pl__top"><span class="pl__who"></span><span class="pl__n"></span></div>
       <h2 class="pl__t"></h2>
       <div class="pl__txt"></div>
-      <div class="pl__act"><a class="btn btn--leaf" href="/contact/" data-book><span>Book a consultation</span>${ico.arrow}</a><a class="pl__ig" target="_blank" rel="noopener">${ico.ig}<span>Watch on Instagram</span></a></div>
+      <p class="pl__note">General education from ${SITE.doctor}. It is not advice for your own situation.</p>
+      <div class="pl__act"><a class="pl__ig" target="_blank" rel="noopener">${ico.ig}<span>Watch on Instagram</span></a></div>
     </div>
     <button class="pl__nav pl__nav--p" type="button" aria-label="Previous video">${ico.arrow}</button>
     <button class="pl__nav pl__nav--n" type="button" aria-label="Next video">${ico.arrow}</button>
@@ -271,11 +275,11 @@ ${footer()}
 function footer() {
   return `<footer class="ftr">
   <div class="ftr__cta wrap">
-    <div class="ftr__img" data-reveal-img>${img('dr-laser', 'Dr. Manish Patel at the clinic', { w: 568, h: 568 })}</div>
+    <div class="ftr__img" data-reveal-img>${img('goa-1', 'Goa coastline', { w: 1200, h: 800 })}</div>
     <div>
-      <p class="eyebrow eyebrow--l" data-reveal>Begin with a conversation</p>
-      <h2 class="display display--l" data-split>Your story,<br><em>thoughtfully</em> renewed.</h2>
-      <div class="ftr__btns" data-reveal><a class="btn btn--leaf" href="/contact/" data-book data-magnetic><span>Book a consultation</span>${ico.arrow}</a><a class="btn btn--line" href="${SITE.social.whatsapp}" target="_blank" rel="noopener" data-magnetic><span>WhatsApp us</span></a></div>
+      <h2 class="display display--l" data-split>Questions first.<br><em>Decisions later.</em></h2>
+      <p class="ftr__p" data-reveal>Call either clinic to ask a question or arrange a consultation.</p>
+      <div class="ftr__btns" data-reveal>${SITE.locations.map((l) => `<a class="btn btn--line" href="tel:${l.phone}"><span>${l.city} · ${l.phoneShow}</span></a>`).join('')}</div>
     </div>
   </div>
   <div class="ftr__grid wrap">
@@ -283,11 +287,15 @@ function footer() {
       <p class="ftr__about">Cosmetic and plastic surgery in Goa, led by ${SITE.doctor}, ${SITE.creds}.</p>
       <div class="social"><a href="${SITE.social.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${ico.ig}</a><a href="${SITE.social.facebook}" target="_blank" rel="noopener" aria-label="Facebook">${ico.fb}</a><a href="${SITE.social.youtube}" target="_blank" rel="noopener" aria-label="YouTube">${ico.yt}</a></div></div>
     <div><h2>Treatments</h2><ul>${SERVICES.slice(0, 7).map((s) => `<li><a href="/services/${s.slug}/">${s.name}</a></li>`).join('')}<li><a href="/services/">All treatments</a></li></ul></div>
-    <div><h2>Clinic</h2><ul><li><a href="/about/">About Dr. Patel</a></li><li><a href="/results/">Results</a></li><li><a href="/testimonials/">Patient stories</a></li><li><a href="/blog/">Journal</a></li><li><a href="/faq/">FAQ</a></li><li><a href="/contact/">Contact</a></li></ul></div>
+    <div><h2>Clinic</h2><ul><li><a href="/about/">About Dr. Patel</a></li><li><a href="/about/#team">Doctors and staff</a></li><li><a href="/blog/">Journal</a></li><li><a href="/faq/">FAQ</a></li><li><a href="/contact/">Contact</a></li><li><a href="/privacy/">Privacy</a></li></ul></div>
     <div><h2>Visit</h2>${SITE.locations.map((l) => `<address><a href="/locations/${l.slug}/"><strong>${l.name}</strong></a><br>${l.street}, ${l.locality}, ${l.region} ${l.postal}<br><a href="tel:${l.phone}">${l.phoneShow}</a></address>`).join('')}</div>
   </div>
   <div class="ftr__sig wrap" aria-hidden="true"><span class="sig">Manish Patel</span></div>
-  <div class="ftr__legal wrap"><p>© ${new Date().getFullYear()} ${SITE.name}. Individual results vary. Content on this site is educational and not a substitute for medical advice. All procedures carry risk; consult a qualified surgeon.</p></div>
+  <div class="ftr__legal wrap">
+    <p class="ftr__reg">${REG_LINE}</p>
+    <p>Information on this website is for general education and is not a substitute for a consultation. No outcome is guaranteed. Every procedure carries risks, which are explained before you decide. In line with the National Medical Commission’s guidelines on ethical advertising, this website does not publish patient testimonials, reviews or before-and-after images.</p>
+    <p>© ${new Date().getFullYear()} ${SITE.name}.</p>
+  </div>
 </footer>`;
 }
 
@@ -309,7 +317,7 @@ const faqBlock = (faqs, title = 'Questions, <em>answered</em>.') => `<section cl
   <div class="faq__list">${faqs.map(([q, a]) => `<details class="qa" data-reveal><summary><span>${esc(q)}</span><i aria-hidden="true"></i></summary><div class="qa__a"><p>${esc(a)}</p></div></details>`).join('')}</div>
 </div></section>`;
 
-const cta = (t = 'Book a consultation', cls = '') => `<a class="btn ${cls}" href="/contact/" data-book data-magnetic><span>${t}</span>${ico.arrow}</a>`;
+const cta = (t = 'Request an appointment', cls = '') => `<a class="btn ${cls}" href="/contact/" data-book data-magnetic><span>${t}</span>${ico.arrow}</a>`;
 
 const tcard = (s, i) => `<a class="tcard" href="/services/${s.slug}/" data-cursor="View">
   <div class="tcard__img">${img(SVC_IMG[s.slug], `${s.name} at Patel Cosmetic Surgery Center`, { w: 1000, h: 1000 })}</div>
@@ -319,29 +327,6 @@ const tcard = (s, i) => `<a class="tcard" href="/services/${s.slug}/" data-curso
 
 const postCard = (p) => `<a class="post" href="/blog/${p.slug}/" data-reveal data-cursor="Read"><div class="post__img">${img(POST_IMG[p.slug], p.title, { w: 1000, h: 667 })}</div><div class="post__m"><span>${p.cat}</span><span>${p.read} read</span></div><h3>${p.title}</h3><p>${p.desc}</p></a>`;
 
-const baSlider = (label = 'Eyelid rejuvenation') => `<figure class="ba" data-ba>
-  <div class="ba__stage" style="--pos:50%" data-cursor="Drag">
-    <img class="ba__img ba__img--after" src="${I('ba-eyelid')}" alt="After: ${esc(label)}, patient of Dr. Manish Patel" width="1600" height="864" loading="lazy">
-    <img class="ba__img ba__img--before" src="${I('ba-eyelid')}" alt="Before: ${esc(label)}" width="1600" height="864" loading="lazy">
-    <span class="ba__tag ba__tag--b">Before</span><span class="ba__tag ba__tag--a">After</span>
-    <span class="ba__h" aria-hidden="true"><i>${ico.arrow}</i></span>
-    <input type="range" min="0" max="100" value="50" aria-label="Compare before and after: ${esc(label)}">
-  </div>
-  <figcaption><span>${label}</span><small>Real patient result, as published on the clinic’s website · individual results vary</small></figcaption>
-</figure>`;
-
-const quotes = () => `<div class="quotes" data-quotes>
-  <div class="quotes__stage">${TESTIMONIALS.map((t, i) => `<figure class="quote${i === 0 ? ' is-on' : ''}"><div class="stars" aria-label="5 out of 5">${ico.star.repeat(5)}</div><blockquote>“${esc(t.quote)}”</blockquote><figcaption><strong>${esc(t.name)}</strong><span>${esc(t.treatment)}</span></figcaption></figure>`).join('')}</div>
-  <div class="quotes__nav">${TESTIMONIALS.map((t, i) => `<button class="${i === 0 ? 'is-on' : ''}" aria-label="Show review by ${esc(t.name)}"><i></i></button>`).join('')}</div>
-</div>`;
-
-const igImgs = ['t-facial', 'dr-laser', 't-co2', 'team-group-1', 't-botox', 'dr-award-aesurg', 't-nose', 'goa-2'];
-const instaGrid = () => `<section class="sec ig" aria-labelledby="ig-h"><div class="wrap">
-  <div class="sec__head sec__head--row"><div><p class="eyebrow" data-reveal>On Instagram</p><h2 class="display display--l" id="ig-h" data-split>Life at the <em>clinic</em>.</h2></div><a class="btn btn--line-d" href="${SITE.social.instagram}" target="_blank" rel="noopener" data-magnetic><span>@patelcosmeticsurgerycenter</span>${ico.ig}</a></div>
-  <div class="igrid" data-stagger>${igImgs.map((n, i) => `<a class="igrid__i" href="${SITE.social.instagram}" target="_blank" rel="noopener" aria-label="Open Instagram profile" data-cursor="Follow">${img(n, 'Patel Cosmetic Surgery Center on Instagram', { w: 600, h: 600 })}<span class="igrid__ic">${ico.ig}</span></a>`).join('')}</div>
-  <!-- LIVE FEED: swap .igrid for an Instagram feed embed (Behold / Elfsight) once the account is connected. -->
-</div></section>`;
-
 const locationsBlock = () => `<section class="sec sec--sand"><div class="wrap">
   <div class="sec__head"><p class="eyebrow" data-reveal>Two clinics in Goa</p><h2 class="display display--l" data-split>Visit us in <em>Margao</em><br>or <em>Panaji</em>.</h2></div>
   <div class="locs" data-stagger>${SITE.locations.map((l, i) => `<article class="loc"><div class="loc__img">${img(i ? 'goa-2' : 'goa-1', `Goa, near our ${l.city} clinic`, { w: 1200, h: 800 })}<span class="loc__city">${l.city}</span></div><div class="loc__b"><address>${l.street}<br>${l.locality}, ${l.region} ${l.postal}</address><div class="loc__a"><a class="btn btn--sm" href="tel:${l.phone}"><span>${l.phoneShow}</span></a><a class="link" href="/locations/${l.slug}/">Directions ${ico.arrow}</a></div></div></article>`).join('')}</div>
@@ -350,15 +335,15 @@ const locationsBlock = () => `<section class="sec sec--sand"><div class="wrap">
 // Team: one consistent frame for every portrait so mixed-quality photos read as a set.
 // Names, roles and qualifications as listed on the clinic's current About page.
 const TEAM = [
-  ['team-1', 'Dr. Levita Cardozo', 'Dermatologist', 'MBBS (Goa Medical College), DVD · Dermatosurgery, St. John’s Medical College · 12 years in practice', 'doc'],
-  ['team-2', 'Dr. Carla', 'Dermatologist', 'MD Dermatology · Fellowship in Dermatosurgery, Cutis Hospital · 7 years, 40,000+ patients', 'doc'],
-  ['team-3', 'Dr. Amruta', 'Dermatologist', 'MBBS, DVD (Gold Medal, Skin & VD)', 'doc'],
+  ['team-1', 'Dr. Levita Cardozo', 'Dermatologist', 'MBBS (Goa Medical College), DVD · Dermatosurgery, St. John’s Medical College', 'doc'],
+  ['team-2', 'Dr. Carla', 'Dermatologist', 'MD Dermatology · Fellowship in Dermatosurgery, Cutis Hospital', 'doc'],
+  ['team-3', 'Dr. Amruta', 'Dermatologist', 'MBBS, DVD', 'doc'],
   ['team-doc-1', 'Reena Patel', 'Counsellor & Clinic Coordinator', '', 'staff'],
   ['team-4', 'Pooja Rao', 'Senior Sister', '', 'staff'],
   ['team-5', 'Suchi', 'Front Desk Manager', 'Margao clinic', 'staff'],
   ['team-6', 'Deepika', 'Front Desk Manager', 'Panaji clinic', 'staff'],
 ];
-const memCard = ([n, name, role, cred]) => `<figure class="mem"><div class="mem__img">${img(n, `${name}, ${role} at Patel Cosmetic & Plastic Surgery Center`, { w: 549, h: 549, sizes: '(max-width: 760px) 44vw, 200px' })}</div><figcaption><strong>${esc(name)}</strong><span class="mem__role">${esc(role)}</span>${cred ? `<small>${esc(cred)}</small>` : ''}</figcaption></figure>`;
+const memCard = ([n, name, role, cred, grp]) => `<figure class="mem"><div class="mem__img">${img(n, `${name}, ${role} at Patel Cosmetic & Plastic Surgery Center`, { w: 549, h: 549, sizes: '(max-width: 760px) 44vw, 200px' })}</div><figcaption><strong>${esc(name)}</strong><span class="mem__role">${esc(role)}</span>${cred ? `<small>${esc(cred)}</small>` : ''}${grp === 'doc' ? `<small class="mem__reg">${regNo('')}</small>` : ''}</figcaption></figure>`;
 const teamBlock = () => `<section class="sec team-s" id="team" aria-labelledby="team-h"><div class="wrap">
   <div class="team-s__top">
     <h2 class="hd hd--l" id="team-h" data-reveal>The people <em>behind your care.</em></h2>
@@ -378,12 +363,12 @@ function write(p, html) {
 
 // ================================================================== HOME
 {
-  const { body, schema } = homePage({ SITE, SERVICES, FAQS, TESTIMONIALS, AWARDS, SVC_IMG, img, I, esc, ico, cta, faqBlock, locationsBlock });
+  const { body, schema } = homePage({ SITE, SERVICES, FAQS, RISKS, PROCESS, SVC_IMG, img, I, esc, ico, cta, faqBlock, locationsBlock, regNo });
   write('/', layout({
     path: '/',
     title: 'Dr. Manish Patel | Plastic & Cosmetic Surgeon in Goa',
-    desc: 'Dr. Manish Patel, MCh plastic surgeon with 30+ years in practice. Watch real patient videos and results. Clinics in Margao and Panaji, Goa.',
-    body, schema: [faqSchema(FAQS.slice(0, 4)), schema], cls: 'home',
+    desc: 'Dr. Manish Patel, MCh plastic surgeon in Goa. What each procedure involves, recovery and risks, explained plainly. Clinics in Margao and Panaji.',
+    body, schema: [faqSchema([FAQS[1], FAQS[5], FAQS[7], FAQS[4]]), schema].filter(Boolean), cls: 'home',
   }));
 }
 
@@ -394,32 +379,33 @@ function write(p, html) {
   <div class="about__fig"><div class="leaf leaf--tall" data-reveal-img>${img('dr-laser', 'Dr. Manish Patel in his clinic', { w: 568, h: 568 })}</div></div>
   <div class="about__txt">
     <p class="big" data-reveal>A surgeon’s job is as much about what he advises against as what he performs.</p>
-    <p data-reveal>Dr. Manish Patel holds MBBS, MS (General Surgery) and MCh (Plastic Surgery) qualifications and has over 30 years of experience. His practice covers cosmetic and reconstructive surgery, hair restoration and advanced skin treatments.</p>
-    <p data-reveal>His approach is simple: understand what you want, be honest about what is achievable, and aim for results that look natural. He plans and performs your treatment personally, and remains reachable throughout recovery.</p>
+    <p data-reveal>Dr. Manish Patel holds MBBS, MS (General Surgery) and MCh (Plastic Surgery) qualifications and has over 30 years of experience. His practice covers cosmetic and reconstructive surgery, hair restoration and skin treatments.</p>
+    <p class="about__reg" data-reveal>${SITE.reg.council} · ${regNo(SITE.reg.no)}</p>
+    <p data-reveal>His approach is simple: understand what you want, be honest about what is and is not achievable, and explain the risks before anything is decided. He plans and performs your treatment personally, and remains reachable throughout recovery.</p>
     <div class="about__sign" data-reveal><span class="sig">Manish Patel</span></div>
     <h2 class="h3" data-reveal>Qualifications</h2>
     <ul class="ticks" data-reveal><li>MBBS</li><li>MS, General Surgery</li><li>MCh, Plastic Surgery</li></ul>
     <h2 class="h3" data-reveal>Areas of practice</h2>
     <ul class="ticks ticks--2" data-reveal>${SERVICES.map((s) => `<li><a href="/services/${s.slug}/">${s.name}</a></li>`).join('')}</ul>
-    <!-- TODO (Dr. Patel): add medical council registration number, society memberships, hospital affiliations and publications for E-E-A-T. -->
+    <!-- TODO (Dr. Patel): fill SITE.reg.no in data.mjs; add society memberships and hospital affiliations with body and year. -->
     <div class="about__cta" data-reveal>${cta()}</div>
   </div>
 </div></section>
 <section class="sec sec--forest rec">
-  <div class="wrap sec__head sec__head--row"><div><p class="eyebrow eyebrow--l" data-reveal>Recognition &amp; teaching</p><h2 class="display display--l" data-split>Respected<br>by <em>his peers</em>.</h2></div><p class="rec__hint" data-reveal>Drag to explore ${ico.arrow}</p></div>
+  <div class="wrap sec__head sec__head--row"><div><h2 class="display display--l" data-split>Teaching and<br><em>conferences</em>.</h2></div><p class="rec__hint" data-reveal>Drag to explore ${ico.arrow}</p></div>
   <div class="drag" data-drag data-cursor="Drag"><div class="drag__track">${AWARDS.map(([n, t, d]) => `<figure class="award">${img(n, t, { w: 1024, h: 768 })}<figcaption><strong>${t}</strong><span>${d}</span></figcaption></figure>`).join('')}</div></div>
 </section>
 ${teamBlock()}
 <section class="sec sec--sand"><div class="wrap values">
-  ${[['Honest advice', 'You will hear what is realistic, including when surgery is not the right answer.'], ['Natural outcomes', 'Balanced results that suit your features, never an “operated” look.'], ['Safety first', 'Proper assessment, a qualified team and clear aftercare at every stage.'], ['Personal care', 'Dr. Patel is involved from consultation through recovery.']].map(([t, d], i) => `<div class="val" data-reveal><span>0${i + 1}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}
+  ${[['Honest advice', 'You will hear what is realistic, including when surgery is not the right answer.'], ['Realistic expectations', 'A clear account of what a procedure can and cannot change for you.'], ['Assessment first', 'A full medical assessment before any procedure, with its risks explained.'], ['Personal care', 'Dr. Patel is involved from consultation through recovery.']].map(([t, d], i) => `<div class="val" data-reveal><span>0${i + 1}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}
 </div></section>
 ${locationsBlock()}`;
-  write('/about/', layout({ path: '/about/', title: 'About Dr. Manish Patel | MCh Plastic Surgeon in Goa', desc: 'Meet Dr. Manish Patel: MBBS, MS, MCh (Plastic Surgery), 30+ years of experience, invited faculty at IAAPS AESURG and the FADS World Congress.', body, ogImg: 'dr-portrait', schema: [crumbSchema([['Home', '/'], ['About', '/about/']]), { '@context': 'https://schema.org', '@type': 'AboutPage', mainEntity: { '@id': docId } }] }));
+  write('/about/', layout({ path: '/about/', title: 'About Dr. Manish Patel | MCh Plastic Surgeon in Goa', desc: 'Dr. Manish Patel: MBBS, MS (General Surgery), MCh (Plastic Surgery), Goa Medical Council registered, in practice for more than 30 years in Goa.', body, ogImg: 'dr-portrait', schema: [crumbSchema([['Home', '/'], ['About', '/about/']]), { '@context': 'https://schema.org', '@type': 'AboutPage', mainEntity: { '@id': docId } }] }));
 }
 
 // ================================================================== SERVICES HUB
 {
-  const body = `${pgHero({ eyebrow: 'Treatments', title: 'Every treatment,<br><em>one trusted</em> surgeon.', lead: 'From hair restoration to facial surgery and advanced skin care, each treatment is planned around you.', crumbs: [['Home', '/'], ['Treatments', '/services/']], image: 't-profile', alt: 'Facial profile' })}
+  const body = `${pgHero({ eyebrow: 'Treatments', title: 'Eleven treatments,<br><em>explained plainly</em>.', lead: 'What each procedure involves, how recovery goes, what can go wrong and who it may not suit.', crumbs: [['Home', '/'], ['Treatments', '/services/']], image: 't-profile', alt: 'Facial profile' })}
 <section class="sec"><div class="wrap">
 ${['Surgical', 'Non-surgical', 'Skin'].map((c) => `<div class="cat"><h2 class="eyebrow" data-reveal>${c}</h2></div><div class="tgrid" data-stagger>${SERVICES.filter((s) => s.cat === c).map((s) => tcard(s, SERVICES.indexOf(s))).join('')}</div>`).join('')}
 </div></section>
@@ -435,36 +421,21 @@ for (const s of SERVICES) {
   const body = `${pgHero({ eyebrow: `${s.cat} · ${s.tag}`, title: `${s.name}<br><em>in Goa</em>`, lead: s.answer, crumbs: [['Home', '/'], ['Treatments', '/services/'], [s.name, p]], image: SVC_IMG[s.slug], alt: `${s.name} at Patel Cosmetic Surgery Center` })}
 <section class="sec"><div class="wrap svc-d">
   <div class="svc-d__aside">
-    <div class="svc-d__card" data-reveal><span class="sig">Dr. Patel</span><p>“Every ${s.name.toLowerCase()} plan starts with an honest conversation about what will suit you.”</p>${cta('Book consultation', 'btn--sm')}</div>
+    <div class="svc-d__card" data-reveal><span class="sig">Dr. Patel</span><p>“Every ${s.name.toLowerCase()} plan starts with an honest conversation about what will suit you, and what may not.”</p><small class="svc-d__reg">${SITE.doctor} · ${SITE.reg.council}, ${regNo(SITE.reg.no)}</small><a class="link" href="/contact/" data-book>Ask the clinic ${ico.arrow}</a></div>
   </div>
   <div class="svc-d__txt">
     <div data-reveal><p class="eyebrow">Who it is for</p><ul class="ticks ticks--lg">${s.who.map((w) => `<li>${w}</li>`).join('')}</ul></div>
     <div><h2 class="eyebrow" data-reveal>What to expect</h2><ol class="steps">${s.details.map(([k, v], j) => `<li data-reveal><span>0${j + 1}</span><div><h3>${k}</h3><p>${v}</p></div></li>`).join('')}</ol></div>
-    <div class="note" data-reveal><strong>Consultation first.</strong> Suitability, risks, alternatives and cost are discussed with Dr. Patel in person. Individual results vary.</div>
+    <div class="riskbox" data-reveal>
+      <h2 class="riskbox__h">Recovery, risks and suitability</h2>
+      <div class="riskbox__g"><div><h3>Recovery</h3><p>${RISKS[s.slug].recovery}</p></div><div><h3>Possible risks</h3><ul>${RISKS[s.slug].risks.map((x) => `<li>${x}</li>`).join('')}</ul></div><div><h3>May not suit you if</h3><ul>${RISKS[s.slug].notFor.map((x) => `<li>${x}</li>`).join('')}</ul></div></div>
+    </div>
+    <div class="note" data-reveal><strong>Consultation first.</strong> Suitability, risks, alternatives and cost are discussed with Dr. Patel in person. No result can be guaranteed and outcomes differ between individuals.</div>
   </div>
 </div></section>
 ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
 <section class="sec sec--sand"><div class="wrap"><div class="sec__head"><p class="eyebrow" data-reveal>Also at the clinic</p><h2 class="display display--l" data-split>Related <em>treatments</em>.</h2></div><div class="tgrid" data-stagger>${others.map((o) => tcard(o, SERVICES.indexOf(o))).join('')}</div></div></section>`;
-  write(p, layout({ path: p, title: `${s.name} in Goa | Dr. Manish Patel`, desc: SVC_META[s.slug], body, service: s.name, ogImg: SVC_IMG[s.slug], schema: [crumbSchema([['Home', '/'], ['Treatments', '/services/'], [s.name, p]]), faqSchema(s.faqs), { '@context': 'https://schema.org', '@type': 'MedicalWebPage', name: `${s.name} in Goa`, url: SITE.domain + p, image: SITE.domain + I(SVC_IMG[s.slug]), about: { '@type': 'MedicalProcedure', name: s.name, procedureType: s.cat === 'Surgical' ? 'SurgicalProcedure' : 'NoninvasiveProcedure', description: s.answer }, reviewedBy: { '@id': docId }, specialty: 'PlasticSurgery' }] }));
-}
-
-// ================================================================== RESULTS
-{
-  const body = `${pgHero({ eyebrow: 'Results', title: 'Before &amp;<br><em>after</em>.', lead: 'Drag the slider to compare. Every face and body is different, and individual results vary.', crumbs: [['Home', '/'], ['Results', '/results/']] })}
-<section class="sec"><div class="wrap res__solo" data-reveal>${baSlider('Eyelid rejuvenation')}</div>
-<div class="wrap"><p class="note" data-reveal>More before-and-after cases will be added here with each patient’s written consent. Ask to see further examples relevant to your treatment at your consultation.</p></div></section>
-<section class="sec sec--forest"><div class="wrap"><div class="sec__head"><p class="eyebrow eyebrow--l" data-reveal>Inside the clinic</p><h2 class="display display--l" data-split>Where results <em>begin</em>.</h2></div>
-<div class="mosaic" data-stagger>${['t-device-1', 'dr-laser', 't-co2', 't-device-2', 't-facial-2', 'team-ot'].map((n) => `<div class="mosaic__i">${img(n, 'Inside Patel Cosmetic Surgery Center', { w: 1000, h: 1000 })}</div>`).join('')}</div></div></section>`;
-  write('/results/', layout({ path: '/results/', title: 'Before & After Results | Dr. Manish Patel, Goa', desc: 'Real before and after results from Dr. Manish Patel’s cosmetic and plastic surgery practice in Goa. Individual results vary.', body, ogImg: 'ba-eyelid', schema: [crumbSchema([['Home', '/'], ['Results', '/results/']])] }));
-}
-
-// ================================================================== TESTIMONIALS
-{
-  const body = `${pgHero({ eyebrow: 'Patient stories', title: 'Kind words from<br><em>our patients</em>.', lead: 'The most meaningful measure of our work is the trust patients place in us.', crumbs: [['Home', '/'], ['Stories', '/testimonials/']], image: 'team-group-1', alt: 'Dr. Patel and team' })}
-<section class="sec"><div class="wrap"><div class="tlist" data-stagger>${TESTIMONIALS.map((t, i) => `<figure class="tl"><span class="tl__n">0${i + 1}</span><div class="stars">${ico.star.repeat(5)}</div><blockquote>“${esc(t.quote)}”</blockquote><figcaption><strong>${esc(t.name)}</strong><span>${esc(t.treatment)}</span></figcaption></figure>`).join('')}</div>
-<!-- TODO: add more genuine reviews (Google Business Profile, Practo, video) with consent. -->
-<div class="center" data-reveal style="margin-top:4rem">${cta('Write your own story')}</div></div></section>`;
-  write('/testimonials/', layout({ path: '/testimonials/', title: 'Patient Reviews & Stories | Dr. Manish Patel, Goa', desc: 'Patient reviews and video stories about Dr. Manish Patel and the team at Patel Cosmetic & Plastic Surgery Center in Margao and Panaji, Goa.', body, ogImg: 'team-group-1', schema: [crumbSchema([['Home', '/'], ['Stories', '/testimonials/']]), { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Patient reviews', about: { '@id': orgId }, review: TESTIMONIALS.map((t) => ({ '@type': 'Review', author: { '@type': 'Person', name: t.name }, reviewBody: t.quote, itemReviewed: { '@id': orgId } })) }] }));
+  write(p, layout({ path: p, title: `${s.name} in Goa | Dr. Manish Patel`, desc: SVC_META[s.slug], body, service: s.name, ogImg: SVC_IMG[s.slug], schema: [crumbSchema([['Home', '/'], ['Treatments', '/services/'], [s.name, p]]), faqSchema(s.faqs), { '@context': 'https://schema.org', '@type': 'MedicalWebPage', name: `${s.name} in Goa`, url: SITE.domain + p, image: SITE.domain + I(SVC_IMG[s.slug]), about: { '@type': 'MedicalProcedure', name: s.name, procedureType: s.cat === 'Surgical' ? 'SurgicalProcedure' : 'NoninvasiveProcedure', description: s.answer, followup: RISKS[s.slug].recovery }, lastReviewed: new Date().toISOString().slice(0, 10), reviewedBy: { '@id': docId }, specialty: 'PlasticSurgery' }] }));
 }
 
 // ================================================================== BLOG
@@ -501,19 +472,19 @@ ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
 
 // ================================================================== CONTACT
 {
-  const body = `${pgHero({ eyebrow: 'Contact', title: 'Book your<br><em>consultation</em>.', lead: 'Tell us a little about what you have in mind. Our team will confirm your appointment by phone or WhatsApp.', crumbs: [['Home', '/'], ['Contact', '/contact/']], image: 'dr-portrait', alt: 'Dr. Manish Patel' })}
+  const body = `${pgHero({ eyebrow: 'Contact', title: 'Contact and<br><em>appointments</em>.', lead: 'Tell the clinic what you would like to discuss. The team replies by phone or WhatsApp to arrange a time.', crumbs: [['Home', '/'], ['Contact', '/contact/']], image: 'dr-portrait', alt: 'Dr. Manish Patel' })}
 <section class="sec"><div class="wrap contact">
   <div class="form" data-reveal>${bookForm('c', true)}</div>
   <div class="contact__side" data-stagger>${SITE.locations.map((l, i) => `<article class="loc"><div class="loc__img">${img(i ? 'goa-2' : 'goa-1', `Goa, near our ${l.city} clinic`, { w: 1200, h: 800 })}<span class="loc__city">${l.city}</span></div><div class="loc__b"><address>${l.street}<br>${l.locality}, ${l.region} ${l.postal}</address><div class="loc__a"><a class="btn btn--sm" href="tel:${l.phone}"><span>Call ${l.phoneShow}</span></a><a class="link" href="/locations/${l.slug}/">Directions ${ico.arrow}</a></div></div></article>`).join('')}</div>
 </div></section>`;
-  write('/contact/', layout({ path: '/contact/', title: 'Book a Consultation | Dr. Manish Patel, Margao & Panaji', desc: 'Book a consultation with Dr. Manish Patel at the Margao or Panaji clinic in Goa. Call, WhatsApp or use the booking form.', body, ogImg: 'dr-portrait', schema: [crumbSchema([['Home', '/'], ['Contact', '/contact/']]), { '@context': 'https://schema.org', '@type': 'ContactPage', url: `${SITE.domain}/contact/` }] }));
+  write('/contact/', layout({ path: '/contact/', title: 'Contact & Appointments | Dr. Manish Patel, Margao & Panaji', desc: 'Addresses, phone numbers and an enquiry form for Dr. Manish Patel’s clinics in Margao and Panaji, Goa. Call, WhatsApp or send the form.', body, ogImg: 'dr-portrait', schema: [crumbSchema([['Home', '/'], ['Contact', '/contact/']]), { '@context': 'https://schema.org', '@type': 'ContactPage', url: `${SITE.domain}/contact/` }] }));
 }
 
 // ================================================================== LOCATIONS
 for (const [k, l] of SITE.locations.entries()) {
   const u = `/locations/${l.slug}/`;
   const q = encodeURIComponent(`${SITE.name} ${l.street} ${l.locality} ${l.postal}`);
-  const body = `${pgHero({ eyebrow: `Clinic · ${l.city}, Goa`, title: `Plastic surgeon<br>in <em>${l.city}</em>`, lead: `${SITE.doctor} consults at our ${l.city} clinic. Call ahead to book your appointment.`, crumbs: [['Home', '/'], [l.city, u]], image: k ? 'goa-2' : 'goa-1', alt: `Goa near ${l.city}` })}
+  const body = `${pgHero({ eyebrow: `Clinic · ${l.city}, Goa`, title: `Plastic surgeon<br>in <em>${l.city}</em>`, lead: `${SITE.doctor} consults at the ${l.city} clinic. Please call ahead for an appointment.`, crumbs: [['Home', '/'], [l.city, u]], image: k ? 'goa-2' : 'goa-1', alt: `Goa near ${l.city}` })}
 <section class="sec"><div class="wrap contact">
   <div data-reveal><article class="loc loc--big"><div class="loc__b"><span class="loc__ic">${ico.pin}</span><h2 class="h2">${l.name}</h2><address>${l.street}<br>${l.locality}, ${l.region} ${l.postal}</address><div class="loc__a"><a class="btn" href="tel:${l.phone}"><span>Call ${l.phoneShow}</span></a><a class="btn btn--line-d" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener"><span>Google Maps</span></a></div></div></article>
   <h3 class="h3">Treatments available</h3><ul class="ticks ticks--2">${SERVICES.map((s) => `<li><a href="/services/${s.slug}/">${s.name}</a></li>`).join('')}</ul></div>
@@ -522,13 +493,32 @@ for (const [k, l] of SITE.locations.entries()) {
   write(u, layout({ path: u, title: `Plastic Surgeon in ${l.city}, Goa | Dr. Manish Patel`, desc: `Visit Dr. Manish Patel’s ${l.city} clinic in Goa for cosmetic and plastic surgery, hair transplant, laser and skin treatments. Address, phone and directions.`, body, schema: [{ '@context': 'https://schema.org', ...locSchema(l) }, crumbSchema([['Home', '/'], [l.city, u]])] }));
 }
 
+// ================================================================== PRIVACY
+{
+  const body = `${pgHero({ eyebrow: 'Privacy', title: 'Privacy<br><em>notice</em>.', lead: 'How the clinic handles the details you send through this website.', crumbs: [['Home', '/'], ['Privacy', '/privacy/']] })}
+<section class="sec sec--tight"><div class="wrap prose">
+  <h2 class="h2">What this website collects</h2>
+  <p>The enquiry form asks for your name, phone number, preferred clinic, treatment of interest and an optional message. The website itself does not store these details. When you press “Continue on WhatsApp”, they are placed in a WhatsApp message to the clinic you chose, which you can review before sending.</p>
+  <h2 class="h2">Why the clinic uses them</h2>
+  <p>Only to reply to your enquiry and arrange an appointment. They are not sold or shared for marketing.</p>
+  <h2 class="h2">Your choices</h2>
+  <p>You can ask the clinic to see, correct or delete the details you sent, or withdraw your consent, by calling ${SITE.locations.map((l) => `${l.city} on <a href="tel:${l.phone}">${l.phoneShow}</a>`).join(' or ')}.</p>
+  <h2 class="h2">Patient images</h2>
+  <p>This website does not publish patient photographs, videos, testimonials or medical details.</p>
+  <h2 class="h2">This website</h2>
+  <p>The site sets no advertising or tracking cookies. Embedded maps and videos are loaded from Google and the clinic’s own server when you open them.</p>
+  <p class="note">This notice follows the Digital Personal Data Protection Act, 2023. Last updated ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}.</p>
+</div></section>`;
+  write('/privacy/', layout({ path: '/privacy/', title: 'Privacy Notice | Patel Cosmetic & Plastic Surgery Center', desc: 'How Patel Cosmetic & Plastic Surgery Center handles the details you send through this website’s enquiry form, and how to ask for them to be corrected or deleted.', body, schema: [crumbSchema([['Home', '/'], ['Privacy', '/privacy/']])] }));
+}
+
 // ================================================================== 404
-fs.writeFileSync(path.join(ROOT, '404.html'), layout({ path: '/404', title: 'Page not found | Dr. Manish Patel', desc: 'Page not found.', noindex: true, body: `${pgHero({ eyebrow: '404', title: 'This page has<br><em>moved on</em>.', lead: 'Try our treatments, or book a consultation.' })}<section class="sec sec--tight"><div class="wrap">${cta()}</div></section>` }));
+fs.writeFileSync(path.join(ROOT, '404.html'), layout({ path: '/404', title: 'Page not found | Dr. Manish Patel', desc: 'Page not found.', noindex: true, body: `${pgHero({ eyebrow: '404', title: 'This page has<br><em>moved on</em>.', lead: 'Try the treatments list, or contact the clinic.' })}<section class="sec sec--tight"><div class="wrap">${cta()}</div></section>` }));
 
 // ================================================================== sitemap / robots / llms
 const today = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE.domain}${u}</loc><lastmod>${today}</lastmod><priority>${u === '/' ? '1.0' : u.startsWith('/services/') ? '0.9' : '0.7'}</priority></url>`).join('\n')}\n</urlset>\n`);
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /_src/\n\n# AI / answer-engine crawlers are welcome\nUser-agent: GPTBot\nAllow: /\nUser-agent: OAI-SearchBot\nAllow: /\nUser-agent: ChatGPT-User\nAllow: /\nUser-agent: PerplexityBot\nAllow: /\nUser-agent: ClaudeBot\nAllow: /\nUser-agent: Google-Extended\nAllow: /\nUser-agent: Applebot-Extended\nAllow: /\n\nSitemap: ${SITE.domain}/sitemap.xml\n`);
-fs.writeFileSync(path.join(ROOT, 'llms.txt'), `# ${SITE.name}\n\n> Cosmetic and plastic surgery clinic in Goa, India, led by ${SITE.doctor} (${SITE.creds}), with ${SITE.experience} of experience. Clinics in Margao and Panaji.\n\n## Key facts\n- Surgeon: ${SITE.doctor}, plastic surgeon. Qualifications: MBBS, MS (General Surgery), MCh (Plastic Surgery).\n- Recognition: invited faculty at IAAPS AESURG 2022 (Certificate of Significant Appreciation); faculty and trainer for Botox and fillers at the 7th FADS World Congress 2023, South Goa; former Head of the Department of Cosmetic Surgery, Wockhardt Institute of Aesthetics (2011).\n- Patient proof: the home page carries video testimonials from patients (eyelid surgery, facelift, mini facelift, hair transplant) and before-and-after photos.\n${SITE.locations.map((l) => `- ${l.name}: ${l.street}, ${l.locality}, ${l.region} ${l.postal}. Phone ${l.phoneShow}.`).join('\n')}\n- Treatments: ${SERVICES.map((s) => s.name).join(', ')}.\n\n## Pages\n- [Home](${SITE.domain}/)\n- [About Dr. Patel](${SITE.domain}/about/)\n- [Treatments](${SITE.domain}/services/)\n${SERVICES.map((s) => `- [${s.name}](${SITE.domain}/services/${s.slug}/): ${s.tag}`).join('\n')}\n- [Results](${SITE.domain}/results/)\n- [Patient reviews](${SITE.domain}/testimonials/)\n- [Journal](${SITE.domain}/blog/)\n- [FAQ](${SITE.domain}/faq/)\n- [Contact](${SITE.domain}/contact/)\n\n## Quick answers\n${FAQS.map(([q, ans]) => `### ${q}\n${ans}`).join('\n\n')}\n\n## Social\n- Instagram (Dr. Manish Patel): https://www.instagram.com/drmanishp/\n- Instagram (clinic): ${SITE.social.instagram}\n- Facebook: ${SITE.social.facebook}\n- YouTube: ${SITE.social.youtube}\n`);
+fs.writeFileSync(path.join(ROOT, 'llms.txt'), `# ${SITE.name}\n\n> Cosmetic and plastic surgery clinic in Goa, India, led by ${SITE.doctor} (${SITE.creds}), with ${SITE.experience} of experience. Clinics in Margao and Panaji.\n\n## Key facts\n- Surgeon: ${SITE.doctor}, plastic surgeon. Qualifications: MBBS, MS (General Surgery), MCh (Plastic Surgery).\n- Registration: ${SITE.reg.council}, ${regNo(SITE.reg.no)}.\n- Positions and teaching: Head, Department of Cosmetic Surgery, Wockhardt Institute of Aesthetics (2011); faculty at IAAPS AESURG 2022; faculty and trainer for Botox and fillers at the 7th FADS World Congress 2023, South Goa.\n- Content policy: following the National Medical Commission's Guidelines on Ethical Advertising and Public Communication (6 October 2026), the site publishes no patient testimonials, reviews or before-and-after images. Each treatment page lists recovery, possible risks and who the procedure may not suit.\n${SITE.locations.map((l) => `- ${l.name}: ${l.street}, ${l.locality}, ${l.region} ${l.postal}. Phone ${l.phoneShow}.`).join('\n')}\n- Treatments: ${SERVICES.map((s) => s.name).join(', ')}.\n\n## Pages\n- [Home](${SITE.domain}/)\n- [About Dr. Patel](${SITE.domain}/about/)\n- [Treatments](${SITE.domain}/services/)\n${SERVICES.map((s) => `- [${s.name}](${SITE.domain}/services/${s.slug}/): ${s.tag}`).join('\n')}\n- [Journal](${SITE.domain}/blog/)\n- [FAQ](${SITE.domain}/faq/)\n- [Contact](${SITE.domain}/contact/)\n- [Privacy](${SITE.domain}/privacy/)\n\n## Quick answers\n${FAQS.map(([q, ans]) => `### ${q}\n${ans}`).join('\n\n')}\n\n## Social\n- Instagram (Dr. Manish Patel): https://www.instagram.com/drmanishp/\n- Instagram (clinic): ${SITE.social.instagram}\n- Facebook: ${SITE.social.facebook}\n- YouTube: ${SITE.social.youtube}\n`);
 fs.writeFileSync(path.join(ROOT, 'assets/img/favicon.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0F2A47"/><path d="M14 50C14 28 28 14 50 14c0 22-14 36-36 36z" fill="#6FBF7A"/><path d="M14 50L36 28" stroke="#F7F4EE" stroke-width="3"/></svg>`);
 console.log('Built', urls.length, 'pages');

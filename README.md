@@ -13,4 +13,4 @@ Static site for Patel Cosmetic & Plastic Surgery Center, Goa. Built by Webson Sy
 ## Deploy
 Pushing to `main` runs `.github/workflows/pages.yml`, which builds `dist/` and publishes it to GitHub Pages.
 
-Brand decisions (palette, type, devices) are in `brand-spec.md`. Original downloaded images are in `assets/img/site/` and are not deployed.
+Brand decisions (palette, type, devices) are in `brand-spec.md`. Content must follow the NMC advertising rules summarised in `brand-spec.md` (no testimonials, reviews, before-and-afters or patient media). Originals and patient media live in `_private/`, which is not committed.

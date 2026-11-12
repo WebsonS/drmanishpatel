@@ -10,10 +10,9 @@
 | Dr. Patel, studio portrait | `assets/img/p/dr-portrait.webp` |
 | Recognition | `dr-award-aesurg.webp` (IAAPS AESURG), `dr-world-congress.webp` (FADS World Congress 2023), `dr-gimacon.webp` (IMA GIMACON) |
 | Team / theatre | `team-ot.webp`, `team-fads-2023.webp`, `team-group-1/2.webp`, `team-1..6.webp`, `team-doc-1.webp`, `t-device-1/2.webp` (operating theatre) |
-| Real result | `ba-eyelid.webp` (before/after, eyelid) |
 | Treatments | `t-*.webp` |
 | Goa | `goa-1.webp`, `goa-2.webp` |
-Originals are kept in `assets/img/site/` (not referenced by pages).
+Originals and all patient media (testimonial films, before-and-after photos, clinic reels with result shots) are kept outside the repository in `_private/`, which git ignores. They must not be published (see Compliance).
 
 ## Colour: a trust palette
 Patients choosing a surgeon are anxious, and the main thing they are deciding is whether to trust him. The palette is built around that decision.
@@ -57,3 +56,23 @@ Leaf on sand is 4.0:1, so it is used only for large italic display words, which 
 1. **Leaf mask**: images cropped to a leaf shape (`border-radius: 60% 0`), taken from the logo.
 2. **Signature**: "Manish Patel" in script, drawn on in the preloader and footer.
 3. **Living motion**: Lenis smooth scroll, GSAP reveals, image clip-path reveals, marquee rows, pinned treatment carousel, draggable recognition carousel.
+
+## Compliance: NMC advertising rules
+The site follows the National Medical Commission's *Guidelines on Ethical Advertising and Public Communication by Hospitals/Medical Institutions and Registered Medical Practitioners* (public notice R-13014/01/2024-Ethics, 6 October 2026). The site's job is to inform, not to persuade.
+
+**Never publish**
+- Patient testimonials, reviews, star ratings or review widgets, in any form (cl. 3.2 Expl. V, 8.1(xi)). Patient consent does not make them acceptable.
+- Before-and-after images or case results (cl. 8.1(v)).
+- Patient photos, videos or identifiable details (cl. 6, 7.4). This includes clinic reels that splice in result shots.
+- Superlatives ("best", "leading", "No. 1"), success rates, patient counts, guarantees or outcome promises (cl. 8.1(iii), (vi), (ix)).
+- Offers, discounts or time-limited deals (cl. 8.1(x)).
+
+**Always show**
+- Each doctor's name, qualifications and medical register number (cl. 3.2 Expl. III). Set `SITE.reg.no` in `_src/data.mjs`; until then the site prints "awaiting confirmation".
+- Risks, recovery and who a procedure may not suit, on every treatment page (`RISKS` in `_src/data.mjs`).
+- The disclaimer in the footer, and consent on the enquiry form (DPDP Act 2023, cl. 7.6).
+
+**Allowed**
+- Factual information: clinics, addresses, phone numbers, hours, services, qualifications, verifiable positions held (with body and year).
+- Patient education that does not promote the practice (cl. 5.1): the risk sheets, the journal, and Dr. Patel's purely educational videos. Only `r-acne` passed a frame check; review any new reel frame by frame first.
+- Calls to action are neutral: "Request an appointment", "Contact the clinic". Never "Book now" or urgency.

@@ -867,3 +867,114 @@ html,body{overflow-x:clip}
   .mem{flex:0 0 56vw}
   .team-s__row:not(.team-s__row--doc) .mem{flex-basis:42vw}
 }
+
+/* ======================================================================
+   v5: NMC-compliant home. Informs, never persuades: register plate, risk sheets, consultation walk-through.
+   ====================================================================== */
+/* hero: the register plate is the brand device. The facts the NMC requires, set like an engraved nameplate. */
+.np{position:relative;padding:clamp(7rem,14vw,9.5rem) 0 clamp(3rem,6vw,5rem);background:var(--cream);overflow:hidden}
+.np::before{content:"";position:absolute;right:-12vw;top:-10vw;width:58vw;aspect-ratio:1;border-radius:var(--leaf-r);background:var(--sand);opacity:.7;transform:rotate(-8deg)}
+.np__in{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(2rem,5vw,5rem);align-items:center}
+.np__h{display:flex;flex-direction:column;gap:.5rem}
+.np__name{font:600 clamp(2.7rem,1.4rem + 5.4vw,6.2rem)/.95 var(--serif);letter-spacing:-.045em;color:var(--forest)}
+.np__role{font:500 clamp(1.15rem,.9rem + 1vw,1.7rem)/1.25 var(--sans);letter-spacing:-.02em;color:var(--ink-2)}
+.np__role em{font:italic 400 1.15em/1 var(--accent);color:var(--leaf)}
+.np__lead{margin-top:clamp(1.2rem,2.5vw,1.8rem);max-width:34rem;font-size:clamp(1.02rem,.95rem + .3vw,1.18rem);color:var(--muted);text-wrap:pretty}
+.np__btns{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:clamp(1.6rem,3vw,2.4rem)}
+
+.plate{position:relative;background:var(--forest);color:var(--cream);border-radius:22px;padding:clamp(1.4rem,3vw,2.2rem);box-shadow:0 40px 80px -40px var(--shadow)}
+.plate::before{content:"";position:absolute;inset:8px;border:1px solid var(--line-l);border-radius:16px;pointer-events:none}
+.plate__top{display:flex;align-items:center;gap:1rem;padding-bottom:1.1rem;border-bottom:1px solid var(--line-l)}
+.plate__ph{width:64px;height:64px;flex:none;border-radius:var(--leaf-r);overflow:hidden;background:var(--forest-2)}
+.plate__ph img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.plate__top b{display:block;font:600 1.25rem/1.15 var(--sans);letter-spacing:-.02em}
+.plate__top small{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--leaf-2);margin-top:.2rem;font-weight:600}
+.plate__dl div{display:grid;grid-template-columns:7.2rem 1fr;gap:.8rem;padding:.85rem 0;border-bottom:1px dashed var(--line-l)}
+.plate__dl dt{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(247,244,238,.6);font-weight:600;padding-top:.2rem}
+.plate__dl dd{margin:0;font-weight:500;line-height:1.45}
+.plate__dl a{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--leaf-2)}
+.plate figcaption{margin-top:1rem;font-size:.78rem;color:rgba(247,244,238,.7)}
+.plate figcaption a{color:var(--leaf-2);font-weight:600}
+@media (max-width:900px){
+  .np{padding-top:6.4rem}
+  .np__in{grid-template-columns:1fr}
+  .np::before{width:110vw;right:-50vw;top:-30vw}
+  .np__btns .btn{flex:1 1 auto}
+}
+
+/* risk sheets: a patient information leaflet, one per procedure */
+.decide{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--white)}
+.decide__tabs{display:flex;gap:.45rem;overflow-x:auto;margin:clamp(1.6rem,3vw,2.4rem) calc(var(--gut) * -1) 1.2rem;padding:0 var(--gut) .3rem;scrollbar-width:none}
+.decide__tabs::-webkit-scrollbar{display:none}
+.decide__tabs button{flex:none;min-height:44px;padding:0 1.1rem;border-radius:100px;border:1px solid var(--line);font:600 .85rem var(--sans);color:var(--ink-2);background:var(--cream);transition:background .25s,color .25s,border-color .25s}
+.decide__tabs button:hover{border-color:var(--forest)}
+.decide__tabs .is-on{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+.js .sheet:not(.is-on){display:none}
+.sheet{border:1px solid var(--line);border-radius:var(--r);background:var(--cream);background-image:repeating-linear-gradient(to bottom,transparent 0 31px,rgba(20,32,44,.05) 31px 32px);overflow:hidden}
+.no-js .sheet+.sheet,html:not(.js) .sheet+.sheet{margin-top:1rem}
+.sheet__hd{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;padding:1rem clamp(1.2rem,3vw,2rem);background:var(--forest);color:var(--cream)}
+.sheet__hd span{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--leaf-2);font-weight:600}
+.sheet__hd b{font:600 clamp(1.05rem,.9rem + .6vw,1.4rem)/1.2 var(--sans);letter-spacing:-.02em;text-align:right}
+.sheet__grid{display:grid;grid-template-columns:1fr 1.25fr 1fr}
+.sheet__c{padding:clamp(1.2rem,3vw,2rem)}
+.sheet__c+.sheet__c{border-left:1px solid var(--line)}
+.sheet__c h3{font:600 .72rem var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--cobalt);margin-bottom:.8rem}
+.sheet__c--risk h3{color:var(--forest)}
+.sheet__c p,.sheet__c li{font-size:.98rem;line-height:1.55}
+.sheet__c li{position:relative;padding-left:1.1rem}
+.sheet__c li+li{margin-top:.5rem}
+.sheet__c li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--cobalt)}
+.sheet__c--risk li::before{background:var(--forest);border-radius:1px}
+.sheet__ft{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1.2rem;padding:1rem clamp(1.2rem,3vw,2rem);border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);background:var(--white)}
+@media (max-width:900px){.sheet__grid{grid-template-columns:1fr}.sheet__c+.sheet__c{border-left:0;border-top:1px solid var(--line)}}
+
+/* explainer video */
+.explain{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--forest);color:var(--cream);overflow:hidden}
+.explain .hd{color:var(--cream)}
+.explain .hd em{color:var(--leaf-2)}
+.explain__in{display:grid;grid-template-columns:auto 1fr;gap:clamp(2rem,6vw,6rem);align-items:center}
+.reel--big{flex:none;width:clamp(220px,26vw,320px)}
+.explain__p{margin-top:1.2rem;max-width:34rem;color:rgba(247,244,238,.78)}
+.explain .ask__handles{grid-template-columns:repeat(2,1fr);margin-bottom:0}
+@media (max-width:900px){.explain__in{grid-template-columns:1fr}.reel--big{width:min(70vw,300px)}.explain__vid{order:2}.explain .ask__handles{grid-template-columns:1fr}}
+
+/* consultation walk-through */
+.walk{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--sand)}
+.walk__list{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:clamp(1.8rem,4vw,3rem);counter-reset:w}
+.walk__list li{position:relative;padding:1.6rem 1.4rem 1.8rem;background:var(--cream);border-radius:var(--r);border-top:3px solid var(--forest)}
+.walk__list li:last-child{border-top-color:var(--leaf)}
+.walk__n{display:block;font:italic 400 2.6rem/1 var(--accent);color:var(--leaf);margin-bottom:.8rem}
+.walk__list h3{font:600 1.2rem/1.2 var(--sans);letter-spacing:-.02em;margin-bottom:.5rem}
+.walk__list p{font-size:.95rem;color:var(--ink-2)}
+@media (max-width:900px){.walk__list{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.walk__list{grid-template-columns:1fr}}
+
+.dr__links{display:flex;flex-wrap:wrap;gap:1.4rem}
+
+/* register lines and disclosures */
+.ftr__reg{color:rgba(247,244,238,.85);font-weight:600;margin-bottom:.6rem}
+.ftr__legal p+p{margin-top:.5rem}
+.ftr__p{margin:1rem 0 0;color:rgba(247,244,238,.75)}
+.about__reg,.svc-d__reg{display:block;font-size:.85rem;font-weight:600;color:var(--cobalt);letter-spacing:.01em}
+.svc-d__reg{color:rgba(247,244,238,.75)}
+.svc-d__card .link{color:var(--leaf-2)}
+.mem__reg{display:block;margin-top:.25rem;letter-spacing:.04em;text-transform:none;color:var(--muted);font-weight:500}
+.book__sub{font-size:.78rem;color:var(--muted);margin-top:.3rem}
+.pl__note{padding:0 1.3rem 1rem;font-size:.8rem;color:var(--muted)}
+.bform__ok{display:flex;gap:.7rem;align-items:flex-start;font-size:.82rem;line-height:1.45;color:var(--ink-2);padding:.4rem .2rem;border-radius:10px}
+.bform__ok input{flex:none;width:20px;height:20px;margin-top:.1rem;accent-color:var(--leaf)}
+.bform__ok a{color:var(--cobalt);font-weight:600}
+.bform__ok.err{outline:2px solid #B3261E;outline-offset:2px}
+
+/* treatment pages: recovery, risks, suitability */
+.riskbox{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--white)}
+.riskbox__h{padding:1rem 1.4rem;background:var(--forest);color:var(--cream);font:600 1.05rem var(--sans);letter-spacing:-.01em}
+.riskbox__g{display:grid;grid-template-columns:1fr 1fr 1fr}
+.riskbox__g>div{padding:1.3rem 1.4rem}
+.riskbox__g>div+div{border-left:1px solid var(--line)}
+.riskbox h3{font:600 .7rem var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--cobalt);margin-bottom:.7rem}
+.riskbox p,.riskbox li{font-size:.94rem;line-height:1.55}
+.riskbox li{padding-left:1rem;position:relative}
+.riskbox li+li{margin-top:.45rem}
+.riskbox li::before{content:"";position:absolute;left:0;top:.6em;width:5px;height:5px;border-radius:50%;background:var(--cobalt)}
+@media (max-width:900px){.riskbox__g{grid-template-columns:1fr}.riskbox__g>div+div{border-left:0;border-top:1px solid var(--line)}}

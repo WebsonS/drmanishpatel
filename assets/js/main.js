@@ -52,13 +52,15 @@
         el.classList.toggle('err', bad);
         if (bad) ok = false;
       });
+      var okBox = form.elements.ok;
+      if (okBox && !okBox.checked) { okBox.closest('label').classList.add('err'); ok = false; }
       if (!ok) { form.querySelector('.err').focus(); return; }
       var num = f.get('clinic') === 'Panaji' ? '919730856787' : '919284562451';
-      var text = 'Hello Dr. Patel’s team, I would like to book a consultation.\nName: ' + f.get('name') + '\nPhone: ' + f.get('phone') + '\nClinic: ' + f.get('clinic') +
+      var text = 'Hello Dr. Patel’s team, I would like to arrange an appointment.\nName: ' + f.get('name') + '\nPhone: ' + f.get('phone') + '\nClinic: ' + f.get('clinic') +
         (f.get('treatment') ? '\nTreatment: ' + f.get('treatment') : '') + (f.get('msg') ? '\nMessage: ' + f.get('msg') : '');
       window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
     });
-    form.addEventListener('input', function (e) { e.target.classList.remove('err'); });
+    form.addEventListener('input', function (e) { e.target.classList.remove('err'); var l = e.target.closest('.bform__ok'); if (l) l.classList.remove('err'); });
   });
 
   // booking popup: every [data-book] opens it instead of leaving the page
@@ -113,6 +115,23 @@
     t = setTimeout(function () { go(1); }, 6000);
   });
 
+  /* ---------- patient information sheets: tabs (arrow keys move between them) ---------- */
+  document.querySelectorAll('.decide').forEach(function (d) {
+    var tabs = [].slice.call(d.querySelectorAll('[role=tab]')), sheets = d.querySelectorAll('.sheet');
+    function pick(k, focus) {
+      tabs.forEach(function (t, j) { var on = j === k; t.classList.toggle('is-on', on); t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; sheets[j].classList.toggle('is-on', on); });
+      if (focus) tabs[k].focus();
+      var bar = tabs[k].parentNode; if (bar.scrollTo) bar.scrollTo({ left: tabs[k].offsetLeft - 16, behavior: 'smooth' });
+    }
+    tabs.forEach(function (t, k) {
+      t.addEventListener('click', function () { pick(k); });
+      t.addEventListener('keydown', function (e) {
+        var n = e.key === 'ArrowRight' ? k + 1 : e.key === 'ArrowLeft' ? k - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : -2;
+        if (n === -2) return; e.preventDefault(); pick((n + tabs.length) % tabs.length, true);
+      });
+    });
+  });
+
   /* ---------- video player sheet (patient films + reels) ---------- */
   var pl = document.getElementById('player');
   var plList = [], plIdx = 0, plFocus = null;
@@ -126,7 +145,7 @@
     pl.querySelector('.pl__t').textContent = d.title || '';
     pl.querySelector('.pl__txt').textContent = d.text || '';
     var ig = pl.querySelector('.pl__ig'); ig.hidden = !d.ig; if (d.ig) ig.href = d.ig;
-    pl.querySelector('[data-book]').dataset.book = d.book || '';
+    var pb = pl.querySelector('[data-book]'); if (pb) pb.dataset.book = d.book || '';
     pl.classList.toggle('is-single', plList.length < 2);
     var p = v.play(); if (p && p.catch) p.catch(function () {});
   }
