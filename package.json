@@ -1,0 +1,13 @@
+{
+  "name": "drmanishpatel",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node _src/build.mjs",
+    "dist": "node _src/build.mjs && node _src/dist.mjs",
+    "serve": "npx serve -l 4173 ."
+  },
+  "devDependencies": {
+    "esbuild": "0.25.5"
+  }
+}
