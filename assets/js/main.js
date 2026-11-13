@@ -115,6 +115,38 @@
     t = setTimeout(function () { go(1); }, 6000);
   });
 
+  /* ---------- hero photo carousel ---------- */
+  document.querySelectorAll('[data-hx]').forEach(function (hx) {
+    var sl = hx.querySelectorAll('.hx__s'), cap = hx.querySelectorAll('.hx__c'), bars = hx.querySelectorAll('.hx__bars b');
+    var i = 0, T = 6000, t0 = performance.now(), raf = 0, vis = true;
+    function go(n) {
+      sl[i].classList.remove('is-on'); cap[i].classList.remove('is-on');
+      i = (n + sl.length) % sl.length;
+      sl[i].classList.add('is-on'); cap[i].classList.add('is-on');
+      var im = sl[i].querySelector('img'); if (im.loading === 'lazy') im.loading = 'eager';
+      bars.forEach(function (b, k) { b.style.transform = 'scaleX(' + (k < i ? 1 : 0) + ')'; });
+      t0 = performance.now();
+    }
+    function tick(now) {
+      var p = Math.min((now - t0) / T, 1);
+      if (bars[i]) bars[i].style.transform = 'scaleX(' + p + ')';
+      if (p >= 1) go(i + 1);
+      raf = requestAnimationFrame(tick);
+    }
+    hx.querySelector('.hx__nx').addEventListener('click', function () { go(i + 1); });
+    hx.querySelector('.hx__pv').addEventListener('click', function () { go(i - 1); });
+    var sx = null;
+    hx.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    hx.addEventListener('touchend', function (e) { if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1)); sx = null; }, { passive: true });
+    // warm the next photo so the crossfade never shows a blank frame
+    setTimeout(function () { sl.forEach(function (s) { var im = s.querySelector('img'); if (im.loading === 'lazy') im.loading = 'eager'; }); }, 2500);
+    if (reduce) { T = 9000; }
+    new IntersectionObserver(function (es) {
+      vis = es[0].isIntersecting; cancelAnimationFrame(raf);
+      if (vis) { t0 = performance.now() - (parseFloat((bars[i].style.transform.match(/[d.]+/) || [0])[0]) * T); raf = requestAnimationFrame(tick); }
+    }).observe(hx);
+  });
+
   /* ---------- patient information sheets: tabs (arrow keys move between them) ---------- */
   document.querySelectorAll('.decide').forEach(function (d) {
     var tabs = [].slice.call(d.querySelectorAll('[role=tab]')), sheets = d.querySelectorAll('.sheet');

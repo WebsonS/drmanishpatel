@@ -12,8 +12,10 @@ const jsonld = (o) => `<script type="application/ld+json">${JSON.stringify(o)}</
 const fmtDate = (d) => new Date(d).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
 const urls = [];
 // Medical register number, required on every doctor's page (NMC advertising guidelines, cl. 3.2 Expl. III).
-const regNo = (n) => (n ? `Reg. No. ${esc(n)}` : 'Reg. No. awaiting confirmation');
-const REG_LINE = `${SITE.doctor}, ${SITE.creds}. ${SITE.reg.council}, ${regNo(SITE.reg.no)}.`;
+// Until the number is supplied, only the council is shown (no placeholder text on the live site).
+const regNo = (n) => (n ? `Reg. No. ${esc(n)}` : '');
+const REG = `Registered with the ${SITE.reg.council}${SITE.reg.no ? `, ${regNo(SITE.reg.no)}` : ''}`;
+const REG_LINE = `${SITE.doctor}, ${SITE.creds}. ${REG}.`;
 
 // ---------- real imagery (from the clinic's own site, optimised to WebP) ----------
 const I = (n) => `/assets/img/p/${n}.webp`;
@@ -163,9 +165,8 @@ function bookForm(id, withMsg = false) {
     <fieldset class="bform__clinic"><legend>Clinic</legend>${SITE.locations.map((l, i) => `<label><input type="radio" name="clinic" value="${l.city}"${i ? '' : ' checked'}><span>${l.city}</span></label>`).join('')}</fieldset>
     <label class="bform__f"><span>Treatment</span><select name="treatment" id="${id}-t"><option value="">Not sure yet</option>${SERVICES.map((s) => `<option>${s.name}</option>`).join('')}</select></label>
     ${withMsg ? `<label class="bform__f"><span>Message (optional)</span><textarea name="msg" rows="3" id="${id}-msg"></textarea></label>` : ''}
-    <label class="bform__ok"><input type="checkbox" name="ok" required id="${id}-ok"><span>I agree to send these details to the clinic on WhatsApp so the team can arrange an appointment. <a href="/privacy/">Privacy notice</a></span></label>
     <button class="btn btn--leaf bform__go" type="submit"><span>Continue on WhatsApp</span>${ico.arrow}</button>
-    <p class="bform__note">Opens WhatsApp with your details filled in. Prefer to talk? <a href="tel:${SITE.locations[0].phone}">Call ${SITE.locations[0].phoneShow}</a></p>
+    <p class="bform__note">Opens WhatsApp with your details filled in, for the clinic to arrange your appointment (<a href="/privacy/">privacy</a>). Prefer to talk? <a href="tel:${SITE.locations[0].phone}">Call ${SITE.locations[0].phoneShow}</a></p>
   </form>`;
 }
 
@@ -244,7 +245,7 @@ ${footer()}
   <div class="book__scrim" data-close></div>
   <div class="book__panel">
     <button class="book__x" type="button" aria-label="Close" data-close><i></i><i></i></button>
-    <div class="book__head"><img src="${I('dr-portrait-sm')}" alt="" width="64" height="64" loading="lazy"><div><h2 id="book-h">Request an appointment</h2><p class="book__sub">${SITE.doctor} · ${SITE.reg.council}, ${regNo(SITE.reg.no)}</p></div></div>
+    <div class="book__head"><img src="${I('dr-portrait-sm')}" alt="" width="64" height="64" loading="lazy"><div><h2 id="book-h">Request an appointment</h2><p class="book__sub">${SITE.doctor} · ${REG}</p></div></div>
     ${bookForm('m')}
   </div>
 </div>
@@ -343,7 +344,7 @@ const TEAM = [
   ['team-5', 'Suchi', 'Front Desk Manager', 'Margao clinic', 'staff'],
   ['team-6', 'Deepika', 'Front Desk Manager', 'Panaji clinic', 'staff'],
 ];
-const memCard = ([n, name, role, cred, grp]) => `<figure class="mem"><div class="mem__img">${img(n, `${name}, ${role} at Patel Cosmetic & Plastic Surgery Center`, { w: 549, h: 549, sizes: '(max-width: 760px) 44vw, 200px' })}</div><figcaption><strong>${esc(name)}</strong><span class="mem__role">${esc(role)}</span>${cred ? `<small>${esc(cred)}</small>` : ''}${grp === 'doc' ? `<small class="mem__reg">${regNo('')}</small>` : ''}</figcaption></figure>`;
+const memCard = ([n, name, role, cred, grp]) => `<figure class="mem"><div class="mem__img">${img(n, `${name}, ${role} at Patel Cosmetic & Plastic Surgery Center`, { w: 549, h: 549, sizes: '(max-width: 760px) 44vw, 200px' })}</div><figcaption><strong>${esc(name)}</strong><span class="mem__role">${esc(role)}</span>${cred ? `<small>${esc(cred)}</small>` : ''}</figcaption></figure>`;
 const teamBlock = () => `<section class="sec team-s" id="team" aria-labelledby="team-h"><div class="wrap">
   <div class="team-s__top">
     <h2 class="hd hd--l" id="team-h" data-reveal>The people <em>behind your care.</em></h2>
@@ -363,12 +364,12 @@ function write(p, html) {
 
 // ================================================================== HOME
 {
-  const { body, schema } = homePage({ SITE, SERVICES, FAQS, RISKS, PROCESS, SVC_IMG, img, I, esc, ico, cta, faqBlock, locationsBlock, regNo });
+  const { body, schema } = homePage({ SITE, SERVICES, FAQS, RISKS, PROCESS, SVC_IMG, img, I, esc, ico, cta, faqBlock, locationsBlock, REG, bookForm, AWARDS });
   write('/', layout({
     path: '/',
     title: 'Dr. Manish Patel | Plastic & Cosmetic Surgeon in Goa',
     desc: 'Dr. Manish Patel, MCh plastic surgeon in Goa. What each procedure involves, recovery and risks, explained plainly. Clinics in Margao and Panaji.',
-    body, schema: [faqSchema([FAQS[1], FAQS[5], FAQS[7], FAQS[4]]), schema].filter(Boolean), cls: 'home',
+    body, schema: [faqSchema([FAQS[1], FAQS[3], FAQS[4], FAQS[6]]), schema].filter(Boolean), cls: 'home',
   }));
 }
 
@@ -380,7 +381,7 @@ function write(p, html) {
   <div class="about__txt">
     <p class="big" data-reveal>A surgeon’s job is as much about what he advises against as what he performs.</p>
     <p data-reveal>Dr. Manish Patel holds MBBS, MS (General Surgery) and MCh (Plastic Surgery) qualifications and has over 30 years of experience. His practice covers cosmetic and reconstructive surgery, hair restoration and skin treatments.</p>
-    <p class="about__reg" data-reveal>${SITE.reg.council} · ${regNo(SITE.reg.no)}</p>
+    <p class="about__reg" data-reveal>${REG}</p>
     <p data-reveal>His approach is simple: understand what you want, be honest about what is and is not achievable, and explain the risks before anything is decided. He plans and performs your treatment personally, and remains reachable throughout recovery.</p>
     <div class="about__sign" data-reveal><span class="sig">Manish Patel</span></div>
     <h2 class="h3" data-reveal>Qualifications</h2>
@@ -421,7 +422,7 @@ for (const s of SERVICES) {
   const body = `${pgHero({ eyebrow: `${s.cat} · ${s.tag}`, title: `${s.name}<br><em>in Goa</em>`, lead: s.answer, crumbs: [['Home', '/'], ['Treatments', '/services/'], [s.name, p]], image: SVC_IMG[s.slug], alt: `${s.name} at Patel Cosmetic Surgery Center` })}
 <section class="sec"><div class="wrap svc-d">
   <div class="svc-d__aside">
-    <div class="svc-d__card" data-reveal><span class="sig">Dr. Patel</span><p>“Every ${s.name.toLowerCase()} plan starts with an honest conversation about what will suit you, and what may not.”</p><small class="svc-d__reg">${SITE.doctor} · ${SITE.reg.council}, ${regNo(SITE.reg.no)}</small><a class="link" href="/contact/" data-book>Ask the clinic ${ico.arrow}</a></div>
+    <div class="svc-d__card" data-reveal><span class="sig">Dr. Patel</span><p>“Every ${s.name.toLowerCase()} plan starts with an honest conversation about what will suit you, and what may not.”</p><small class="svc-d__reg">${SITE.doctor} · ${REG}</small><a class="link" href="/contact/" data-book>Ask the clinic ${ico.arrow}</a></div>
   </div>
   <div class="svc-d__txt">
     <div data-reveal><p class="eyebrow">Who it is for</p><ul class="ticks ticks--lg">${s.who.map((w) => `<li>${w}</li>`).join('')}</ul></div>
@@ -519,6 +520,6 @@ fs.writeFileSync(path.join(ROOT, '404.html'), layout({ path: '/404', title: 'Pag
 const today = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE.domain}${u}</loc><lastmod>${today}</lastmod><priority>${u === '/' ? '1.0' : u.startsWith('/services/') ? '0.9' : '0.7'}</priority></url>`).join('\n')}\n</urlset>\n`);
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /_src/\n\n# AI / answer-engine crawlers are welcome\nUser-agent: GPTBot\nAllow: /\nUser-agent: OAI-SearchBot\nAllow: /\nUser-agent: ChatGPT-User\nAllow: /\nUser-agent: PerplexityBot\nAllow: /\nUser-agent: ClaudeBot\nAllow: /\nUser-agent: Google-Extended\nAllow: /\nUser-agent: Applebot-Extended\nAllow: /\n\nSitemap: ${SITE.domain}/sitemap.xml\n`);
-fs.writeFileSync(path.join(ROOT, 'llms.txt'), `# ${SITE.name}\n\n> Cosmetic and plastic surgery clinic in Goa, India, led by ${SITE.doctor} (${SITE.creds}), with ${SITE.experience} of experience. Clinics in Margao and Panaji.\n\n## Key facts\n- Surgeon: ${SITE.doctor}, plastic surgeon. Qualifications: MBBS, MS (General Surgery), MCh (Plastic Surgery).\n- Registration: ${SITE.reg.council}, ${regNo(SITE.reg.no)}.\n- Positions and teaching: Head, Department of Cosmetic Surgery, Wockhardt Institute of Aesthetics (2011); faculty at IAAPS AESURG 2022; faculty and trainer for Botox and fillers at the 7th FADS World Congress 2023, South Goa.\n- Content policy: following the National Medical Commission's Guidelines on Ethical Advertising and Public Communication (6 October 2026), the site publishes no patient testimonials, reviews or before-and-after images. Each treatment page lists recovery, possible risks and who the procedure may not suit.\n${SITE.locations.map((l) => `- ${l.name}: ${l.street}, ${l.locality}, ${l.region} ${l.postal}. Phone ${l.phoneShow}.`).join('\n')}\n- Treatments: ${SERVICES.map((s) => s.name).join(', ')}.\n\n## Pages\n- [Home](${SITE.domain}/)\n- [About Dr. Patel](${SITE.domain}/about/)\n- [Treatments](${SITE.domain}/services/)\n${SERVICES.map((s) => `- [${s.name}](${SITE.domain}/services/${s.slug}/): ${s.tag}`).join('\n')}\n- [Journal](${SITE.domain}/blog/)\n- [FAQ](${SITE.domain}/faq/)\n- [Contact](${SITE.domain}/contact/)\n- [Privacy](${SITE.domain}/privacy/)\n\n## Quick answers\n${FAQS.map(([q, ans]) => `### ${q}\n${ans}`).join('\n\n')}\n\n## Social\n- Instagram (Dr. Manish Patel): https://www.instagram.com/drmanishp/\n- Instagram (clinic): ${SITE.social.instagram}\n- Facebook: ${SITE.social.facebook}\n- YouTube: ${SITE.social.youtube}\n`);
+fs.writeFileSync(path.join(ROOT, 'llms.txt'), `# ${SITE.name}\n\n> Cosmetic and plastic surgery clinic in Goa, India, led by ${SITE.doctor} (${SITE.creds}), with ${SITE.experience} of experience. Clinics in Margao and Panaji.\n\n## Key facts\n- Surgeon: ${SITE.doctor}, plastic surgeon. Qualifications: MBBS, MS (General Surgery), MCh (Plastic Surgery).\n- Registration: ${REG}.\n- Positions and teaching: Head, Department of Cosmetic Surgery, Wockhardt Institute of Aesthetics (2011); faculty at IAAPS AESURG 2022; faculty and trainer for Botox and fillers at the 7th FADS World Congress 2023, South Goa.\n- Content policy: following the National Medical Commission's Guidelines on Ethical Advertising and Public Communication (6 October 2026), the site publishes no patient testimonials, reviews or before-and-after images. Each treatment page lists recovery, possible risks and who the procedure may not suit.\n${SITE.locations.map((l) => `- ${l.name}: ${l.street}, ${l.locality}, ${l.region} ${l.postal}. Phone ${l.phoneShow}.`).join('\n')}\n- Treatments: ${SERVICES.map((s) => s.name).join(', ')}.\n\n## Pages\n- [Home](${SITE.domain}/)\n- [About Dr. Patel](${SITE.domain}/about/)\n- [Treatments](${SITE.domain}/services/)\n${SERVICES.map((s) => `- [${s.name}](${SITE.domain}/services/${s.slug}/): ${s.tag}`).join('\n')}\n- [Journal](${SITE.domain}/blog/)\n- [FAQ](${SITE.domain}/faq/)\n- [Contact](${SITE.domain}/contact/)\n- [Privacy](${SITE.domain}/privacy/)\n\n## Quick answers\n${FAQS.map(([q, ans]) => `### ${q}\n${ans}`).join('\n\n')}\n\n## Social\n- Instagram (Dr. Manish Patel): https://www.instagram.com/drmanishp/\n- Instagram (clinic): ${SITE.social.instagram}\n- Facebook: ${SITE.social.facebook}\n- YouTube: ${SITE.social.youtube}\n`);
 fs.writeFileSync(path.join(ROOT, 'assets/img/favicon.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0F2A47"/><path d="M14 50C14 28 28 14 50 14c0 22-14 36-36 36z" fill="#6FBF7A"/><path d="M14 50L36 28" stroke="#F7F4EE" stroke-width="3"/></svg>`);
 console.log('Built', urls.length, 'pages');
