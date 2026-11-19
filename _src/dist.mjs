@@ -7,6 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { transform } from 'esbuild';
 import { PurgeCSS } from 'purgecss';
+import { createHash } from 'node:crypto';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'dist');
@@ -30,6 +31,9 @@ const [purged] = await new PurgeCSS().purge({
   variables: false,
 });
 
+const hash = (s) => createHash('sha1').update(s).digest('hex').slice(0, 8);
+const VER = { css: hash(purged.css), js: hash(fs.readFileSync(path.join(ROOT, 'assets/js/main.js'))) };
+
 const fontsCss = fs.readFileSync(path.join(ROOT, 'assets/css/fonts.css'), 'utf8').replace(/url\(\.\.\/fonts\//g, `url(${BASE}/assets/fonts/`);
 const fontsInline = (await transform(fontsCss, { loader: 'css', minify: true })).code.trim();
 
@@ -46,7 +50,10 @@ function rewriteHtml(html) {
     .replace(/url\(\/(?!\/)/g, `url(${b}/`)
     .replace('<html lang="en-IN" class="no-js">', `<html lang="en-IN" class="no-js" data-base="${b}">`)
     // one fewer render-blocking request: the font-face rules go inline
-    .replace(/<link rel="stylesheet" href="[^"]*fonts\.css">/, `<style>${fontsInline}</style>`);
+    .replace(/<link rel="stylesheet" href="[^"]*fonts\.css">/, `<style>${fontsInline}</style>`)
+    // cache-busting: a new deploy changes the URL, so returning visitors never mix old CSS with new HTML
+    .replace(/(\/assets\/css\/style\.css)"/g, `$1?v=${VER.css}"`)
+    .replace(/(\/assets\/js\/main\.js)"/g, `$1?v=${VER.js}"`);
   if (NOINDEX) html = html.replace(/<meta name="robots" content="[^"]*">/, '<meta name="robots" content="noindex,nofollow">');
   return html;
 }
