@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { transform } from 'esbuild';
+import { PurgeCSS } from 'purgecss';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'dist');
@@ -13,9 +14,21 @@ const BASE = (process.env.BASE || '').replace(/\/$/, '');
 const NOINDEX = process.env.NOINDEX === '1';
 
 // Never shipped: sources, originals, tooling.
-const SKIP = new Set(['_src', 'dist', 'node_modules', '.git', '.github', '.claude', 'assets/img/site', 'package.json', 'package-lock.json', 'brand-spec.md', 'README.md']);
+const SKIP = new Set(['_src', '_private', 'dist', 'node_modules', '.git', '.github', '.claude', 'assets/img/site', 'package.json', 'package-lock.json', 'brand-spec.md', 'README.md']);
 
 fs.rmSync(OUT, { recursive: true, force: true });
+
+// Unused CSS out: keep only selectors that appear in a built page or in main.js.
+// State classes added at runtime (is-*, lenis*, arriving, first) are safelisted.
+const pages = [];
+(function walk(d) { for (const f of fs.readdirSync(d)) { const p = path.join(d, f); if (SKIP.has(path.relative(ROOT, p).split(path.sep).join('/')) || f.startsWith('.')) continue; if (fs.statSync(p).isDirectory()) walk(p); else if (f.endsWith('.html')) pages.push(p); } })(ROOT);
+const [purged] = await new PurgeCSS().purge({
+  content: [...pages, path.join(ROOT, 'assets/js/main.js')],
+  css: [path.join(ROOT, 'assets/css/style.css')],
+  safelist: { standard: [/^is-/, /^lenis/, 'js', 'no-js', 'arriving', 'first', 'cursor', /^split/, /^char/, /^word/, /^line/], greedy: [/is-/] },
+  keyframes: true,
+  variables: false,
+});
 
 const fontsCss = fs.readFileSync(path.join(ROOT, 'assets/css/fonts.css'), 'utf8').replace(/url\(\.\.\/fonts\//g, `url(${BASE}/assets/fonts/`);
 const fontsInline = (await transform(fontsCss, { loader: 'css', minify: true })).code.trim();
@@ -29,6 +42,8 @@ function rewriteHtml(html) {
     .replace(/(\ssrcset=")([^"]*)"/g, (_, a, v) => a + v.replace(/(^|,\s*)\/(?!\/)/g, `$1${b}/`) + '"')
     // paths inside JSON held in data attributes
     .replace(/&quot;\/(?!\/)/g, `&quot;${b}/`)
+    // url() in inline styles (hero backdrops)
+    .replace(/url\(\/(?!\/)/g, `url(${b}/`)
     .replace('<html lang="en-IN" class="no-js">', `<html lang="en-IN" class="no-js" data-base="${b}">`)
     // one fewer render-blocking request: the font-face rules go inline
     .replace(/<link rel="stylesheet" href="[^"]*fonts\.css">/, `<style>${fontsInline}</style>`);
@@ -50,7 +65,7 @@ async function copy(rel) {
   const ext = path.extname(rel);
   if (ext === '.html') return fs.writeFileSync(dst, rewriteHtml(fs.readFileSync(src, 'utf8')));
   if (ext === '.css' || (ext === '.js' && !rel.includes('vendor'))) {
-    const code = fs.readFileSync(src, 'utf8');
+    const code = rel.split(path.sep).join('/') === 'assets/css/style.css' ? purged.css : fs.readFileSync(src, 'utf8');
     const out = await transform(code, { loader: ext.slice(1), minify: true, target: ['es2017', 'chrome61', 'safari11', 'firefox60'] });
     return fs.writeFileSync(dst, out.code);
   }

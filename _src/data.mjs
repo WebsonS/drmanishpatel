@@ -1,3 +1,4 @@
+import { POSTS2 } from './posts2.mjs';
 // Single source of truth for all site content. Edit here, then run: node _src/build.mjs
 export const SITE = {
   name: 'Patel Cosmetic & Plastic Surgery Center',
@@ -464,3 +465,7 @@ export const PROCESS = [
   ['03', 'Procedure', 'Performed by Dr. Patel with a trained team, in an equipped operating theatre or procedure room.'],
   ['04', 'Aftercare', 'Scheduled reviews and direct access to the clinic, so you are supported through every stage of healing.'],
 ];
+
+// Journal part 2 lives in posts2.mjs; newest first everywhere.
+POSTS.push(...POSTS2);
+POSTS.sort((a, b) => b.date.localeCompare(a.date));

@@ -8,6 +8,7 @@
     "serve": "npx serve -l 4173 ."
   },
   "devDependencies": {
-    "esbuild": "0.25.5"
+    "esbuild": "0.25.5",
+    "purgecss": "6.0.0"
   }
 }

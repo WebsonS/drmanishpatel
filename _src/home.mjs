@@ -8,14 +8,14 @@ const ORDER = ['hair-transplant-goa', 'liposuction-goa', 'breast-augmentation-go
 // Only reels that are purely educational (Dr. Patel speaking, no patient results) may appear. Frame-checked: r-acne.
 const EDU_REELS = ['acne'];
 
-// Hero carousel: Dr. Patel at conferences, teaching and in theatre. Captions state what, who and when; nothing else.
+// Hero carousel: Dr. Patel's own photos first, then teaching and conferences. One short factual caption each.
 const SLIDES = [
-  { img: 'dr-aesurg-chair', t: 'Chairing the hair transplant session', s: 'IAAPS AESURG national conference, 2022', o: '50% 40%' },
-  { img: 'dr-world-congress', t: 'Faculty, 7th FADS World Congress', s: 'Holiday Inn Resort, South Goa, 2023', o: '45% 35%' },
-  { img: 'team-ot', t: 'Hair transplant operative workshop', s: 'With visiting international faculty', o: '50% 35%' },
-  { img: 'dr-gimacon', t: 'IMA GIMACON', s: 'Indian Medical Association conference, 2023', o: '30% 30%' },
-  { img: 'event-1', t: 'CosDermIndia convention', s: 'Taj Resort & Convention Centre, Goa, 2023', o: '50% 30%' },
-  { img: 't-device-1', t: 'Our operating theatre', s: 'Margao clinic', o: '50% 50%' },
+  { img: 'dr-portrait', c: 'Dr. Manish Patel, MCh (Plastic Surgery)', w: 648, h: 796, o: '50% 4%' },
+  { img: 'dr-laser', c: 'At the Margao clinic', w: 568, h: 568, o: '55% 30%' },
+  { img: 'dr-award-aesurg', c: 'IAAPS AESURG national conference, 2022', w: 562, h: 482, o: '78% 30%' },
+  { img: 'dr-gimacon', c: 'IMA GIMACON, 2023', w: 1024, h: 920, o: '35% 30%' },
+  { img: 'dr-world-congress', c: 'Faculty, 7th FADS World Congress, Goa, 2023', w: 1024, h: 768, o: '40% 35%' },
+  { img: 'dr-aesurg-chair', c: 'Chairing a session, IAAPS AESURG 2022', w: 1600, h: 1200, o: '50% 40%' },
 ];
 
 export function homePage(h) {
@@ -37,20 +37,17 @@ export function homePage(h) {
 
   const body = `
 <section class="hx" id="top" aria-label="Dr. Manish Patel" data-hx>
-  <div class="hx__slides">${SLIDES.map((s, k) => `<figure class="hx__s${k ? '' : ' is-on'}" style="--o:${s.o}">${img(s.img, `${SITE.doctor}: ${s.t}, ${s.s}`, { w: 1600, h: 1200, lazy: k > 0, sizes: '100vw' })}</figure>`).join('')}</div>
-  <div class="hx__shade" aria-hidden="true"></div>
-  <div class="wrap hx__in">
-    <div class="hx__txt">
-      <p class="hx__kick">${SITE.creds.replace(/ · /g, ' &nbsp;·&nbsp; ')}</p>
-      <h1 class="hx__h"><span class="hx__name">Dr. Manish Patel</span><span class="hx__role">Plastic &amp; cosmetic surgeon in <em>Goa</em></span></h1>
-      <p class="hx__lead">More than 30 years in plastic, cosmetic and reconstructive surgery. Consultations in Margao and Panaji.</p>
-      <div class="hx__btns">${cta('Request an appointment', 'btn--leaf')}<a class="btn btn--glass" href="tel:${SITE.locations[0].phone}"><span>Call ${SITE.locations[0].phoneShow}</span></a></div>
+  <div class="hx__media">
+    <div class="hx__slides">${SLIDES.map((s, k) => `<figure class="hx__s${k ? '' : ' is-on'}" style="--o:${s.o};--bg:url(${I(s.img + '-sm')})">${img(s.img, `${SITE.doctor}: ${s.c}`, { w: s.w, h: s.h, lazy: k > 0, sizes: '(max-width: 900px) 100vw, 560px' })}</figure>`).join('')}</div>
+    <div class="hx__foot" aria-live="polite">
+      ${SLIDES.map((s, k) => `<p class="hx__c${k ? '' : ' is-on'}">${s.c}</p>`).join('')}
+      <div class="hx__bars" role="group" aria-label="Photos">${SLIDES.map((s, k) => `<button type="button" aria-label="Photo ${k + 1}"><b></b></button>`).join('')}</div>
     </div>
-    <div class="hx__cap" aria-live="polite">
-      <div class="hx__bars" aria-hidden="true">${SLIDES.map(() => '<i><b></b></i>').join('')}</div>
-      ${SLIDES.map((s, k) => `<p class="hx__c${k ? '' : ' is-on'}"><b>${s.t}</b><span>${s.s}</span></p>`).join('')}
-      <div class="hx__nav"><button type="button" class="hx__pv" aria-label="Previous photo">${ico.arrow}</button><button type="button" class="hx__nx" aria-label="Next photo">${ico.arrow}</button></div>
-    </div>
+  </div>
+  <div class="hx__txt">
+    <h1 class="hx__h"><span class="hx__name">Dr. Manish Patel</span><span class="hx__role">Plastic &amp; cosmetic surgeon in <em>Goa</em></span></h1>
+    <p class="hx__cred">MBBS · MS · MCh (Plastic Surgery) · Margao &amp; Panaji</p>
+    <div class="hx__btns">${cta('Request an appointment', 'btn--leaf')}<a class="btn btn--glass" href="tel:${SITE.locations[0].phone}">${ico.phone}<span>Call the clinic</span></a></div>
   </div>
 </section>
 
@@ -101,7 +98,7 @@ ${reels.length ? `<section class="explain" aria-labelledby="explain-h"><div clas
   <div class="talk__txt">
     <h2 id="talk-h" class="hd hd--l" data-reveal>Have a question? <em>Ask the clinic.</em></h2>
     <p class="talk__p" data-reveal>Send your details and the team will reply on WhatsApp or by phone to answer questions or find a consultation time.</p>
-    <ul class="talk__calls" data-stagger>${SITE.locations.map((l) => `<li><a href="tel:${l.phone}">${ico.phone}<span><small>${l.city} clinic</small><b>${l.phoneShow}</b></span></a></li>`).join('')}<li><a href="${SITE.social.whatsapp}" target="_blank" rel="noopener">${ico.wa}<span><small>WhatsApp</small><b>Message the clinic</b></span></a></li></ul>
+    <ul class="talk__calls" data-stagger>${SITE.locations.map((l) => `<li><a href="tel:${l.phone}">${ico.phone}<span><small>${l.city} clinic</small><b>${l.phoneShow}</b></span></a></li>`).join('')}<li><a href="${SITE.social.whatsapp}" target="_blank" rel="noopener">${ico.waC}<span><small>WhatsApp</small><b>Message the clinic</b></span></a></li></ul>
   </div>
   <div class="talk__form" data-reveal>${bookForm('h')}</div>
 </div></section>

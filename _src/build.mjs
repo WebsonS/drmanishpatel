@@ -22,7 +22,7 @@ const I = (n) => `/assets/img/p/${n}.webp`;
 const SVC_IMG = {
   'hair-transplant-goa': 't-hair',
   'rhinoplasty-goa': 't-nose',
-  'liposuction-goa': 't-lipo',
+  'liposuction-goa': 't-abdomen',
   'breast-augmentation-goa': 't-breast',
   'gynecomastia-surgery-goa': 't-gyno',
   'facelift-goa': 't-facelift',
@@ -52,6 +52,7 @@ const POST_IMG = {
   'how-to-choose-a-plastic-surgeon-in-goa': 'dr-laser',
   'acne-scars-fractional-co2-laser': 't-co2',
 };
+for (const p of POSTS) if (p.img) POST_IMG[p.slug] = p.img;
 const AWARDS = [
   // captions as given in the gallery on the clinic's current About page
   ['dr-world-congress', 'FADS World Congress 2023', 'On stage, Holiday Inn Resort, South Goa'],
@@ -139,10 +140,11 @@ const crumbSchema = (items) => ({ '@context': 'https://schema.org', '@type': 'Br
 const ico = {
   arrow: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
   pin: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
-  ig: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
-  fb: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/></svg>',
-  yt: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z"/></svg>',
+  ig: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><defs><radialGradient id="igG" cx="30%" cy="107%" r="150%"><stop offset="0" stop-color="#fdf497"/><stop offset=".05" stop-color="#fdf497"/><stop offset=".45" stop-color="#fd5949"/><stop offset=".6" stop-color="#d6249f"/><stop offset=".9" stop-color="#285AEB"/></radialGradient></defs><rect x="2" y="2" width="20" height="20" rx="6" fill="url(#igG)"/><rect x="6" y="6" width="12" height="12" rx="3.6" fill="none" stroke="#fff" stroke-width="1.7"/><circle cx="12" cy="12" r="2.9" fill="none" stroke="#fff" stroke-width="1.7"/><circle cx="16.1" cy="7.9" r=".95" fill="#fff"/></svg>',
+  fb: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#1877F2"/><path fill="#fff" d="M13.4 22.4v-7.1h2.4l.4-2.9h-2.8v-1.8c0-.8.3-1.4 1.4-1.4h1.5V6.6c-.3 0-1.2-.1-2.2-.1-2.2 0-3.6 1.3-3.6 3.7v2.2H8.1v2.9h2.4v7.1z"/></svg>',
+  yt: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="1.5" y="5" width="21" height="14" rx="4.2" fill="#FF0000"/><path fill="#fff" d="M10 8.8v6.4l5.6-3.2z"/></svg>',
   wa: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.300 1.200-1.800 1.200-.5.1-1 .2-3.300-.7-2.800-1.100-4.600-4-4.700-4.200-.1-.2-1.100-1.500-1.100-2.900s.7-2.100 1-2.400c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.100c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.300 1.700 2.100 1.200 1 2.100 1.300 2.400 1.500.3.1.5.1.7-.1l.9-1.100c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.6-.1 1.200z"/></svg>',
+  waC: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#25D366"/><path fill="#fff" transform="translate(3.3 3.3) scale(.725)" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.300 1.200-1.800 1.200-.5.1-1 .2-3.300-.7-2.800-1.100-4.600-4-4.700-4.200-.1-.2-1.100-1.500-1.100-2.900s.7-2.100 1-2.400c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.100c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.300 1.700 2.100 1.200 1 2.100 1.300 2.400 1.500.3.1.5.1.7-.1l.9-1.100c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.6-.1 1.200z"/></svg>',
   play: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a.8.8 0 0 0 1.2.7l10.4-6.5a.8.8 0 0 0 0-1.4L9.2 4.8A.8.8 0 0 0 8 5.5z"/></svg>',
   star: '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7 7 .6-5.3 4.7L18.4 22 12 18l-6.4 4 1.7-7.7L2 9.6 9 9z"/></svg>',
   phone: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',
@@ -151,7 +153,7 @@ const ico = {
 
 const NAV = [
   ['/services/', 'Treatments'],
-  ['/about/', 'Dr. Patel'],
+  ['/about/', 'About'],
   ['/faq/', 'FAQ'],
   ['/blog/', 'Journal'],
   ['/contact/', 'Contact'],
@@ -211,7 +213,7 @@ ${schema.map(jsonld).join('\n')}
 <div class="loader" aria-hidden="true"><div class="loader__in"><img src="/assets/img/logo.webp" alt="" width="240" height="78"><span class="sig loader__sig">Manish Patel</span><span class="loader__bar"><i></i></span></div></div>
 <div class="wipe" aria-hidden="true"><span></span><span></span><span></span></div>
 <header class="hdr" id="hdr">
-  <a class="hdr__logo" href="/" aria-label="${esc(SITE.name)} home"><img src="/assets/img/logo.webp" alt="${esc(SITE.name)} logo" width="160" height="52"></a>
+  <a class="hdr__logo" href="/" aria-label="${esc(SITE.name)} home"><img src="/assets/img/mark.webp" alt="" width="52" height="52"><span class="hdr__brand"><b>Patel Cosmetic</b><small>&amp; Plastic Surgery Center</small></span></a>
   <nav class="hdr__nav" aria-label="Primary">${nav}</nav>
   <div class="hdr__cta">
     <a class="hdr__tel" href="tel:${M.phone}">${M.phoneShow}</a>
@@ -227,7 +229,7 @@ ${schema.map(jsonld).join('\n')}
     <div class="drawer__foot">
       <a class="btn btn--leaf" href="/contact/" data-book><span>Request an appointment</span>${ico.arrow}</a>
       <div class="drawer__calls">${SITE.locations.map((l) => `<a href="tel:${l.phone}"><small>${l.city}</small>${l.phoneShow}</a>`).join('')}</div>
-      <div class="social"><a href="${SITE.social.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp">${ico.wa}</a><a href="${SITE.social.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${ico.ig}</a><a href="${SITE.social.facebook}" target="_blank" rel="noopener" aria-label="Facebook">${ico.fb}</a><a href="${SITE.social.youtube}" target="_blank" rel="noopener" aria-label="YouTube">${ico.yt}</a></div>
+      <div class="social"><a href="${SITE.social.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp">${ico.waC}</a><a href="${SITE.social.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${ico.ig}</a><a href="${SITE.social.facebook}" target="_blank" rel="noopener" aria-label="Facebook">${ico.fb}</a><a href="${SITE.social.youtube}" target="_blank" rel="noopener" aria-label="YouTube">${ico.yt}</a></div>
     </div>
   </div>
 </aside>
@@ -276,7 +278,7 @@ ${footer()}
 function footer() {
   return `<footer class="ftr">
   <div class="ftr__cta wrap">
-    <div class="ftr__img" data-reveal-img>${img('goa-1', 'Goa coastline', { w: 1200, h: 800 })}</div>
+    <div class="ftr__img" data-reveal-img>${img('dr-portrait', SITE.doctor, { w: 648, h: 796, sizes: '300px' })}</div>
     <div>
       <h2 class="display display--l" data-split>Questions first.<br><em>Decisions later.</em></h2>
       <p class="ftr__p" data-reveal>Call either clinic to ask a question or arrange a consultation.</p>
@@ -326,7 +328,7 @@ const tcard = (s, i) => `<a class="tcard" href="/services/${s.slug}/" data-curso
   <h3>${s.name}</h3><p>${s.tag}</p>
 </a>`;
 
-const postCard = (p) => `<a class="post" href="/blog/${p.slug}/" data-reveal data-cursor="Read"><div class="post__img">${img(POST_IMG[p.slug], p.title, { w: 1000, h: 667 })}</div><div class="post__m"><span>${p.cat}</span><span>${p.read} read</span></div><h3>${p.title}</h3><p>${p.desc}</p></a>`;
+const postCard = (p) => `<a class="post" data-cat="${p.cat}" href="/blog/${p.slug}/" data-reveal data-cursor="Read"><div class="post__img">${img(POST_IMG[p.slug], p.title, { w: 1000, h: 667 })}</div><div class="post__m"><span>${p.cat}</span><span>${p.read} read</span></div><h3>${p.title}</h3><p>${p.desc}</p></a>`;
 
 const locationsBlock = () => `<section class="sec sec--sand"><div class="wrap">
   <div class="sec__head"><p class="eyebrow" data-reveal>Two clinics in Goa</p><h2 class="display display--l" data-split>Visit us in <em>Margao</em><br>or <em>Panaji</em>.</h2></div>
@@ -445,17 +447,21 @@ ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
   const body = `${pgHero({ eyebrow: 'The journal', title: 'Honest answers,<br><em>from the surgeon</em>.', lead: 'Clear, careful guidance on the questions patients ask most.', crumbs: [['Home', '/'], ['Journal', '/blog/']] })}
 <section class="sec sec--tight"><div class="wrap">
   <a class="feat" href="/blog/${lead.slug}/" data-reveal data-cursor="Read"><div class="feat__img">${img(POST_IMG[lead.slug], lead.title, { w: 1000, h: 1000 })}</div><div class="feat__txt"><div class="post__m"><span>${lead.cat}</span><span>${fmtDate(lead.date)}</span></div><h2 class="display">${lead.title}</h2><p>${lead.desc}</p><span class="link">Read article ${ico.arrow}</span></div></a>
-  <div class="posts" style="margin-top:4rem">${rest.map(postCard).join('')}</div>
+  <div class="chips" role="group" aria-label="Filter articles by topic" data-filter>${['All', ...new Set(rest.map((p) => p.cat))].map((c, k) => `<button type="button" class="chip${k ? '' : ' is-on'}" data-f="${c}" aria-pressed="${k ? 'false' : 'true'}">${c}</button>`).join('')}</div>
+  <div class="posts">${rest.map(postCard).join('')}</div>
 </div></section>`;
-  write('/blog/', layout({ path: '/blog/', title: 'Plastic Surgery & Skin Journal | Dr. Manish Patel, Goa', desc: 'Guides on hair transplant, rhinoplasty recovery, acne scar treatment and choosing a plastic surgeon in Goa, from the practice of Dr. Manish Patel.', body, schema: [crumbSchema([['Home', '/'], ['Journal', '/blog/']]), { '@context': 'https://schema.org', '@type': 'Blog', name: 'Dr. Manish Patel Journal', url: `${SITE.domain}/blog/`, blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: `${SITE.domain}/blog/${p.slug}/`, datePublished: p.date })) }] }));
+  write('/blog/', layout({ path: '/blog/', title: 'Plastic Surgery & Skin Journal | Dr. Manish Patel, Goa', desc: `${POSTS.length} plain-language guides on hair transplant, liposuction, Botox and fillers, laser treatments, pigmentation and surgery recovery, by Dr. Manish Patel, Goa.`, body, schema: [crumbSchema([['Home', '/'], ['Journal', '/blog/']]), { '@context': 'https://schema.org', '@type': 'Blog', name: 'Dr. Manish Patel Journal', url: `${SITE.domain}/blog/`, blogPost: POSTS.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: `${SITE.domain}/blog/${p.slug}/`, datePublished: p.date })) }] }));
   for (const p of POSTS) {
     const u = `/blog/${p.slug}/`;
     const svc = p.service ? SERVICES.find((s) => s.slug === p.service) : null;
-    const more = POSTS.filter((x) => x.slug !== p.slug).slice(0, 3);
+    const more = POSTS.filter((x) => x.slug !== p.slug).sort((a, c) => (c.cat === p.cat) - (a.cat === p.cat)).slice(0, 3);
     const b = `${pgHero({ eyebrow: `${p.cat} · ${fmtDate(p.date)} · ${p.read} read`, title: p.title, crumbs: [['Home', '/'], ['Journal', '/blog/'], [p.cat, u]], image: POST_IMG[p.slug], alt: p.title })}
 <article class="sec sec--tight"><div class="wrap prose">
   <p class="answer" data-reveal><strong>Short answer</strong>${p.answer}</p>
-  ${p.body.map(([t, x]) => (t === 'h2' ? `<h2 class="h2" data-reveal>${x}</h2>` : `<p data-reveal>${x}</p>`)).join('\n  ')}
+  ${p.body.map(([t, x, c]) => (t === 'h2' ? `<h2 class="h2" data-reveal>${x}</h2>`
+    : t === 'ul' ? `<ul class="prose__list" data-reveal>${x.map((li) => `<li>${li}</li>`).join('')}</ul>`
+    : t === 'fig' ? `<figure class="prose__fig" data-reveal>${img(x, c, { w: 1200, h: 800, sizes: '(max-width: 760px) 92vw, 780px' })}<figcaption>${c}</figcaption></figure>`
+    : `<p data-reveal>${x}</p>`)).join('\n  ')}
   <div class="byline" data-reveal><img src="${I('dr-portrait')}" alt="${SITE.doctor}" width="64" height="64" loading="lazy"><div><strong>${SITE.doctor}</strong><span>${SITE.creds}</span></div><span class="sig">Manish Patel</span></div>
   ${svc ? `<div class="note" data-reveal>Related treatment: <a href="/services/${svc.slug}/">${svc.name} in Goa</a></div>` : ''}
   <p class="note" data-reveal>This article is general education, not medical advice. Please consult a qualified doctor about your situation.</p>
