@@ -9,7 +9,7 @@
   --line:rgba(20,32,44,.13); --line-l:rgba(247,244,238,.18); --shadow:rgba(15,42,71,.5);
   --serif:"Jakarta",system-ui,sans-serif; --accent:"Instrument",Georgia,serif; --sans:"Jakarta",system-ui,sans-serif; --sig:"Signature",cursive;
   --ease:cubic-bezier(.22,.8,.14,1); --wrap:1360px; --gut:clamp(1.25rem,4vw,3.5rem);
-  --leaf-r:62% 0 62% 0; --r:18px;
+  --r:18px; --leaf-r:var(--r);
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -113,7 +113,7 @@ html.js.arriving .wipe span{transform:scaleY(1);transform-origin:top}
 /* ---------- leaf mask (brand device from the logo) ---------- */
 .leaf{position:relative;overflow:hidden;border-radius:var(--leaf-r);background:var(--sand);transform:translateZ(0)}
 .leaf img{width:100%;height:100%;object-fit:cover}
-.leaf--flip{border-radius:0 62% 0 62%}
+.leaf--flip{border-radius:var(--r)}
 .leaf--hero{aspect-ratio:4/5}
 .leaf--tall{aspect-ratio:4/5}
 .leaf--sm{aspect-ratio:1}
@@ -222,7 +222,7 @@ html.js.arriving .wipe span{transform:scaleY(1);transform-origin:top}
 .drag__track{display:flex;gap:1.6rem;width:max-content;padding-right:var(--gut)}
 .award{width:clamp(280px,34vw,520px);flex:none}
 .award img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r);pointer-events:none;filter:saturate(.92)}
-.award:nth-child(even) img{aspect-ratio:1;border-radius:var(--leaf-r)}
+
 .award figcaption{padding-top:1rem;display:flex;flex-direction:column;gap:.2rem}
 .award strong{font:600 1.35rem/1.2 var(--serif)}
 .award span{font-size:.85rem;opacity:.65}
@@ -348,7 +348,7 @@ html.js.arriving .wipe span{transform:scaleY(1);transform-origin:top}
 .ticks--2{grid-template-columns:1fr 1fr;gap:.7rem 2rem}
 .ticks--lg li{font:600 1.35rem/1.35 var(--serif)}
 .ticks li{padding-left:2rem;position:relative}
-.ticks li::before{content:"";position:absolute;left:0;top:.62em;width:12px;height:12px;border-radius:62% 0 62% 0;background:var(--leaf)}
+.ticks li::before{content:"";position:absolute;left:0;top:.62em;width:10px;height:10px;border-radius:50%;background:var(--leaf)}
 .ticks a:hover{color:var(--leaf)}
 @media (max-width:560px){.ticks--2{grid-template-columns:1fr}}
 .svc-d__txt{display:grid;gap:4rem}
@@ -443,7 +443,7 @@ html.js [data-hero-img]{clip-path:inset(0 0 100% 0)}
 .drawer.is-open{visibility:visible;clip-path:circle(150% at calc(100% - 2.6rem) 2.4rem);transition:clip-path .8s var(--ease)}
 .drawer__in{min-height:100%;display:flex;flex-direction:column;gap:1.6rem;padding:5.6rem var(--gut) calc(1.6rem + env(safe-area-inset-bottom));max-width:640px}
 .drawer__doc{display:flex;align-items:center;gap:.9rem;padding-bottom:1.2rem;border-bottom:1px solid var(--line-l)}
-.drawer__doc img{width:52px;height:52px;border-radius:var(--leaf-r);object-fit:cover;flex:none}
+.drawer__doc img{width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none}
 .drawer__doc strong{display:block;font-weight:600;font-size:1rem}
 .drawer__doc span{font-size:.78rem;color:var(--sand)}
 .drawer__nav{display:flex;flex-direction:column}
@@ -490,7 +490,7 @@ html.js [data-hero-img]{clip-path:inset(0 0 100% 0)}
 .book__x i{position:absolute;left:14px;right:14px;top:21px;height:1.5px;background:var(--ink)}
 .book__x i:first-child{transform:rotate(45deg)}.book__x i:last-child{transform:rotate(-45deg)}
 .book__head{display:flex;gap:1rem;align-items:center;margin-bottom:1.4rem;padding-right:3rem}
-.book__head img{width:60px;height:60px;border-radius:var(--leaf-r);object-fit:cover;flex:none}
+.book__head img{width:60px;height:60px;border-radius:50%;object-fit:cover;flex:none}
 .book__head .eyebrow{margin-bottom:.4rem}
 .book__head h2{font:600 1.35rem/1.2 var(--sans);letter-spacing:-.03em}
 .bform{display:grid;gap:1rem}
@@ -787,7 +787,7 @@ html.js [data-hero-img]{clip-path:inset(0 0 100% 0)}
 .dr{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--cream);overflow:hidden}
 html,body{overflow-x:clip}
 .dr__in{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(1.6rem,5vw,5rem);align-items:center}
-.dr__fig{border-radius:var(--leaf-r);overflow:hidden;aspect-ratio:744/801}
+.dr__fig{border-radius:var(--r);overflow:hidden;aspect-ratio:4/5;box-shadow:0 40px 80px -40px rgba(15,42,71,.45)}
 .js .dr__fig{clip-path:inset(100% 0 0 0)}
 .dr__fig img{width:100%;height:100%;object-fit:cover}
 .dr__cv{margin:clamp(1.4rem,3vw,2.2rem) 0 1.6rem}
@@ -1070,7 +1070,14 @@ html,body{overflow-x:clip}
 .post[hidden]{display:none}
 .prose__list{margin:0 0 1.6rem;display:grid;gap:.6rem}
 .prose__list li{position:relative;padding-left:1.6rem;font-size:1.08rem;line-height:1.6}
-.prose__list li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:var(--leaf-r);background:var(--leaf)}
+.prose__list li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--leaf)}
 .prose__fig{margin:2.4rem 0}
 .prose__fig img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:var(--r)}
 .prose__fig figcaption{margin-top:.7rem;font-size:.86rem;color:var(--muted)}
+
+/* v8: one shape language. Every photo is a rounded rectangle; galleries share one ratio and size. */
+.np::before{display:none}
+.award img{aspect-ratio:4/3;border-radius:var(--r)}
+.award figcaption{min-height:4.6rem}
+.dr__awards .drag__track{align-items:flex-start}
+.ftr__img{border-radius:var(--r)}
