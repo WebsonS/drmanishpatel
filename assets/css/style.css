@@ -1157,3 +1157,5 @@ html,body{overflow-x:clip}
 .hd--l{font-size:clamp(2.3rem,1.5rem + 3.8vw,4.9rem)}
 .display em,.hd em,.np__name em,.sh__name em,h1 em,h2 em{font-family:inherit;font-style:italic;font-weight:400;letter-spacing:0;padding-right:.02em}
 .np__name,.sh__name{letter-spacing:-.015em}
+/* Meet section: the name sits centred under the portrait */
+.dr__name{margin-top:1.2rem;text-align:center;font:400 clamp(1.9rem,1.4rem + 1.6vw,2.8rem)/1.1 var(--accent);letter-spacing:-.01em;color:var(--ink)}

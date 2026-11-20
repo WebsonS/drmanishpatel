@@ -66,9 +66,8 @@ export function homePage(h) {
 </section>
 
 <section class="dr" aria-labelledby="dr-h"><div class="wrap dr__in">
-  <div class="dr__fig" data-reveal-img>${img('dr-portrait', 'Dr. Manish Patel, plastic surgeon in Goa', { w: 744, h: 801 })}</div>
+  <div class="dr__side"><div class="dr__fig" data-reveal-img>${img('dr-portrait', 'Dr. Manish Patel, plastic surgeon in Goa', { w: 744, h: 801 })}</div><h2 id="dr-h" class="dr__name" data-reveal>Dr. Manish Patel</h2></div>
   <div class="dr__txt">
-    <h2 id="dr-h" class="hd hd--l" data-reveal>Meet <em>Dr. Manish Patel.</em></h2>
     <p class="dr__p" data-reveal>He consults, plans and operates himself, and sees you again through recovery. If a procedure is not right for you, he will say so.</p>
     <dl class="dr__cv" data-stagger>
       <div><dt>Degrees</dt><dd>MBBS · MS (General Surgery) · MCh (Plastic Surgery)</dd></div>
