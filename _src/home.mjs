@@ -1,20 +1,12 @@
 // Home page. Built to turn visitors into enquiries while staying inside the NMC Guidelines on Ethical Advertising
 // (6 Oct 2026): factual captions only (event, body, year), no testimonials, reviews, before-and-afters, patient media,
 // superlatives, success rates or offers. Risks and recovery live on each treatment page.
-import { REELS } from './reels.mjs';
+import { REELS, EDU } from './reels.mjs';
 
 const ORDER = ['hair-transplant-goa', 'liposuction-goa', 'breast-augmentation-goa', 'rhinoplasty-goa', 'gynecomastia-surgery-goa', 'facelift-goa', 'botox-fillers-goa', 'tummy-tuck-goa', 'laser-hair-removal-goa', 'acne-scar-treatment-goa', 'skin-rejuvenation-pigmentation-goa'];
 
-// Only reels that are purely educational (Dr. Patel speaking, no patient results) may appear.
-// Frame-checked: r-acne as posted; r-botox, r-hair-care, r-tattoo re-cut (before/after and treatment clips removed, see _private/video).
-const EDU_REELS = ['botox', 'acne', 'hair-care', 'tattoo'];
-// Plain factual descriptions (the Instagram captions carry claims we do not repeat here).
-const REEL_DESC = {
-  botox: 'Dr. Manish Patel explains what Botox does, which lines it treats and when people usually start.',
-  acne: 'Dr. Manish Patel on daily habits that can make acne-prone skin worse.',
-  'hair-care': 'Dr. Manish Patel walks through care after a hair transplant: washing, sleeping, medicines and when to return to routine.',
-  tattoo: 'Dr. Manish Patel explains how laser tattoo removal works and why it takes several sessions.',
-};
+// Only reels that are purely educational (Dr. Patel speaking, no patient results) may appear: see EDU in reels.mjs.
+const EDU_REELS = Object.keys(EDU);
 
 // Hero carousel: Dr. Patel's own photos first, then teaching and conferences. One short factual caption each.
 const SLIDES = [
@@ -111,6 +103,6 @@ ${reels.length ? `<section class="explain" aria-labelledby="explain-h">
 ${faqBlock([FAQS[1], FAQS[3], FAQS[4], FAQS[6]])}
 ${locationsBlock()}`;
 
-  const videos = reels.map((r) => ({ '@type': 'VideoObject', name: r.q, description: REEL_DESC[r.slug] || r.q, thumbnailUrl: SITE.domain + I('r-' + r.slug), contentUrl: SITE.domain + V('r-' + r.slug), duration: ({ botox: 'PT40S', acne: 'PT1M4S', 'hair-care': 'PT1M22S', tattoo: 'PT35S' })[r.slug], uploadDate: r.date, embedUrl: r.ig, creator: { '@id': `${SITE.domain}/#doctor` } }));
+  const videos = reels.map((r) => ({ '@type': 'VideoObject', name: r.q, description: EDU[r.slug].desc, thumbnailUrl: SITE.domain + I('r-' + r.slug), contentUrl: SITE.domain + V('r-' + r.slug), duration: EDU[r.slug].dur, uploadDate: r.date, embedUrl: r.ig, creator: { '@id': `${SITE.domain}/#doctor` } }));
   return { body, schema: videos.length ? { '@context': 'https://schema.org', '@graph': videos } : null };
 }

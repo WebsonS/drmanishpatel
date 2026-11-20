@@ -29,6 +29,8 @@ export const SITE = {
       postal: '403602',
       phone: '+919284562451',
       phoneShow: '+91 92845 62451',
+      near: 'near Bolshe Circle in Borda, Margao',
+      serves: ['Margao', 'Salcete', 'South Goa'],
     },
     {
       slug: 'panaji',
@@ -40,6 +42,8 @@ export const SITE = {
       postal: '403001',
       phone: '+919730856787',
       phoneShow: '+91 97308 56787',
+      near: 'on the first floor of the building in Patto next to the State Central Library',
+      serves: ['Panaji', 'Porvorim', 'North Goa'],
     },
   ],
 };
@@ -382,6 +386,7 @@ export const POSTS = [
       ['h2', 'How the two techniques work'],
       ['p', 'Both methods move hair that is genetically resistant to balding, usually from the back and sides of the scalp, to thinning areas. The difference lies in how the grafts are harvested.'],
       ['p', 'With FUE (Follicular Unit Extraction), follicles are removed individually using a very small punch. With FUT (Follicular Unit Transplantation), a narrow strip is removed from the donor area and dissected into grafts under magnification.'],
+      ['table', {"cap":"FUE and FUT at a glance","head":["FUE","FUT"],"rows":[["How grafts are taken","One follicle at a time, with a very small punch","A thin strip of scalp, divided into grafts under magnification"],["Donor-area scar","Small scattered dots","One fine line, covered by hair unless cut very short"],["Grafts in one session","Flexible, and can be repeated","Often more, which may suit extensive hair loss"],["Very short hairstyles","Usually easier to keep","The line may show with a close crop"]]}],
       ['h2', 'Scarring and hairstyle'],
       ['p', 'FUE leaves small dot-like marks that are barely visible even in short hair. FUT leaves a thin linear scar, which is covered by surrounding hair unless it is cut very short. If you like a closely cropped style, discuss this openly at your consultation.'],
       ['h2', 'Number of grafts'],

@@ -40,6 +40,7 @@ export const POSTS2 = [
     body: [
       ['h2', 'Start with what is actually there'],
       ['p', 'The tummy can look full for three different reasons: fat under the skin, loose or stretched skin, and a weakened or separated abdominal wall. Each needs a different approach, so the first step is an examination, not a choice of procedure.'],
+      ['table', {"cap":"Liposuction and tummy tuck compared","head":["Liposuction","Tummy tuck"],"rows":[["What it removes","Fat","Loose skin and fat"],["Tightens loose skin","No; relies on your skin shrinking back","Yes"],["Repairs separated muscles","No","Can, if they have separated"],["Scar","Small incisions","A longer scar, usually placed low enough for underwear to cover"],["Recovery","Usually shorter","Longer"],["Often suits","Good skin elasticity, localised fat, stable weight","Loose skin after pregnancy or major weight loss"]]}],
       ['h2', 'When liposuction may suit'],
       ['ul', ['Skin with good elasticity that can shrink back after fat is removed', 'Localised fat that has not responded to diet and exercise', 'A weight that has been stable for some time']],
       ['p', 'Liposuction uses small incisions and a thin cannula. It reshapes; it is not a weight-loss treatment.'],
@@ -64,6 +65,7 @@ export const POSTS2 = [
     body: [
       ['h2', 'Lines that come and go vs lines that stay'],
       ['p', 'Frown lines, forehead lines and crow\'s feet appear when you move your face. These dynamic lines are where botulinum toxin is typically used. Hollows under the eyes, flattened cheeks and deep folds that remain when your face is still are usually about lost volume, which is where fillers come in.'],
+      ['table', {"cap":"Botox and fillers compared","head":["Botulinum toxin (Botox)","Hyaluronic acid filler"],"rows":[["What it does","Relaxes the muscles that crease the skin","Adds volume under the skin"],["Typical use","Lines that appear when you move your face","Hollows, flattened areas and folds present at rest"],["When it shows","Over a few days","Usually straight after treatment, once swelling settles"],["How long it lasts","Around three to four months","Commonly six to eighteen months, by product and area"],["Main risks","Bruising, swelling, asymmetry","Bruising, swelling, asymmetry; rarely, a blocked blood vessel"]]}],
       ['fig', 't-facelift', 'Botulinum toxin is placed in small, measured doses into the muscles that cause frown lines.'],
       ['h2', 'How long they last'],
       ['ul', ['Botulinum toxin: effect appears over a few days and typically lasts around three to four months', 'Hyaluronic acid fillers: commonly six to eighteen months, depending on the product and the area', 'Both wear off gradually; neither is permanent']],

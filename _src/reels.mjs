@@ -81,3 +81,13 @@ export const REELS = [
   "text": "Dr Manish explains the post-care requirements after a Hair Transplant surgery"
  }
 ];
+
+// Reels cleared for the site (Dr. Patel speaking, no patient results). Frame-checked:
+// r-acne as posted; r-botox, r-hair-care, r-tattoo re-cut (before/after and treatment clips removed, see _private/video).
+// desc: plain factual description (the Instagram captions carry claims we do not repeat). svc: the treatment page it belongs on.
+export const EDU = {
+  botox: { desc: 'Dr. Manish Patel explains what Botox does, which lines it treats and when people usually start.', dur: 'PT40S', svc: 'botox-fillers-goa' },
+  acne: { desc: 'Dr. Manish Patel on daily habits that can make acne-prone skin worse.', dur: 'PT1M4S', svc: 'acne-scar-treatment-goa' },
+  'hair-care': { desc: 'Dr. Manish Patel walks through care after a hair transplant: washing, sleeping, medicines and when to return to routine.', dur: 'PT1M22S', svc: 'hair-transplant-goa' },
+  tattoo: { desc: 'Dr. Manish Patel explains how laser tattoo removal works and why it takes several sessions.', dur: 'PT35S', svc: null },
+};

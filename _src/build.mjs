@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE, SERVICES, FAQS, POSTS, PROCESS, RISKS } from './data.mjs';
 import { homePage } from './home.mjs';
+import { REELS, EDU } from './reels.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const M = SITE.locations[0];
@@ -97,6 +98,9 @@ const locSchema = (l) => ({
   medicalSpecialty: 'PlasticSurgery',
   parentOrganization: { '@id': orgId },
   address: { '@type': 'PostalAddress', streetAddress: l.street, addressLocality: l.locality, addressRegion: l.region, postalCode: l.postal, addressCountry: 'IN' },
+  hasMap: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${SITE.name} ${l.street} ${l.locality} ${l.postal}`)}`,
+  areaServed: (l.serves || []).map((name) => ({ '@type': 'Place', name: name.includes('Goa') ? name : `${name}, Goa` })),
+  // TODO (clinic): add geo (exact coordinates) and openingHoursSpecification once confirmed.
 });
 const orgSchema = {
   '@context': 'https://schema.org',
@@ -383,7 +387,7 @@ function write(p, html) {
   <div class="about__fig"><div class="leaf leaf--tall" data-reveal-img>${img('dr-laser', 'Dr. Manish Patel in his clinic', { w: 568, h: 568 })}</div></div>
   <div class="about__txt">
     <p class="big" data-reveal>A surgeon’s job is as much about what he advises against as what he performs.</p>
-    <p data-reveal>Dr. Manish Patel holds MBBS, MS (General Surgery) and MCh (Plastic Surgery) qualifications and has over 30 years of experience. His practice covers cosmetic and reconstructive surgery, hair restoration and skin treatments.</p>
+    <p data-reveal>Dr. Manish Patel is a plastic surgeon in Goa, India, with clinics in Margao and Panaji. He holds MBBS, MS (General Surgery) and MCh (Plastic Surgery) degrees, is registered with the Goa Medical Council and has practised for more than 30 years. In 2011 he headed the Department of Cosmetic Surgery at the Wockhardt Institute of Aesthetics, and he has taught as faculty at IAAPS AESURG 2022 and as a Botox and fillers trainer at the 7th FADS World Congress 2023. His practice covers cosmetic and reconstructive surgery of the face, breast and body, hair transplant, and laser and skin treatments. He consults in English, Hindi and Konkani.</p>
     <p class="about__reg" data-reveal>${REG}</p>
     <p data-reveal>His approach is simple: understand what you want, be honest about what is and is not achievable, and explain the risks before anything is decided. He plans and performs your treatment personally, and remains reachable throughout recovery.</p>
     <div class="about__sign" data-reveal><span class="sig">Manish Patel</span></div>
@@ -418,28 +422,36 @@ ${faqBlock(FAQS.slice(3, 6))}`;
 }
 
 // ================================================================== SERVICE DETAIL
+// How each treatment reads inside a question ("Who is a hair transplant for?"). Headings phrased as the questions people search.
+const SVC_PHRASE = { 'hair-transplant-goa': 'a hair transplant', 'rhinoplasty-goa': 'rhinoplasty', 'liposuction-goa': 'liposuction', 'breast-augmentation-goa': 'breast augmentation', 'gynecomastia-surgery-goa': 'gynecomastia surgery', 'facelift-goa': 'a facelift', 'tummy-tuck-goa': 'a tummy tuck', 'botox-fillers-goa': 'Botox and fillers', 'laser-hair-removal-goa': 'laser hair removal', 'acne-scar-treatment-goa': 'acne scar treatment', 'skin-rejuvenation-pigmentation-goa': 'skin rejuvenation' };
 for (const s of SERVICES) {
   const p = `/services/${s.slug}/`;
   const i = SERVICES.indexOf(s);
+  const ph = SVC_PHRASE[s.slug] || s.name;
+  // A cleared educational reel for this treatment, if there is one.
+  const reelSlug = Object.keys(EDU).find((k) => EDU[k].svc === s.slug);
+  const reel = reelSlug && REELS.find((r) => r.slug === reelSlug);
+  const vid = reel ? { src: `/assets/video/r-${reel.slug}.mp4`, poster: I(`r-${reel.slug}`) } : null;
   const others = [1, 2, 3].map((k) => SERVICES[(i + k) % SERVICES.length]);
   const body = `${pgHero({ eyebrow: `${s.cat} · ${s.tag}`, title: `${s.name}<br><em>in Goa</em>`, lead: s.answer, crumbs: [['Home', '/'], ['Treatments', '/services/'], [s.name, p]], image: SVC_IMG[s.slug], alt: `${s.name} at Patel Cosmetic Surgery Center` })}
 <section class="sec"><div class="wrap svc-d">
   <div class="svc-d__aside">
     <div class="svc-d__card" data-reveal><span class="sig">Dr. Patel</span><p>“Every ${s.name.toLowerCase()} plan starts with an honest conversation about what will suit you, and what may not.”</p><small class="svc-d__reg">${SITE.doctor} · ${REG}</small><a class="link" href="/contact/" data-book>Ask the clinic ${ico.arrow}</a></div>
+    ${vid ? `<figure class="svc-vid" data-reveal><video controls playsinline preload="none" poster="${vid.poster}" width="540" height="960"><source src="${vid.src}" type="video/mp4"></video><figcaption><small>Dr. Patel explains</small>${esc(reel.q)}</figcaption></figure>` : ''}
   </div>
   <div class="svc-d__txt">
-    <div data-reveal><p class="eyebrow">Who it is for</p><ul class="ticks ticks--lg">${s.who.map((w) => `<li>${w}</li>`).join('')}</ul></div>
-    <div><h2 class="eyebrow" data-reveal>What to expect</h2><ol class="steps">${s.details.map(([k, v], j) => `<li data-reveal><span>0${j + 1}</span><div><h3>${k}</h3><p>${v}</p></div></li>`).join('')}</ol></div>
+    <div data-reveal><h2 class="qh">Who is ${ph} for?</h2><ul class="ticks ticks--lg">${s.who.map((w) => `<li>${w}</li>`).join('')}</ul></div>
+    <div><h2 class="qh" data-reveal>What happens during ${ph}?</h2><ol class="steps">${s.details.map(([k, v], j) => `<li data-reveal><span>0${j + 1}</span><div><h3>${k}</h3><p>${v}</p></div></li>`).join('')}</ol></div>
     <div class="riskbox" data-reveal>
-      <h2 class="riskbox__h">Recovery, risks and suitability</h2>
-      <div class="riskbox__g"><div><h3>Recovery</h3><p>${RISKS[s.slug].recovery}</p></div><div><h3>Possible risks</h3><ul>${RISKS[s.slug].risks.map((x) => `<li>${x}</li>`).join('')}</ul></div><div><h3>May not suit you if</h3><ul>${RISKS[s.slug].notFor.map((x) => `<li>${x}</li>`).join('')}</ul></div></div>
+      <h2 class="riskbox__h">Recovery, risks and who it may not suit</h2>
+      <div class="riskbox__g"><div><h3>How long is recovery?</h3><p>${RISKS[s.slug].recovery}</p></div><div><h3>What are the possible risks?</h3><ul>${RISKS[s.slug].risks.map((x) => `<li>${x}</li>`).join('')}</ul></div><div><h3>Who may it not suit?</h3><ul>${RISKS[s.slug].notFor.map((x) => `<li>${x}</li>`).join('')}</ul></div></div>
     </div>
     <div class="note" data-reveal><strong>Consultation first.</strong> Suitability, risks, alternatives and cost are discussed with Dr. Patel in person. No result can be guaranteed and outcomes differ between individuals.</div>
   </div>
 </div></section>
 ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
 <section class="sec sec--sand"><div class="wrap"><div class="sec__head"><p class="eyebrow" data-reveal>Also at the clinic</p><h2 class="display display--l" data-split>Related <em>treatments</em>.</h2></div><div class="tgrid" data-stagger>${others.map((o) => tcard(o, SERVICES.indexOf(o))).join('')}</div></div></section>`;
-  write(p, layout({ path: p, title: ((t) => t.length <= 62 ? t : `${s.name} in Goa: Margao & Panaji`)(`${s.name} in Goa: Margao & Panaji | Dr. Manish Patel`), desc: SVC_META[s.slug], body, service: s.name, ogImg: SVC_IMG[s.slug], schema: [crumbSchema([['Home', '/'], ['Treatments', '/services/'], [s.name, p]]), faqSchema(s.faqs), { '@context': 'https://schema.org', '@type': 'MedicalWebPage', name: `${s.name} in Goa`, url: SITE.domain + p, image: SITE.domain + I(SVC_IMG[s.slug]), about: { '@type': 'MedicalProcedure', name: s.name, procedureType: s.cat === 'Surgical' ? 'SurgicalProcedure' : 'NoninvasiveProcedure', description: s.answer, followup: RISKS[s.slug].recovery }, lastReviewed: new Date().toISOString().slice(0, 10), reviewedBy: { '@id': docId }, specialty: 'PlasticSurgery' }] }));
+  write(p, layout({ path: p, title: ((t) => t.length <= 62 ? t : `${s.name} in Goa: Margao & Panaji`)(`${s.name} in Goa: Margao & Panaji | Dr. Manish Patel`), desc: SVC_META[s.slug], body, service: s.name, ogImg: SVC_IMG[s.slug], schema: [crumbSchema([['Home', '/'], ['Treatments', '/services/'], [s.name, p]]), faqSchema(s.faqs), { '@context': 'https://schema.org', '@type': 'MedicalWebPage', name: `${s.name} in Goa`, url: SITE.domain + p, image: SITE.domain + I(SVC_IMG[s.slug]), about: { '@type': 'MedicalProcedure', name: s.name, procedureType: s.cat === 'Surgical' ? 'SurgicalProcedure' : 'NoninvasiveProcedure', description: s.answer, followup: RISKS[s.slug].recovery }, lastReviewed: new Date().toISOString().slice(0, 10), reviewedBy: { '@id': docId }, specialty: 'PlasticSurgery' }, ...(vid ? [{ '@context': 'https://schema.org', '@type': 'VideoObject', name: reel.q, description: EDU[reel.slug].desc, thumbnailUrl: SITE.domain + vid.poster, contentUrl: SITE.domain + vid.src, duration: EDU[reel.slug].dur, uploadDate: reel.date, embedUrl: reel.ig, creator: { '@id': docId } }] : [])] }));
 }
 
 // ================================================================== BLOG
@@ -461,6 +473,7 @@ ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
   <p class="answer" data-reveal><strong>Short answer</strong>${p.answer}</p>
   ${p.body.map(([t, x, c]) => (t === 'h2' ? `<h2 class="h2" data-reveal>${x}</h2>`
     : t === 'ul' ? `<ul class="prose__list" data-reveal>${x.map((li) => `<li>${li}</li>`).join('')}</ul>`
+    : t === 'table' ? `<div class="prose__tbl" data-reveal><table><caption>${x.cap}</caption><thead><tr><th scope="col"></th>${x.head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${x.rows.map(([r, ...c]) => `<tr><th scope="row">${r}</th>${c.map((v, n) => `<td data-l="${x.head[n]}">${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`
     : t === 'fig' ? `<figure class="prose__fig" data-reveal>${img(x, c, { w: 1200, h: 800, sizes: '(max-width: 760px) 92vw, 780px' })}<figcaption>${c}</figcaption></figure>`
     : `<p data-reveal>${x}</p>`)).join('\n  ')}
   <div class="byline" data-reveal><img src="${I('dr-portrait')}" alt="${SITE.doctor}" width="64" height="64" loading="lazy"><div><strong>${SITE.doctor}</strong><span>${SITE.creds}</span></div><span class="sig">Manish Patel</span></div>
@@ -492,13 +505,29 @@ ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
 for (const [k, l] of SITE.locations.entries()) {
   const u = `/locations/${l.slug}/`;
   const q = encodeURIComponent(`${SITE.name} ${l.street} ${l.locality} ${l.postal}`);
+  const other = SITE.locations[k ? 0 : 1];
+  const locFaqs = [
+    [`Do I need an appointment at the ${l.city} clinic?`, `Yes. Please call ${l.phoneShow} or send a WhatsApp message before you come, so a consultation time can be set aside for you.`],
+    [`Where exactly is the ${l.city} clinic?`, `${l.street}, ${l.locality}, ${l.region} ${l.postal}. It is ${l.near}. The Google Maps button on this page opens directions.`],
+    [`Does Dr. Patel see patients himself at the ${l.city} clinic?`, `Yes. Dr. Manish Patel consults at both the Margao and Panaji clinics and plans each treatment himself after examining you.`],
+    ['What happens at the first consultation?', 'Dr. Patel listens to what you would like to change, examines you, explains the options that may suit you and those that may not, and goes through recovery and risks. The clinic gives a written estimate after the consultation.'],
+  ];
   const body = `${pgHero({ eyebrow: `Clinic · ${l.city}, Goa`, title: `Plastic surgeon<br>in <em>${l.city}</em>`, lead: `${SITE.doctor} consults at the ${l.city} clinic. Please call ahead for an appointment.`, crumbs: [['Home', '/'], [l.city, u]], image: k ? 'goa-2' : 'goa-1', alt: `Goa near ${l.city}` })}
 <section class="sec"><div class="wrap contact">
   <div data-reveal><article class="loc loc--big"><div class="loc__b"><span class="loc__ic">${ico.pin}</span><h2 class="h2">${l.name}</h2><address>${l.street}<br>${l.locality}, ${l.region} ${l.postal}</address><div class="loc__a"><a class="btn" href="tel:${l.phone}"><span>Call ${l.phoneShow}</span></a><a class="btn btn--line-d" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener"><span>Google Maps</span></a></div></div></article>
   <h3 class="h3">Treatments available</h3><ul class="ticks ticks--2">${SERVICES.map((s) => `<li><a href="/services/${s.slug}/">${s.name}</a></li>`).join('')}</ul></div>
   <div class="map" data-reveal><iframe title="Map of ${l.name}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${q}&output=embed"></iframe></div>
-</div></section>`;
-  write(u, layout({ path: u, title: `Plastic Surgeon in ${l.city}, Goa | Dr. Manish Patel`, desc: `Visit Dr. Manish Patel’s ${l.city} clinic in Goa for cosmetic and plastic surgery, hair transplant, laser and skin treatments. Address, phone and directions.`, body, schema: [{ '@context': 'https://schema.org', ...locSchema(l) }, crumbSchema([['Home', '/'], [l.city, u]])] }));
+</div></section>
+<section class="sec sec--sand"><div class="wrap prose locinfo">
+  <h2 class="qh" data-reveal>Seeing Dr. Patel at the ${l.city} clinic</h2>
+  <p data-reveal>The ${l.name} is one of two clinics where ${SITE.doctor}, a plastic surgeon (MBBS, MS, MCh) registered with the ${SITE.reg.council}, sees patients. It is ${l.near}, and is the nearer of the two for people in ${l.serves.slice(0, -1).join(', ')} and ${l.serves.at(-1)}. Consultations are by appointment: call ${l.phoneShow} or send a WhatsApp message to fix a time.</p>
+  <p data-reveal>At the first visit Dr. Patel asks what you would like to change, examines the area, and explains which treatments may suit you and which may not. He goes through recovery, possible risks and alternatives, and the clinic gives a written estimate after the consultation. Consultations are in English, Hindi or Konkani.</p>
+  <h2 class="qh" data-reveal>What to bring</h2>
+  <ul class="prose__list" data-reveal><li>A list of the medicines and supplements you take</li><li>Reports, scans or prescriptions related to your concern</li><li>Details of any past surgery, laser or skin treatment in the area</li></ul>
+  <p data-reveal>Dr. Patel also consults at the <a href="/locations/${other.slug}/">${other.name}</a> in ${other.city}, ${other.near}.</p>
+</div></section>
+${faqBlock(locFaqs, `${l.city} clinic: <em>your questions</em>.`)}`;
+  write(u, layout({ path: u, title: `Plastic Surgeon in ${l.city}, Goa | Dr. Manish Patel`, desc: `Visit Dr. Manish Patel’s ${l.city} clinic in Goa for cosmetic and plastic surgery, hair transplant, laser and skin treatments. Address, phone and directions.`, body, schema: [{ '@context': 'https://schema.org', ...locSchema(l) }, crumbSchema([['Home', '/'], [l.city, u]]), faqSchema(locFaqs)] }));
 }
 
 // ================================================================== PRIVACY

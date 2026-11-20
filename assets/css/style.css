@@ -1159,3 +1159,34 @@ html,body{overflow-x:clip}
 .np__name,.sh__name{letter-spacing:-.015em}
 /* Meet section: the name sits centred under the portrait */
 .dr__name{margin-top:1.2rem;text-align:center;font:400 clamp(1.9rem,1.4rem + 1.6vw,2.8rem)/1.1 var(--accent);letter-spacing:-.01em;color:var(--ink)}
+
+/* ---------- v11: question headings, comparison tables, treatment video, clinic info ---------- */
+.qh{font:400 clamp(1.9rem,1.5rem + 1.4vw,2.6rem)/1.1 var(--accent);letter-spacing:-.005em;color:var(--forest);margin:0 0 1.1rem;text-wrap:balance}
+.svc-d__txt .qh{margin-top:.4rem}
+.prose__tbl{margin:.4rem 0 2rem;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px;background:#fff}
+.prose__tbl table{width:100%;min-width:520px;border-collapse:collapse;font-size:.97rem;line-height:1.45}
+.prose__tbl caption{caption-side:top;text-align:left;padding:1rem 1.1rem .2rem;font:600 .72rem/1.2 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--leaf)}
+.prose__tbl th,.prose__tbl td{padding:.8rem 1.1rem;text-align:left;vertical-align:top;border-top:1px solid var(--line)}
+.prose__tbl thead th{border-top:0;font:600 .95rem var(--sans);color:var(--forest)}
+.prose__tbl tbody th{font-weight:600;color:var(--ink);width:28%}
+.prose__tbl tbody tr:nth-child(odd){background:var(--mist)}
+.svc-vid{margin-top:1.2rem;border-radius:var(--r);overflow:hidden;background:var(--forest-3);color:var(--cream)}
+.svc-vid video{display:block;width:100%;height:auto;aspect-ratio:9/16;max-height:70vh;object-fit:cover;background:#000}
+.svc-vid figcaption{padding:1rem 1.3rem 1.2rem;font:400 1.15rem/1.3 var(--accent)}
+.svc-vid small{display:block;margin-bottom:.35rem;font:600 .66rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--leaf-2)}
+@media (max-width:900px){.svc-vid{max-width:340px}}
+.locinfo{max-width:780px}
+.locinfo .qh{margin-top:1.6rem}
+.locinfo .qh:first-child{margin-top:0}
+@media (max-width:900px){.svc-d__aside{order:2}.svc-vid{margin-inline:auto}.svc-vid video{max-height:60vh}}
+@media (max-width:600px){
+  .prose__tbl table{min-width:0}
+  .prose__tbl thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .prose__tbl tr,.prose__tbl th,.prose__tbl td{display:block;width:auto}
+  .prose__tbl tbody tr{padding:.85rem 1.1rem;border-top:1px solid var(--line)}
+  .prose__tbl tbody th,.prose__tbl td{border:0;padding:0;width:auto}
+  .prose__tbl tbody th{margin-bottom:.45rem;color:var(--forest)}
+  .prose__tbl td{display:grid;grid-template-columns:7.5rem 1fr;gap:.6rem;padding:.2rem 0}
+  .prose__tbl td::before{content:attr(data-l);font:600 .68rem/1.5 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--leaf)}
+}
+@media (min-width:901px){.svc-vid{max-width:250px}}
