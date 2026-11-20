@@ -37,7 +37,7 @@ export function homePage(h) {
   const body = `
 <section class="hx" id="top" aria-label="Dr. Manish Patel" data-hx style="--hxbg:url(${I(SLIDES[0].img + '-sm')})">
   <div class="hx__media">
-    <div class="hx__slides">${SLIDES.map((s, k) => `<figure class="hx__s${k ? '' : ' is-on'}" style="--o:${s.o};--bg:url(${I(s.img + '-sm')})">${img(s.img, `${SITE.doctor}: ${s.c}`, { w: s.w, h: s.h, lazy: k > 0, sizes: '(max-width: 900px) 100vw, 560px' })}</figure>`).join('')}</div>
+    <div class="hx__slides">${SLIDES.map((s, k) => `<figure class="hx__s${k ? '' : ' is-on'}" style="--o:${s.o};--bg:url(${I(s.img + '-sm')})">${img(s.img, s.c.startsWith(SITE.doctor) ? s.c : `${SITE.doctor}: ${s.c}`, { w: s.w, h: s.h, lazy: k > 0, sizes: '(max-width: 900px) 100vw, 560px' })}</figure>`).join('')}</div>
     <div class="hx__foot" aria-live="polite">
       ${SLIDES.map((s, k) => `<p class="hx__c${k ? '' : ' is-on'}">${s.c}</p>`).join('')}
       <div class="hx__bars" role="group" aria-label="Photos">${SLIDES.map((s, k) => `<button type="button" aria-label="Photo ${k + 1}"><b></b></button>`).join('')}</div>

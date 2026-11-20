@@ -78,12 +78,56 @@ const webpW = (n) => {
   } catch {}
   return 1600;
 };
+// Real pixel height of a WebP, read alongside the width, so width/height attributes match the file and nothing shifts on load.
+const webpH = (n) => {
+  try {
+    const b = fs.readFileSync(path.join(ROOT, 'assets/img/p', `${n}.webp`)).subarray(0, 30);
+    const t = b.toString('ascii', 12, 16);
+    if (t === 'VP8 ') return b.readUInt16LE(28) & 0x3fff;
+    if (t === 'VP8L') return 1 + (((b[24] & 0x0f) << 10) | (b[23] << 2) | ((b[22] & 0xc0) >> 6));
+    if (t === 'VP8X') return 1 + b.readUIntLE(27, 3);
+  } catch {}
+  return 0;
+};
+// The treatment and article images are licensed stock photos, not clinic photos: alt text says what is in the picture,
+// never that it was taken at the clinic or shows a patient.
+const IMG_ALT = {
+  't-abdomen': 'Woman holding the soft fat at her waist',
+  't-bikini': 'Woman resting her hands over the bikini area',
+  't-botox': 'Gloved hand giving a fine injection beside the eye',
+  't-breast-2': 'Woman in a bra with her arms folded',
+  't-breast': 'Woman in a bra with surgical planning lines drawn on the chest',
+  't-co2': 'Laser treatment on a man’s face, with protective eyewear',
+  't-device-1': 'Surgical team operating under theatre lights',
+  't-device-2': 'Operating theatre with a surgical team at work',
+  't-eye': 'Close-up of a man’s eye and the skin beneath it',
+  't-face-3': 'Doctor’s gloved hand examining a woman’s ear',
+  't-facelift': 'Fine injection into forehead lines',
+  't-facial-2': 'Woman checking her face in a hand mirror',
+  't-facial': 'Skin device treatment on a woman’s cheek',
+  't-gyno': 'Doctor examining a man’s chest',
+  't-hair': 'Man’s receding hairline',
+  't-laser-hair': 'Laser hair removal on the legs',
+  't-laser-legs': 'Laser handpiece passing over a woman’s legs',
+  't-lipo': 'Tape measure around a woman’s chest',
+  't-nose': 'Doctor’s gloved hands examining a woman’s nose',
+  't-profile-2': 'Side profile of a woman with lift lines drawn along the jaw',
+  't-profile': 'Woman’s face in profile with lines marking the jaw and cheek',
+  't-skin': 'Side view of a woman’s abdomen and waist',
+  't-tattoo': 'Laser tattoo removal on a forearm',
+  't-tummy': 'Surgical marking lines drawn on a man’s abdomen',
+};
 const srcset = (n) => {
   const big = webpW(n), sm = webpW(n + '-sm');
   return big > sm ? `${I(n + '-sm')} ${sm}w, ${I(n)} ${big}w` : `${I(n + '-sm')} ${sm}w`;
 };
-const img = (n, alt, { cls = '', w = 1200, h = 1500, lazy = true, sizes = '(max-width: 760px) 92vw, 50vw' } = {}) =>
-  `<img${cls ? ` class="${cls}"` : ''} src="${I(n)}"${hasSm(n) ? ` srcset="${srcset(n)}" sizes="${sizes}"` : ''} alt="${esc(alt)}" width="${w}" height="${h}"${lazy ? ' loading="lazy" decoding="async"' : ' fetchpriority="high"'}>`;
+// alt '' stays empty (decorative duplicates); otherwise stock images get their factual description.
+const img = (n, alt, { cls = '', w = 1200, h = 1500, lazy = true, sizes = '(max-width: 760px) 92vw, 50vw' } = {}) => {
+  const rh = webpH(n), rw = rh ? webpW(n) : 0;
+  if (rw && rh) { w = rw; h = rh; }
+  const a = alt === '' ? '' : (IMG_ALT[n] || alt);
+  return `<img${cls ? ` class="${cls}"` : ''} src="${I(n)}"${hasSm(n) ? ` srcset="${srcset(n)}" sizes="${sizes}"` : ''} alt="${esc(a)}" width="${w}" height="${h}"${lazy ? ' loading="lazy" decoding="async"' : ' fetchpriority="high"'}>`;
+};
 
 // ---------- shared schema ----------
 const orgId = `${SITE.domain}/#clinic`;
@@ -228,7 +272,7 @@ ${schema.map(jsonld).join('\n')}
 </header>
 <aside class="drawer" id="drawer" aria-hidden="true">
   <div class="drawer__in">
-    <div class="drawer__doc"><img src="${I('dr-portrait-sm')}" alt="" width="56" height="56" loading="lazy"><div><strong>${SITE.doctor}</strong><span>MCh Plastic Surgery · 30+ yrs</span></div></div>
+    <div class="drawer__doc"><img src="${I('dr-portrait-sm')}" alt="" width="56" height="56" loading="lazy" decoding="async"><div><strong>${SITE.doctor}</strong><span>MCh Plastic Surgery · 30+ yrs</span></div></div>
     <nav class="drawer__nav" aria-label="Mobile">${[['/', 'Home'], ...NAV].map(([h, t]) => `<a href="${h}"${p.startsWith(h) && (h !== '/' || p === '/') ? ' aria-current="page"' : ''}><span>${t}</span>${ico.arrow}</a>`).join('')}</nav>
     <div class="drawer__svc"><p>Popular</p><div>${SERVICES.slice(0, 6).map((s) => `<a href="/services/${s.slug}/">${s.name.replace(/ \(.*\)/, '')}</a>`).join('')}</div></div>
     <div class="drawer__foot">
@@ -252,7 +296,7 @@ ${footer()}
   <div class="book__scrim" data-close></div>
   <div class="book__panel">
     <button class="book__x" type="button" aria-label="Close" data-close><i></i><i></i></button>
-    <div class="book__head"><img src="${I('dr-portrait-sm')}" alt="" width="64" height="64" loading="lazy"><div><h2 id="book-h">Request an appointment</h2><p class="book__sub">${SITE.doctor} · ${REG}</p></div></div>
+    <div class="book__head"><img src="${I('dr-portrait-sm')}" alt="" width="64" height="64" loading="lazy" decoding="async"><div><h2 id="book-h">Request an appointment</h2><p class="book__sub">${SITE.doctor} · ${REG}</p></div></div>
     ${bookForm('m')}
   </div>
 </div>
@@ -291,7 +335,7 @@ function footer() {
     </div>
   </div>
   <div class="ftr__grid wrap">
-    <div><img class="ftr__logo" src="/assets/img/logo.webp" alt="${esc(SITE.name)}" width="180" height="58" loading="lazy">
+    <div><img class="ftr__logo" src="/assets/img/logo.webp" alt="${esc(SITE.name)}" width="180" height="58" loading="lazy" decoding="async">
       <p class="ftr__about">Cosmetic and plastic surgery in Goa, led by ${SITE.doctor}, ${SITE.creds}.</p>
       <div class="social"><a href="${SITE.social.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${ico.ig}</a><a href="${SITE.social.facebook}" target="_blank" rel="noopener" aria-label="Facebook">${ico.fb}</a><a href="${SITE.social.youtube}" target="_blank" rel="noopener" aria-label="YouTube">${ico.yt}</a></div></div>
     <div><p class="ftr__h">Treatments</p><ul>${SERVICES.slice(0, 7).map((s) => `<li><a href="/services/${s.slug}/">${s.name}</a></li>`).join('')}<li><a href="/services/">All treatments</a></li></ul></div>
@@ -476,7 +520,7 @@ ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
     : t === 'table' ? `<div class="prose__tbl" data-reveal><table><caption>${x.cap}</caption><thead><tr><th scope="col"></th>${x.head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${x.rows.map(([r, ...c]) => `<tr><th scope="row">${r}</th>${c.map((v, n) => `<td data-l="${x.head[n]}">${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`
     : t === 'fig' ? `<figure class="prose__fig" data-reveal>${img(x, c, { w: 1200, h: 800, sizes: '(max-width: 760px) 92vw, 780px' })}<figcaption>${c}</figcaption></figure>`
     : `<p data-reveal>${x}</p>`)).join('\n  ')}
-  <div class="byline" data-reveal><img src="${I('dr-portrait')}" alt="${SITE.doctor}" width="64" height="64" loading="lazy"><div><strong>${SITE.doctor}</strong><span>${SITE.creds}</span></div><span class="sig">Manish Patel</span></div>
+  <div class="byline" data-reveal><img src="${I('dr-portrait')}" alt="${SITE.doctor}" width="64" height="64" loading="lazy" decoding="async"><div><strong>${SITE.doctor}</strong><span>${SITE.creds}</span></div><span class="sig">Manish Patel</span></div>
   ${svc ? `<div class="note" data-reveal>Related treatment: <a href="/services/${svc.slug}/">${svc.name} in Goa</a></div>` : ''}
   <p class="note" data-reveal>This article is general education, not medical advice. Please consult a qualified doctor about your situation.</p>
 </div></article>
