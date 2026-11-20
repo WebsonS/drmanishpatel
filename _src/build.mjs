@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { SITE, SERVICES, FAQS, POSTS, PROCESS, RISKS } from './data.mjs';
 import { homePage } from './home.mjs';
@@ -233,7 +234,7 @@ function layout({ path: p, title, desc, body, schema = [], ogType = 'website', o
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
-<link rel="canonical" href="${url}">
+${noindex ? '' : `<link rel="canonical" href="${url}">`}
 ${noindex ? '<meta name="robots" content="noindex">' : '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">'}
 <meta name="theme-color" content="#285E80">
 <meta property="og:type" content="${ogType}">
@@ -407,7 +408,24 @@ const teamBlock = () => `<section class="sec team-s" id="team" aria-labelledby="
   <div class="team-s__row" data-stagger>${TEAM.filter((t) => t[4] === 'staff').map(memCard).join('')}</div>
 </div></section>`;
 
+// lastmod that only moves when a page's own content changes: hash the <main> element (scripts stripped, so shared
+// header, footer and schema boilerplate do not count) and keep the previous date while the hash is unchanged.
+// Feeds the sitemap <lastmod>, BlogPosting dateModified and MedicalWebPage lastReviewed.
+const TODAY = new Date().toISOString().slice(0, 10);
+const MOD_FILE = path.join(ROOT, '_src/lastmod.json');
+const MOD_OLD = fs.existsSync(MOD_FILE) ? JSON.parse(fs.readFileSync(MOD_FILE, 'utf8')) : {};
+const MOD = {};
+function modDate(p, html) {
+  const main = (html.match(/<main[\s\S]*<\/main>/) || [html])[0].replace(/<script[\s\S]*?<\/script>/g, '');
+  const h = createHash('sha1').update(main).digest('hex').slice(0, 12);
+  const post = POSTS.find((x) => `/blog/${x.slug}/` === p);
+  let date = MOD_OLD[p] && MOD_OLD[p].h === h ? MOD_OLD[p].d : TODAY;
+  if (post && post.date > date) date = post.date;
+  MOD[p] = { h, d: date };
+  return date;
+}
 function write(p, html) {
+  html = html.replaceAll('__MODIFIED__', modDate(p, html));
   const f = path.join(ROOT, p === '/' ? 'index.html' : path.join(p, 'index.html'));
   fs.mkdirSync(path.dirname(f), { recursive: true });
   fs.writeFileSync(f, html);
@@ -495,7 +513,7 @@ for (const s of SERVICES) {
 </div></section>
 ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
 <section class="sec sec--sand"><div class="wrap"><div class="sec__head"><p class="eyebrow" data-reveal>Also at the clinic</p><h2 class="display display--l" data-split>Related <em>treatments</em>.</h2></div><div class="tgrid" data-stagger>${others.map((o) => tcard(o, SERVICES.indexOf(o))).join('')}</div></div></section>`;
-  write(p, layout({ path: p, title: ((t) => t.length <= 62 ? t : `${s.name} in Goa: Margao & Panaji`)(`${s.name} in Goa: Margao & Panaji | Dr. Manish Patel`), desc: SVC_META[s.slug], body, service: s.name, ogImg: SVC_IMG[s.slug], schema: [crumbSchema([['Home', '/'], ['Treatments', '/services/'], [s.name, p]]), faqSchema(s.faqs), { '@context': 'https://schema.org', '@type': 'MedicalWebPage', name: `${s.name} in Goa`, url: SITE.domain + p, image: SITE.domain + I(SVC_IMG[s.slug]), about: { '@type': 'MedicalProcedure', name: s.name, procedureType: s.cat === 'Surgical' ? 'SurgicalProcedure' : 'NoninvasiveProcedure', description: s.answer, followup: RISKS[s.slug].recovery }, lastReviewed: new Date().toISOString().slice(0, 10), reviewedBy: { '@id': docId }, specialty: 'PlasticSurgery' }, ...(vid ? [{ '@context': 'https://schema.org', '@type': 'VideoObject', name: reel.q, description: EDU[reel.slug].desc, thumbnailUrl: SITE.domain + vid.poster, contentUrl: SITE.domain + vid.src, duration: EDU[reel.slug].dur, uploadDate: reel.date, embedUrl: reel.ig, creator: { '@id': docId } }] : [])] }));
+  write(p, layout({ path: p, title: ((t) => t.length <= 62 ? t : `${s.name} in Goa: Margao & Panaji`)(`${s.name} in Goa: Margao & Panaji | Dr. Manish Patel`), desc: SVC_META[s.slug], body, service: s.name, ogImg: SVC_IMG[s.slug], schema: [crumbSchema([['Home', '/'], ['Treatments', '/services/'], [s.name, p]]), faqSchema(s.faqs), { '@context': 'https://schema.org', '@type': 'MedicalWebPage', name: `${s.name} in Goa`, url: SITE.domain + p, image: SITE.domain + I(SVC_IMG[s.slug]), about: { '@type': 'MedicalProcedure', name: s.name, procedureType: s.cat === 'Surgical' ? 'SurgicalProcedure' : 'NoninvasiveProcedure', description: s.answer, followup: RISKS[s.slug].recovery }, lastReviewed: '__MODIFIED__', reviewedBy: { '@id': docId }, specialty: 'PlasticSurgery' }, ...(vid ? [{ '@context': 'https://schema.org', '@type': 'VideoObject', name: reel.q, description: EDU[reel.slug].desc, thumbnailUrl: SITE.domain + vid.poster, contentUrl: SITE.domain + vid.src, duration: EDU[reel.slug].dur, uploadDate: reel.date, embedUrl: reel.ig, creator: { '@id': docId } }] : [])] }));
 }
 
 // ================================================================== BLOG
@@ -525,7 +543,7 @@ ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
   <p class="note" data-reveal>This article is general education, not medical advice. Please consult a qualified doctor about your situation.</p>
 </div></article>
 <section class="sec sec--sand"><div class="wrap"><div class="sec__head"><h2 class="display display--l" data-split>Keep <em>reading</em>.</h2></div><div class="posts">${more.map(postCard).join('')}</div></div></section>`;
-    write(u, layout({ path: u, title: p.title.length > 46 ? p.title : `${p.title} | Dr. Manish Patel`, desc: p.desc.length < 120 ? `${p.desc} By Dr. Manish Patel, plastic surgeon in Goa.` : p.desc, body: b, ogType: 'article', ogImg: POST_IMG[p.slug], schema: [crumbSchema([['Home', '/'], ['Journal', '/blog/'], [p.title, u]]), { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: p.desc, datePublished: p.date, dateModified: p.date, mainEntityOfPage: SITE.domain + u, author: { '@id': docId }, publisher: { '@id': orgId }, image: SITE.domain + I(POST_IMG[p.slug]), inLanguage: 'en-IN', articleSection: p.cat }] }));
+    write(u, layout({ path: u, title: p.title.length > 46 ? p.title : `${p.title} | Dr. Manish Patel`, desc: p.desc.length < 120 ? `${p.desc} By Dr. Manish Patel, plastic surgeon in Goa.` : p.desc, body: b, ogType: 'article', ogImg: POST_IMG[p.slug], schema: [crumbSchema([['Home', '/'], ['Journal', '/blog/'], [p.title, u]]), { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: p.desc, datePublished: p.date, dateModified: '__MODIFIED__', mainEntityOfPage: SITE.domain + u, author: { '@id': docId }, publisher: { '@id': orgId }, image: SITE.domain + I(POST_IMG[p.slug]), inLanguage: 'en-IN', articleSection: p.cat }] }));
   }
 }
 
@@ -597,8 +615,9 @@ ${faqBlock(locFaqs, `${l.city} clinic: <em>your questions</em>.`)}`;
 fs.writeFileSync(path.join(ROOT, '404.html'), layout({ path: '/404', title: 'Page not found | Dr. Manish Patel', desc: 'Page not found.', noindex: true, body: `${pgHero({ eyebrow: '404', title: 'This page has<br><em>moved on</em>.', lead: 'Try the treatments list, or contact the clinic.' })}<section class="sec sec--tight"><div class="wrap">${cta()}</div></section>` }));
 
 // ================================================================== sitemap / robots / llms
-const today = new Date().toISOString().slice(0, 10);
-fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE.domain}${u}</loc><lastmod>${(POSTS.find((p) => `/blog/${p.slug}/` === u) || {}).date || today}</lastmod></url>`).join('\n')}\n</urlset>\n`);
+const today = TODAY;
+fs.writeFileSync(MOD_FILE, JSON.stringify(Object.fromEntries(Object.keys(MOD).sort().map((k) => [k, MOD[k]])), null, 1) + '\n');
+fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE.domain}${u}</loc><lastmod>${(MOD[u] || {}).d || today}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\n\n# AI / answer-engine crawlers are welcome\nUser-agent: GPTBot\nAllow: /\nUser-agent: OAI-SearchBot\nAllow: /\nUser-agent: ChatGPT-User\nAllow: /\nUser-agent: PerplexityBot\nAllow: /\nUser-agent: ClaudeBot\nAllow: /\nUser-agent: Google-Extended\nAllow: /\nUser-agent: Applebot-Extended\nAllow: /\n\nSitemap: ${SITE.domain}/sitemap.xml\n`);
 fs.writeFileSync(path.join(ROOT, 'llms.txt'), `# ${SITE.name}\n\n> Cosmetic and plastic surgery clinic in Goa, India, led by ${SITE.doctor} (${SITE.creds}), with ${SITE.experience} of experience. Clinics in Margao and Panaji.\n\n## Key facts\n- Surgeon: ${SITE.doctor}, plastic surgeon. Qualifications: MBBS, MS (General Surgery), MCh (Plastic Surgery).\n- Registration: ${REG}.\n- Positions and teaching: Head, Department of Cosmetic Surgery, Wockhardt Institute of Aesthetics (2011); faculty at IAAPS AESURG 2022; faculty and trainer for Botox and fillers at the 7th FADS World Congress 2023, South Goa.\n- Content policy: following the National Medical Commission's Guidelines on Ethical Advertising and Public Communication (6 October 2026), the site publishes no patient testimonials, reviews or before-and-after images. Each treatment page lists recovery, possible risks and who the procedure may not suit.\n${SITE.locations.map((l) => `- ${l.name}: ${l.street}, ${l.locality}, ${l.region} ${l.postal}. Phone ${l.phoneShow}.`).join('\n')}\n- Treatments: ${SERVICES.map((s) => s.name).join(', ')}.\n\n## Pages\n- [Home](${SITE.domain}/)\n- [About Dr. Patel](${SITE.domain}/about/)\n- [Treatments](${SITE.domain}/services/)\n${SERVICES.map((s) => `- [${s.name}](${SITE.domain}/services/${s.slug}/): ${s.tag}`).join('\n')}\n- [Journal](${SITE.domain}/blog/)\n${POSTS.map((p) => `  - [${p.title}](${SITE.domain}/blog/${p.slug}/): ${p.desc}`).join('\n')}\n- [FAQ](${SITE.domain}/faq/)\n- [Contact](${SITE.domain}/contact/)\n- [Privacy](${SITE.domain}/privacy/)\n\n## Quick answers\n${FAQS.map(([q, ans]) => `### ${q}\n${ans}`).join('\n\n')}\n\n## Social\n- Last updated: ${today}\n- Instagram (Dr. Manish Patel): https://www.instagram.com/drmanishp/\n- Instagram (clinic): ${SITE.social.instagram}\n- Facebook: ${SITE.social.facebook}\n- YouTube: ${SITE.social.youtube}\n`);
 fs.writeFileSync(path.join(ROOT, 'assets/img/favicon.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#285E80"/><path d="M14 50C14 28 28 14 50 14c0 22-14 36-36 36z" fill="#6FBF7A"/><path d="M14 50L36 28" stroke="#F7F4EE" stroke-width="3"/></svg>`);
