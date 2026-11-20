@@ -1141,3 +1141,19 @@ html,body{overflow-x:clip}
 .talk__calls small{color:var(--muted)}
 .talk__form{background:#fff;box-shadow:0 40px 80px -46px rgba(29,74,102,.45)}
 .ticks li::before{background:var(--forest)}
+
+/* ======================================================================
+   v10 typography: one display face per headline.
+   Headlines are Instrument Serif throughout; the emphasised words are the same
+   family in italic, so a line never mixes two typefaces, weights or x-heights.
+   Jakarta stays for body copy, labels and small card titles (serif display +
+   sans text). Serif display needs open tracking, not the tight sans tracking.
+   ====================================================================== */
+.display,.hd,.np__name,.sh__name{font-family:var(--accent);font-weight:400;letter-spacing:-.01em;line-height:1.04}
+.display{font-size:clamp(2.2rem,1.5rem + 3vw,3.9rem)}
+.display--l{font-size:clamp(2.4rem,1.5rem + 3.9vw,5rem)}
+.display--xl{font-size:clamp(2.8rem,1.6rem + 5.2vw,6.4rem);line-height:1}
+.hd{font-size:clamp(2.1rem,1.4rem + 3vw,3.9rem);max-width:22ch}
+.hd--l{font-size:clamp(2.3rem,1.5rem + 3.8vw,4.9rem)}
+.display em,.hd em,.np__name em,.sh__name em,h1 em,h2 em{font-family:inherit;font-style:italic;font-weight:400;letter-spacing:0;padding-right:.02em}
+.np__name,.sh__name{letter-spacing:-.015em}
