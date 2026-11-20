@@ -111,6 +111,6 @@ ${reels.length ? `<section class="explain" aria-labelledby="explain-h">
 ${faqBlock([FAQS[1], FAQS[3], FAQS[4], FAQS[6]])}
 ${locationsBlock()}`;
 
-  const videos = reels.map((r) => ({ '@type': 'VideoObject', name: r.q, description: REEL_DESC[r.slug] || r.q, thumbnailUrl: SITE.domain + I('r-' + r.slug), contentUrl: SITE.domain + V('r-' + r.slug), uploadDate: r.date, embedUrl: r.ig, creator: { '@id': `${SITE.domain}/#doctor` } }));
+  const videos = reels.map((r) => ({ '@type': 'VideoObject', name: r.q, description: REEL_DESC[r.slug] || r.q, thumbnailUrl: SITE.domain + I('r-' + r.slug), contentUrl: SITE.domain + V('r-' + r.slug), duration: ({ botox: 'PT40S', acne: 'PT1M4S', 'hair-care': 'PT1M22S', tattoo: 'PT35S' })[r.slug], uploadDate: r.date, embedUrl: r.ig, creator: { '@id': `${SITE.domain}/#doctor` } }));
   return { body, schema: videos.length ? { '@context': 'https://schema.org', '@graph': videos } : null };
 }

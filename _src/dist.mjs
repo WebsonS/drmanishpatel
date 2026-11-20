@@ -15,7 +15,7 @@ const BASE = (process.env.BASE || '').replace(/\/$/, '');
 const NOINDEX = process.env.NOINDEX === '1';
 
 // Never shipped: sources, originals, tooling.
-const SKIP = new Set(['_src', '_private', 'dist', 'node_modules', '.git', '.github', '.claude', 'assets/img/site', 'package.json', 'package-lock.json', 'brand-spec.md', 'README.md']);
+const SKIP = new Set(['_src', '_private', 'seo', 'dist', 'node_modules', '.git', '.github', '.claude', 'assets/img/site', 'package.json', 'package-lock.json', 'brand-spec.md', 'README.md']);
 
 fs.rmSync(OUT, { recursive: true, force: true });
 

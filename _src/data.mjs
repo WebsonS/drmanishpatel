@@ -1,4 +1,5 @@
 import { POSTS2 } from './posts2.mjs';
+import { POSTS3 } from './posts3.mjs';
 // Single source of truth for all site content. Edit here, then run: node _src/build.mjs
 export const SITE = {
   name: 'Patel Cosmetic & Plastic Surgery Center',
@@ -467,5 +468,5 @@ export const PROCESS = [
 ];
 
 // Journal part 2 lives in posts2.mjs; newest first everywhere.
-POSTS.push(...POSTS2);
+POSTS.push(...POSTS2, ...POSTS3);
 POSTS.sort((a, b) => b.date.localeCompare(a.date));

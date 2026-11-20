@@ -1063,7 +1063,7 @@ html,body{overflow-x:clip}
 .social a:hover{background:#fff;transform:translateY(-2px) scale(1.06)}
 .hdl>svg{width:24px;height:24px}
 .talk__calls a>svg:first-child{width:24px;height:24px}
-.ftr__grid h2{font:600 .7rem var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--leaf-2);margin-bottom:1.2rem}
+.ftr__grid h2,.ftr__h{font:600 .7rem var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--leaf-2);margin-bottom:1.2rem}
 .ftr__logo{height:64px}
 
 /* journal: topic chips, lists and figures inside articles */
