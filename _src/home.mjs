@@ -5,8 +5,16 @@ import { REELS } from './reels.mjs';
 
 const ORDER = ['hair-transplant-goa', 'liposuction-goa', 'breast-augmentation-goa', 'rhinoplasty-goa', 'gynecomastia-surgery-goa', 'facelift-goa', 'botox-fillers-goa', 'tummy-tuck-goa', 'laser-hair-removal-goa', 'acne-scar-treatment-goa', 'skin-rejuvenation-pigmentation-goa'];
 
-// Only reels that are purely educational (Dr. Patel speaking, no patient results) may appear. Frame-checked: r-acne.
-const EDU_REELS = ['acne'];
+// Only reels that are purely educational (Dr. Patel speaking, no patient results) may appear.
+// Frame-checked: r-acne as posted; r-botox, r-hair-care, r-tattoo re-cut (before/after and treatment clips removed, see _private/video).
+const EDU_REELS = ['botox', 'acne', 'hair-care', 'tattoo'];
+// Plain factual descriptions (the Instagram captions carry claims we do not repeat here).
+const REEL_DESC = {
+  botox: 'Dr. Manish Patel explains what Botox does, which lines it treats and when people usually start.',
+  acne: 'Dr. Manish Patel on daily habits that can make acne-prone skin worse.',
+  'hair-care': 'Dr. Manish Patel walks through care after a hair transplant: washing, sleeping, medicines and when to return to routine.',
+  tattoo: 'Dr. Manish Patel explains how laser tattoo removal works and why it takes several sessions.',
+};
 
 // Hero carousel: Dr. Patel's own photos first, then teaching and conferences. One short factual caption each.
 const SLIDES = [
@@ -24,8 +32,7 @@ export function homePage(h) {
   const V = (id) => `/assets/video/${id}.mp4`;
   const play = (o) => esc(JSON.stringify(o));
   const reels = EDU_REELS.map((s) => REELS.find((r) => r.slug === s)).filter(Boolean);
-  const reelData = (r) => play({ src: V('r-' + r.slug), poster: I('r-' + r.slug), who: 'Dr. Manish Patel · @drmanishp', title: r.q, text: r.text, ig: r.ig });
-
+  
   const facts = ['MBBS · MS (General Surgery) · MCh (Plastic Surgery)', 'More than 30 years in practice', `Registered with the ${SITE.reg.council}`, 'Clinics in Margao &amp; Panaji', 'English · Hindi · Konkani', 'Written estimate after consultation'];
 
   const handles = [
@@ -36,7 +43,7 @@ export function homePage(h) {
   ];
 
   const body = `
-<section class="hx" id="top" aria-label="Dr. Manish Patel" data-hx>
+<section class="hx" id="top" aria-label="Dr. Manish Patel" data-hx style="--hxbg:url(${I(SLIDES[0].img + '-sm')})">
   <div class="hx__media">
     <div class="hx__slides">${SLIDES.map((s, k) => `<figure class="hx__s${k ? '' : ' is-on'}" style="--o:${s.o};--bg:url(${I(s.img + '-sm')})">${img(s.img, `${SITE.doctor}: ${s.c}`, { w: s.w, h: s.h, lazy: k > 0, sizes: '(max-width: 900px) 100vw, 560px' })}</figure>`).join('')}</div>
     <div class="hx__foot" aria-live="polite">
@@ -81,18 +88,17 @@ export function homePage(h) {
   <ol class="walk__list" data-stagger>${PROCESS.map(([n, t, d]) => `<li><span class="walk__n">${n}</span><h3>${t}</h3><p>${d}</p></li>`).join('')}</ol>
 </div></section>
 
-${reels.length ? `<section class="explain" aria-labelledby="explain-h"><div class="wrap explain__in">
-  <div class="explain__vid">${reels.map((r) => `<button type="button" class="reel reel--big" data-play="${reelData(r)}" aria-label="Play video: ${esc(r.q)}">
-    ${img('r-' + r.slug, '', { w: 540, h: 960, sizes: '(max-width: 760px) 70vw, 320px' })}
-    <span class="reel__p">${ico.play}</span>
-    <span class="reel__q">${esc(r.q)}</span>
-  </button>`).join('')}</div>
-  <div class="explain__txt">
+${reels.length ? `<section class="explain" aria-labelledby="explain-h">
+  <div class="wrap explain__hd">
     <h2 id="explain-h" class="hd hd--l" data-reveal>Questions patients ask. <em>Answered by the surgeon.</em></h2>
-    <p class="explain__p" data-reveal>Dr. Patel records short explainers on skin, hair and surgery. Follow along, or bring your own question to the clinic.</p>
-    <div class="ask__handles" data-reveal>${handles.map(([hd, sub, u, ic]) => `<a class="hdl" href="${u}" target="_blank" rel="noopener">${ic}<span><b>${hd}</b><small>${sub}</small></span></a>`).join('')}</div>
+    <p class="explain__p" data-reveal>Short explainers recorded by Dr. Patel. Swipe through and tap to play.</p>
   </div>
-</div></section>` : ''}
+  <div class="vids" data-vids>
+    <div class="vids__track">${reels.map((r, k) => `<article class="vid${k ? '' : ' is-c'}"><button type="button" class="vid__btn" data-src="${V('r-' + r.slug)}" aria-label="Play video: ${esc(r.q)}">${img('r-' + r.slug, '', { w: 540, h: 960, sizes: '(max-width: 760px) 70vw, 290px' })}<span class="vid__p">${ico.play}</span><span class="vid__q"><small>${k + 1} / ${reels.length}</small>${esc(r.q)}</span></button></article>`).join('')}</div>
+    <div class="vids__nav"><button type="button" class="vids__arr" data-dir="-1" aria-label="Previous video">${ico.arrow}</button><div class="vids__dots">${reels.map((r, k) => `<button type="button"${k ? '' : ' class="is-on"'} aria-label="Video ${k + 1}"></button>`).join('')}</div><button type="button" class="vids__arr" data-dir="1" aria-label="Next video">${ico.arrow}</button></div>
+  </div>
+  <div class="wrap"><div class="ask__handles explain__handles" data-reveal>${handles.map(([hd, sub, u, ic]) => `<a class="hdl" href="${u}" target="_blank" rel="noopener">${ic}<span><b>${hd}</b><small>${sub}</small></span></a>`).join('')}</div></div>
+</section>` : ''}
 
 <section class="talk" id="enquire" aria-labelledby="talk-h"><div class="wrap talk__in">
   <div class="talk__txt">
@@ -106,6 +112,6 @@ ${reels.length ? `<section class="explain" aria-labelledby="explain-h"><div clas
 ${faqBlock([FAQS[1], FAQS[3], FAQS[4], FAQS[6]])}
 ${locationsBlock()}`;
 
-  const videos = reels.map((r) => ({ '@type': 'VideoObject', name: r.q, description: r.text.slice(0, 300), thumbnailUrl: SITE.domain + I('r-' + r.slug), contentUrl: SITE.domain + V('r-' + r.slug), uploadDate: r.date, embedUrl: r.ig, creator: { '@id': `${SITE.domain}/#doctor` } }));
+  const videos = reels.map((r) => ({ '@type': 'VideoObject', name: r.q, description: REEL_DESC[r.slug] || r.q, thumbnailUrl: SITE.domain + I('r-' + r.slug), contentUrl: SITE.domain + V('r-' + r.slug), uploadDate: r.date, embedUrl: r.ig, creator: { '@id': `${SITE.domain}/#doctor` } }));
   return { body, schema: videos.length ? { '@context': 'https://schema.org', '@graph': videos } : null };
 }

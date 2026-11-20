@@ -131,15 +131,21 @@
   document.querySelectorAll('[data-hx]').forEach(function (hx) {
     var sl = hx.querySelectorAll('.hx__s'), cap = hx.querySelectorAll('.hx__c'), bars = hx.querySelectorAll('.hx__bars b');
     var i = 0, T = 6000, t0 = performance.now(), raf = 0, vis = true;
+    // first visit: the loader covers the hero, so hold slide 1 (and its slow zoom) until the page is revealed
+    var held = document.documentElement.classList.contains('first');
+    function release() { if (!held) return; held = false; var im = sl[i].querySelector('img'); im.style.animation = 'none'; void im.offsetWidth; im.style.animation = ''; t0 = performance.now(); }
+    if (held) { document.addEventListener('intro:go', release, { once: true }); setTimeout(release, 6000); }
     function go(n) {
       sl[i].classList.remove('is-on'); cap[i].classList.remove('is-on');
       i = (n + sl.length) % sl.length;
       sl[i].classList.add('is-on'); cap[i].classList.add('is-on');
+      hx.style.setProperty('--hxbg', sl[i].style.getPropertyValue('--bg'));
       var im = sl[i].querySelector('img'); if (im.loading === 'lazy') im.loading = 'eager';
       bars.forEach(function (b, k) { b.style.transform = 'scaleX(' + (k < i ? 1 : 0) + ')'; });
       t0 = performance.now();
     }
     function tick(now) {
+      if (held) t0 = now;
       var p = Math.min((now - t0) / T, 1);
       if (bars[i]) bars[i].style.transform = 'scaleX(' + p + ')';
       if (p >= 1) go(i + 1);
@@ -154,8 +160,44 @@
     if (reduce) { T = 9000; }
     new IntersectionObserver(function (es) {
       vis = es[0].isIntersecting; cancelAnimationFrame(raf);
-      if (vis) { t0 = performance.now() - (parseFloat((bars[i].style.transform.match(/[d.]+/) || [0])[0]) * T); raf = requestAnimationFrame(tick); }
+      if (vis) { t0 = performance.now() - (parseFloat((bars[i].style.transform.match(/[\d.]+/) || [0])[0]) * T); raf = requestAnimationFrame(tick); }
     }).observe(hx);
+  });
+
+  /* ---------- explainer videos: swipe, centre, play in place ---------- */
+  document.querySelectorAll('[data-vids]').forEach(function (box) {
+    var track = box.querySelector('.vids__track'), cards = [].slice.call(track.querySelectorAll('.vid')), dots = box.querySelectorAll('.vids__dots button'), c = 0, ticking = false;
+    function stopAll(except) { box.querySelectorAll('video').forEach(function (v) { if (v !== except) v.pause(); }); }
+    function centre(k, smooth) {
+      var card = cards[k]; if (!card) return;
+      track.scrollTo({ left: card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2, behavior: smooth === false ? 'auto' : 'smooth' });
+    }
+    function mark() {
+      ticking = false;
+      var mid = track.scrollLeft + track.clientWidth / 2, best = 0, bd = Infinity;
+      cards.forEach(function (card, k) { var d = Math.abs(card.offsetLeft + card.offsetWidth / 2 - mid); if (d < bd) { bd = d; best = k; } });
+      if (best === c) return;
+      c = best; stopAll();
+      cards.forEach(function (card, k) { card.classList.toggle('is-c', k === c); });
+      dots.forEach(function (d, k) { d.classList.toggle('is-on', k === c); });
+    }
+    track.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(mark); } }, { passive: true });
+    dots.forEach(function (d, k) { d.addEventListener('click', function () { centre(k); }); });
+    box.querySelectorAll('.vids__arr').forEach(function (a) { a.addEventListener('click', function () { centre(Math.max(0, Math.min(cards.length - 1, c + +a.dataset.dir))); }); });
+    cards.forEach(function (card, k) {
+      var btn = card.querySelector('.vid__btn');
+      btn.addEventListener('click', function () {
+        var narrow = getComputedStyle(box.querySelector('.vids__nav')).display !== 'none';
+        if (narrow && k !== c) { centre(k); return; } // first tap brings a side card to the centre
+        var v = document.createElement('video');
+        v.src = btn.dataset.src; v.controls = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.preload = 'auto';
+        var im = btn.querySelector('img'); v.poster = im.currentSrc || im.src;
+        card.appendChild(v); btn.hidden = true; stopAll(v);
+        v.addEventListener('play', function () { stopAll(v); });
+        var p = v.play(); if (p && p.catch) p.catch(function () {});
+      });
+    });
+    new IntersectionObserver(function (es) { if (!es[0].isIntersecting) stopAll(); }).observe(box);
   });
 
   /* ---------- patient information sheets: tabs (arrow keys move between them) ---------- */
@@ -352,7 +394,7 @@
     ss('seen', '1'); ss('pt', null);
 
     // ---- intro: loader (first visit) or wipe (internal navigation) ----
-    var intro = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+    var intro = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' }, onStart: function () { document.dispatchEvent(new Event('intro:go')); } });
     var heroH = document.querySelector('.hero [data-split], .pghero [data-split]');
     if (heroH) intro.from(heroH.querySelectorAll('.ln>span'), { yPercent: 115, rotate: 3, duration: 1.4, stagger: .1 }, 0);
     var heroImg = document.querySelector('[data-hero-img]');
