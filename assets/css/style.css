@@ -4,7 +4,7 @@
   /* Trust palette. Navy carries authority and trust (logo blue, deepened); cobalt marks links and focus;
      green is reserved for health, renewal and the one action that matters: booking. Warm ivory flatters skin
      tones in clinical photos and feels less sterile than white. All text pairs pass WCAG AA (see brand-spec.md). */
-  --forest:#285E80; --forest-2:#34729A; --forest-3:#1D4A66; --leaf:#2E7D3E; --leaf-2:#6FBF7A; --cobalt:#1C5FBF;
+  --forest:#285E80; --forest-2:#34729A; --forest-3:#1D4A66; --leaf:#2E7D3E; --leaf-2:#E3BC82; --champ-l:#F4E6CE; --mist:#EAF1F5; --cobalt:#1C5FBF;
   --cream:#F7F4EE; --sand:#ECE4D8; --ink:#14202C; --ink-2:#2E3B48; --muted:#55606C; --white:#FFFFFF; --gold:#E8A93B;
   --line:rgba(20,32,44,.13); --line-l:rgba(247,244,238,.18); --shadow:rgba(40,94,128,.5);
   --serif:"Jakarta",system-ui,sans-serif; --accent:"Instrument",Georgia,serif; --sans:"Jakarta",system-ui,sans-serif; --sig:"Signature",cursive;
@@ -119,12 +119,12 @@ html.js.arriving .wipe span{transform:scaleY(1);transform-origin:top}
 .leaf--sm{aspect-ratio:1}
 
 /* ---------- sections ---------- */
-.sec{padding:clamp(5rem,10vw,10rem) 0;position:relative}
+.sec{padding:clamp(3.5rem,7vw,6.5rem) 0;position:relative}
 .sec--tight{padding:clamp(2.5rem,5vw,5rem) 0}
 .sec--sand{background:var(--sand)}
 .sec--forest{background:var(--forest);color:var(--cream)}
 .sec--forest p{color:rgba(247,244,238,.75)}
-.sec__head{margin-bottom:clamp(2.5rem,5vw,4.5rem)}
+.sec__head{margin-bottom:clamp(1.8rem,4vw,3.2rem)}
 .sec__head--row{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap}
 
 /* ---------- home hero ---------- */
@@ -391,8 +391,8 @@ html.js.arriving .wipe span{transform:scaleY(1);transform-origin:top}
 .byline .sig{margin-left:auto;font-size:3rem}
 
 /* ---------- footer ---------- */
-.ftr{background:var(--forest);color:var(--cream);padding-top:clamp(5rem,9vw,9rem);overflow:hidden}
-.ftr__cta{display:grid;grid-template-columns:auto 1fr;gap:clamp(2rem,5vw,5rem);align-items:center;padding-bottom:clamp(4rem,7vw,7rem);border-bottom:1px solid var(--line-l)}
+.ftr{background:var(--forest);color:var(--cream);padding-top:clamp(3.5rem,7vw,6.5rem);overflow:hidden}
+.ftr__cta{display:grid;grid-template-columns:auto 1fr;gap:clamp(2rem,5vw,5rem);align-items:center;padding-bottom:clamp(2.8rem,5vw,5rem);border-bottom:1px solid var(--line-l)}
 .ftr__img{width:clamp(160px,22vw,300px);aspect-ratio:4/5;border-radius:var(--leaf-r);overflow:hidden}
 .ftr__img img{width:100%;height:100%;object-fit:cover}
 .ftr__btns{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.5rem}
@@ -669,7 +669,7 @@ html.js [data-hero-img]{clip-path:inset(0 0 100% 0)}
 }
 
 /* ---- results: compare + case list ---- */
-.cases{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--sand)}
+.cases{padding:clamp(3rem,6vw,5.5rem) 0;background:var(--sand)}
 .cases .hd{margin-bottom:clamp(1.6rem,3vw,2.6rem)}
 .cases__grid{display:grid;grid-template-columns:1.35fr .65fr;gap:clamp(1rem,3vw,2.5rem);align-items:start}
 .cmp{margin:0}
@@ -723,7 +723,7 @@ html.js [data-hero-img]{clip-path:inset(0 0 100% 0)}
 }
 
 /* ---- patient voices ---- */
-.voices{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--cream)}
+.voices{padding:clamp(3rem,6vw,5.5rem) 0;background:var(--cream)}
 .voices .hd{margin-bottom:clamp(1.6rem,3vw,2.8rem)}
 .voices__row{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.7rem,1.5vw,1.2rem)}
 .vcard{position:relative;display:block;aspect-ratio:9/16;border-radius:22px;overflow:hidden;border:0;padding:0;cursor:pointer;background:var(--forest);color:#fff;text-align:left;isolation:isolate}
@@ -753,7 +753,7 @@ html.js [data-hero-img]{clip-path:inset(0 0 100% 0)}
 }
 
 /* ---- Dr. Patel answers (reels) ---- */
-.ask{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--forest);color:var(--cream);overflow:hidden}
+.ask{padding:clamp(3rem,6vw,5.5rem) 0;background:var(--forest);color:var(--cream);overflow:hidden}
 .ask .hd{color:var(--cream)}
 .ask .hd em{color:var(--leaf-2)}
 .ask__handles{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:clamp(1.6rem,3vw,2.6rem) 0 clamp(1.6rem,3vw,2.4rem)}
@@ -784,7 +784,7 @@ html.js [data-hero-img]{clip-path:inset(0 0 100% 0)}
 }
 
 /* ---- Dr. Patel ---- */
-.dr{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--cream);overflow:hidden}
+.dr{padding:clamp(3rem,6vw,5.5rem) 0;background:var(--cream);overflow:hidden}
 html,body{overflow-x:clip}
 .dr__in{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(1.6rem,5vw,5rem);align-items:center}
 .dr__fig{border-radius:var(--r);overflow:hidden;aspect-ratio:4/5;box-shadow:0 40px 80px -40px rgba(40,94,128,.45)}
@@ -902,7 +902,7 @@ html,body{overflow-x:clip}
 }
 
 /* risk sheets: a patient information leaflet, one per procedure */
-.decide{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--white)}
+.decide{padding:clamp(3rem,6vw,5.5rem) 0;background:var(--white)}
 .decide__tabs{display:flex;gap:.45rem;overflow-x:auto;margin:clamp(1.6rem,3vw,2.4rem) calc(var(--gut) * -1) 1.2rem;padding:0 var(--gut) .3rem;scrollbar-width:none}
 .decide__tabs::-webkit-scrollbar{display:none}
 .decide__tabs button{flex:none;min-height:44px;padding:0 1.1rem;border-radius:100px;border:1px solid var(--line);font:600 .85rem var(--sans);color:var(--ink-2);background:var(--cream);transition:background .25s,color .25s,border-color .25s}
@@ -933,7 +933,7 @@ html,body{overflow-x:clip}
 .explain__p{margin-top:1.2rem;max-width:34rem;color:rgba(247,244,238,.78)}
 
 /* consultation walk-through */
-.walk{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--sand)}
+.walk{padding:clamp(3rem,6vw,5.5rem) 0;background:var(--sand)}
 .walk__list{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:clamp(1.8rem,4vw,3rem);counter-reset:w}
 .walk__list li{position:relative;padding:1.6rem 1.4rem 1.8rem;background:var(--cream);border-radius:var(--r);border-top:3px solid var(--forest)}
 .walk__list li:last-child{border-top-color:var(--leaf)}
@@ -976,8 +976,8 @@ html,body{overflow-x:clip}
 /* ======================================================================
    v6: full-screen photo carousel hero + enquiry section
    ====================================================================== */
-.hx{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);min-height:100svh;background:var(--forest-3);color:#fff;overflow:hidden;isolation:isolate}
-.hx__media{grid-column:2;grid-row:1;position:relative;min-height:100svh;overflow:hidden}
+.hx{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);min-height:min(100svh,820px);background:var(--forest-3);color:#fff;overflow:hidden;isolation:isolate}
+.hx__media{grid-column:2;grid-row:1;position:relative;min-height:min(100svh,820px);overflow:hidden}
 .hx__slides,.hx__s{position:absolute;inset:0}
 .hx__s{margin:0;opacity:0;transition:opacity 1.2s var(--ease)}
 .hx__s.is-on{opacity:1}
@@ -993,7 +993,7 @@ html,body{overflow-x:clip}
 .hx__bars button{width:30px;height:24px;padding:11px 0;display:block}
 .hx__bars button::before{content:"";display:block;height:2px;border-radius:2px;background:rgba(255,255,255,.3)}
 .hx__bars b{display:block;height:2px;margin-top:-2px;border-radius:2px;background:#fff;transform:scaleX(0);transform-origin:left}
-.hx__txt{grid-column:1;grid-row:1;align-self:center;position:relative;z-index:2;padding:8rem clamp(1.5rem,3vw,3rem) 5rem max(var(--gut),calc((100vw - var(--wrap))/2 + var(--gut)))}
+.hx__txt{grid-column:1;grid-row:1;align-self:center;position:relative;z-index:2;padding:7rem clamp(1.5rem,3vw,3rem) 3rem max(var(--gut),calc((100vw - var(--wrap))/2 + var(--gut)))}
 .hx__h{display:flex;flex-direction:column;gap:1rem}
 .hx__name{font:400 clamp(3.2rem,1.6rem + 5vw,6.6rem)/.95 var(--accent);letter-spacing:-.02em}
 .hx__role{font:500 clamp(1.05rem,.9rem + .6vw,1.4rem)/1.3 var(--sans);letter-spacing:-.01em;color:rgba(255,255,255,.86)}
@@ -1023,7 +1023,7 @@ html,body{overflow-x:clip}
   .hx__foot{position:relative;left:auto;right:auto;bottom:auto;z-index:2;flex-direction:column;gap:.7rem;margin:1.3rem auto 0;text-align:center}
   .hx__c{font-size:.78rem;min-height:1.1em}
   .hx__bars button{width:22px}
-  .hx__txt{padding:1.6rem var(--gut) calc(6.5rem + env(safe-area-inset-bottom));text-align:center}
+  .hx__txt{padding:1.4rem var(--gut) 2.4rem;text-align:center}
   .hx__h{align-items:center;gap:.7rem}
   .hx__name{font-size:clamp(2.9rem,13vw,4.2rem)}
   .hx__cred{margin:1.2rem auto 0;padding-top:1rem;font-size:.66rem}
@@ -1036,7 +1036,7 @@ html,body{overflow-x:clip}
 .dr__links{align-items:center}
 
 /* enquiry section */
-.talk{padding:clamp(3.5rem,8vw,7rem) 0;background:var(--forest);color:var(--cream)}
+.talk{padding:clamp(3rem,6vw,5.5rem) 0;background:var(--forest);color:var(--cream)}
 .talk .hd{color:var(--cream)}
 .talk .hd em{color:var(--leaf-2)}
 .talk__in{display:grid;grid-template-columns:1fr minmax(0,460px);gap:clamp(2rem,6vw,6rem);align-items:center}
@@ -1087,7 +1087,7 @@ html,body{overflow-x:clip}
 .ftr__img{border-radius:var(--r)}
 
 /* ---- explainer videos: swipeable, centred, play in place ---- */
-.explain{padding:clamp(3.5rem,8vw,6.5rem) 0;background:linear-gradient(180deg,var(--forest-3),var(--forest));color:var(--cream);overflow:hidden}
+.explain{padding:clamp(3rem,6vw,5.5rem) 0;background:linear-gradient(180deg,var(--forest-3),var(--forest));color:var(--cream);overflow:hidden}
 .explain__hd{text-align:center;max-width:46rem}
 .explain__hd .explain__p{margin:1rem auto 0}
 .vids{--vw:clamp(230px,66vw,290px);margin-top:clamp(1.8rem,4vw,2.8rem)}
@@ -1120,3 +1120,24 @@ html,body{overflow-x:clip}
 }
 @media (max-width:900px){.explain__handles{grid-template-columns:1fr 1fr}}
 @media (max-width:520px){.explain__handles{grid-template-columns:1fr}}
+
+/* ======================================================================
+   v9 colour system, 60-30-10:
+   60% warm ivory neutrals (cream, sand, mist) · 30% slate-teal blue (trust) ·
+   10% champagne, the blue's complement, for highlights on blue. Green is kept
+   for the booking buttons only, so the one action that matters stands out.
+   ====================================================================== */
+.display em,.h2 em,.big em,h1 em,h2 em,h3 em,.hd em{color:var(--forest)}
+.sec--forest .display em,.ftr .display em,.goa .display em,.hz .display em,.explain .hd em,.ask .hd em,.hx em{color:var(--leaf-2)}
+.tick{background:var(--champ-l);color:var(--forest-3);padding:.85rem 0}
+.tick__row span::after{background:var(--forest)}
+.talk{background:var(--mist);color:var(--ink)}
+.talk .hd{color:var(--ink)}
+.talk .hd em{color:var(--forest)}
+.talk__p{color:var(--ink-2)}
+.talk__calls a{border-color:rgba(40,94,128,.16);background:#fff}
+.talk__calls a:hover{background:#fff;border-color:var(--forest)}
+.talk__calls svg{color:var(--forest)}
+.talk__calls small{color:var(--muted)}
+.talk__form{background:#fff;box-shadow:0 40px 80px -46px rgba(29,74,102,.45)}
+.ticks li::before{background:var(--forest)}
