@@ -41,9 +41,14 @@ export function homePage(h) {
 <section class="fsec" aria-labelledby="fcta-h"><div class="wrap"><div class="fcta">
   <figure class="fcta__img">${img('dr-arms', 'Dr. Manish Patel in a suit and red tie, arms folded, in a hospital ward', { w: 1132, h: 1390, sizes: '(max-width: 860px) 92vw, 460px' })}</figure>
   <div class="fcta__txt">
-    <p class="fcta__kick">Your first step</p>
-    <h2 id="fcta-h" class="fcta__h">Questions first.<br><em>Decisions later.</em></h2>
-    <p class="fcta__p">Every treatment starts with an unhurried consultation with Dr. Patel. Ask anything, see your options, and decide in your own time.</p>
+    <p class="fcta__kick">About Dr. Manish Patel</p>
+    <h2 id="fcta-h" class="fcta__h">Cosmetic &amp; plastic surgery&nbsp;<em>in&nbsp;Goa.</em></h2>
+    <p class="fcta__p">Dr. Manish Patel is an established cosmetic and plastic surgeon in Margao, Goa, with more than 30 years of experience in aesthetic and plastic surgery. Treatments include rhinoplasty, facelift, breast augmentation, liposuction and hair transplant, along with laser hair removal, acne scar treatment, anti-ageing skin care, and non-surgical options such as Botox and fillers.</p>
+    <ul class="fcta__pts">
+      <li>M.B.B.S, MS (General Surgery), MCh (Plastic Surgery)</li>
+      <li>30+ years of experience</li>
+      <li>Clinics in Margao and Panaji</li>
+    </ul>
     <p class="fcta__or">Reach the clinic directly</p>
     <div class="fcta__alt">
       <a class="pill pill--wa" href="${SITE.social.whatsapp}" target="_blank" rel="noopener">${ico.waC}<span>Message on WhatsApp</span></a>

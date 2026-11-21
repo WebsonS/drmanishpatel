@@ -1905,3 +1905,30 @@ body{letter-spacing:.003em}
 .pghero .crumbs{margin-bottom:1.25rem}
 .pghero__in{align-items:start!important}
 @media (max-width:900px){.pghero{padding-top:5.75rem!important}}
+
+/* Consultation card: stack before the text column gets narrow; roomy buttons */
+@media (max-width:1024px){
+  .fsec .fcta{grid-template-columns:minmax(0,1fr)!important}
+  .fsec .fcta__img{min-height:0!important;aspect-ratio:16/10}
+  .fsec .fcta__img img{object-position:50% 3%}
+  .fsec .fcta__txt{border-top:0;padding:clamp(1.6rem,4vw,2.6rem)}
+  .fsec .fcta__alt{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;max-width:560px}
+  .fsec .pill{width:100%;min-height:52px}
+  .fsec .pill--wa{grid-column:1/-1}
+}
+@media (max-width:640px){
+  .fsec .fcta__img{aspect-ratio:4/4.3}
+  .fsec .fcta__or{margin:1.6rem 0 .9rem}
+  .fsec .fcta__alt{gap:.7rem;max-width:none}
+  .fsec .pill{padding:0 .9rem;font-size:.93rem}
+}
+
+/* About card: tidy contact rows on every width (WhatsApp row, then two calls) */
+.fsec .fcta__alt{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;max-width:480px}
+.fsec .pill{width:100%;min-height:50px}
+.fsec .pill--wa{grid-column:1/-1}
+.fsec .fcta__pts{margin-top:1.3rem}
+.fsec .fcta__pts li{font-size:.98rem;color:var(--ink-2)}
+@media (min-width:1025px){.fsec .fcta__txt{padding:clamp(2rem,3.4vw,3.2rem)}.fsec .fcta__p{font-size:1.02rem}}
+@media (max-width:640px){.fsec .fcta__alt{max-width:none}}
+.fsec .fcta__h{font-size:clamp(2rem,1.1rem + 1.6vw,2.75rem)!important;line-height:1.1!important}
