@@ -31,8 +31,8 @@ export function homePage(h) {
 <section class="hx2" id="top" aria-labelledby="hs-h">
   <figure class="hx2__bg">${img('dr-hero', 'Dr. Manish Patel at his clinic in Goa', { w: 1402, h: 1122, lazy: false, sizes: '100vw' })}</figure>
   <div class="wrap hx2__in"><div class="hx2__txt">
-    <h1 id="hs-h" class="hx2__h"><span class="hx2__name">Dr. Manish Patel</span><span class="hx2__role">Cosmetic &amp; Plastic Surgeon in Goa</span></h1>
-    <p class="hx2__p">MCh (Plastic Surgery) · 30+ years<br>Clinics in Margao and Panaji</p>
+    <h1 id="hs-h" class="hx2__h"><span class="hx2__name">Cosmetic &amp; Plastic Surgeon in Goa</span><span class="hx2__role">Dr. Manish Patel</span></h1>
+    <ul class="hx2__facts"><li><span class="hx2__ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9.5 12 5l10 4.5-10 4.5z"/><path d="M6 11.3v4.2c0 1.4 2.7 2.8 6 2.8s6-1.4 6-2.8v-4.2"/><path d="M22 9.5v5"/></svg></span>MCh (Plastic Surgery)</li><li><span class="hx2__ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span>30+ years in practice</li><li><span class="hx2__ic">${ico.pin}</span>Clinics in Margao and Panaji</li></ul>
     <div class="hx2__btns">${cta('Book a consultation', 'btn--hx')}<a class="hx2__link" href="/about/">About Dr. Patel ${ico.arrow}</a></div>
   </div></div>
 </section>

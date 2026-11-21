@@ -1793,3 +1793,47 @@ body{letter-spacing:.003em}
   .hx2__role{margin-top:1rem;padding-top:1rem}
   .gband__t{font-size:1.9rem}
 }
+
+/* hero facts with icons, larger specialty label */
+.hx2__role{font-size:clamp(.95rem,.85rem + .35vw,1.15rem);letter-spacing:.12em;margin-top:1.3rem;padding-top:1.2rem;max-width:34rem}
+.hx2__facts{list-style:none;margin:1.3rem 0 0;padding:0;display:grid;gap:.75rem}
+.hx2__facts li{display:flex;align-items:center;gap:.8rem;font-size:1.05rem;line-height:1.3;color:var(--ink-2)}
+.hx2__ic{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#fff;color:var(--forest);box-shadow:0 0 0 1px rgba(11,63,122,.12)}
+.hx2__ic svg{width:19px;height:19px}
+@media (max-width:640px){
+  .hx2__role{font-size:.95rem;letter-spacing:.1em}
+  .hx2__facts li{font-size:1rem}
+  .hx2__ic{width:34px;height:34px}
+}
+
+/* hero: specialty is the headline, the doctor's name is the label */
+.hx2__name{font-size:clamp(2.5rem,1.2rem + 3vw,4.4rem);line-height:1.05;text-wrap:balance}
+@media (min-width:901px){.hx2__name{font-size:clamp(2.6rem,1rem + 3.1vw,4.4rem)}}
+@media (max-width:640px){.hx2__name{font-size:2.3rem}}
+
+/* hero secondary action: outline pill, same height and shape as the primary */
+.hx2__btns{align-items:stretch;gap:.8rem}
+.hx2__btns .btn,.hx2__link{min-height:52px}
+.hx2__link{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;padding:0 1.6rem;border:1.5px solid rgba(11,63,122,.35);border-bottom:1.5px solid rgba(11,63,122,.35)!important;border-radius:999px;background:rgba(255,255,255,.7);color:var(--forest);font:600 .98rem/1 var(--sans);text-decoration:none!important;white-space:nowrap}
+.hx2__link:hover,.hx2__link:focus-visible{border-color:var(--forest)!important;background:#fff}
+.hx2__link svg{width:16px;height:16px}
+@media (max-width:640px){
+  .hx2__btns{flex-direction:column;flex-wrap:nowrap}
+  .hx2__btns .btn,.hx2__link{width:100%;justify-content:center}
+}
+
+/* doctor's name under the headline: serif italic, normal case, like a signed line */
+.hx2__role{font:400 italic clamp(1.55rem,1.2rem + .9vw,2.1rem)/1.15 var(--accent)!important;letter-spacing:0!important;text-transform:none!important;color:var(--forest-2)!important}
+@media (max-width:640px){.hx2__role{font-size:1.6rem!important}}
+
+/* hero rhythm: short accent bar instead of a long rule, one spacing scale */
+.hx2__role{border-top:0!important;padding-top:0!important;margin-top:1.6rem!important;max-width:none!important}
+.hx2__role::before{content:"";display:block;width:56px;height:2px;border-radius:2px;background:var(--leaf);margin-bottom:1.1rem}
+.hx2__facts{margin-top:1.5rem!important;gap:.7rem!important}
+.hx2__btns{margin-top:2rem!important}
+@media (max-width:640px){
+  .hx2__role{margin-top:1.3rem!important}
+  .hx2__role::before{margin-bottom:.9rem}
+  .hx2__facts{margin-top:1.25rem!important}
+  .hx2__btns{margin-top:1.75rem!important}
+}
