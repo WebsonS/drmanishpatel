@@ -28,27 +28,33 @@ export function homePage(h) {
 
 
   const body = `
-<section class="hs" id="top" aria-labelledby="hs-h">
-  <figure class="hs__img">${img('dr-hero', 'Dr. Manish Patel at the clinic', { w: 1402, h: 1122, lazy: false, sizes: '(max-width: 900px) 100vw, 62vw' })}</figure>
-  <div class="wrap hs__in">
-  <div class="hs__txt">
-    <h1 id="hs-h" class="hs__h">Cosmetic &amp; Plastic Surgery in Goa</h1>
-    <p class="hs__p">Personal cosmetic and plastic surgery care in Margao and Panaji.</p>
-    <div class="hs__btns">${cta('Book a consultation', 'btn--prem')}</div>
-    <ul class="hs__trust"><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.6 8 11 4.6-1.4 8-6 8-11V5l-8-3z" fill="currentColor"/></svg>MBBS · MS · MCh (Plastic Surgery)</li><li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 7v5l3 2" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>30+ years in practice</li></ul>
-  </div>
-</div></section>
-
-<section class="procs" aria-labelledby="procs-h">
-  <div class="wrap hd-row"><h2 id="procs-h" class="hd">Treatments</h2><a class="link" href="/services/">All ${SERVICES.length} treatments ${ico.arrow}</a></div>
-  <div class="wrap tcols">${[
-    ['Surgical treatments', 'Operations performed by Dr. Patel', svcs.filter((s) => s.cat === 'Surgical')],
-    ['Non-surgical treatments', 'Injections, lasers and skin care', svcs.filter((s) => s.cat !== 'Surgical')],
-  ].map(([t, sub, list], k) => `${k ? '<div class="tcol__side">' : ''}<div class="tcol"><div class="tcol__hd"><h3>${t}</h3><p>${sub}</p></div><ul class="tcol__list">${list.map((s) => `<li><a class="trow" href="/services/${s.slug}/"><span class="trow__img">${img(SVC_IMG[s.slug], '', { w: 600, h: 750, sizes: '120px' })}</span><span class="trow__t"><b>${s.name}</b><small>${s.tag}</small></span>${ico.arrow}</a></li>`).join('')}</ul></div>${k ? `<div class="tcol__help"><h3>Not sure which you need?</h3><p>Tell the clinic what is bothering you. Dr. Patel will explain the options at your consultation, surgical or not.</p>${cta('Book a consultation', 'btn--leaf')}</div></div>` : ''}`).join('')}</div>
+<section class="hx2" id="top" aria-labelledby="hs-h">
+  <figure class="hx2__bg">${img('dr-hero', 'Dr. Manish Patel at his clinic in Goa', { w: 1402, h: 1122, lazy: false, sizes: '100vw' })}</figure>
+  <div class="wrap hx2__in"><div class="hx2__txt">
+    <h1 id="hs-h" class="hx2__h"><span class="hx2__name">Dr. Manish Patel</span><span class="hx2__role">Cosmetic &amp; Plastic Surgeon in Goa</span></h1>
+    <p class="hx2__p">MCh (Plastic Surgery) · 30+ years<br>Clinics in Margao and Panaji</p>
+    <div class="hx2__btns">${cta('Book a consultation', 'btn--hx')}<a class="hx2__link" href="/about/">About Dr. Patel ${ico.arrow}</a></div>
+  </div></div>
 </section>
 
+<section class="fsec" aria-labelledby="fcta-h"><div class="wrap"><div class="fcta">
+  <figure class="fcta__img">${img('dr-arms', 'Dr. Manish Patel in a suit and red tie, arms folded, in a hospital ward', { w: 1132, h: 1390, sizes: '(max-width: 860px) 92vw, 460px' })}</figure>
+  <div class="fcta__txt">
+    <p class="fcta__kick">Your first step</p>
+    <h2 id="fcta-h" class="fcta__h">Questions first.<br><em>Decisions later.</em></h2>
+    <p class="fcta__p">Every treatment starts with an unhurried consultation with Dr. Patel. Ask anything, see your options, and decide in your own time.</p>
+    <ul class="fcta__pts"><li>MBBS · MS · MCh (Plastic Surgery)</li><li>More than 30 years in practice</li><li>No pressure to decide on the day</li></ul>
+    <div class="fcta__btns">${cta('Book a consultation', 'btn--leaf')}<a class="fcta__wa" href="${SITE.social.whatsapp}" target="_blank" rel="noopener">${ico.waC}<span>Ask on WhatsApp</span></a></div>
+  </div>
+</div></div></section>
+
+<section class="tx" aria-labelledby="procs-h"><div class="wrap">
+  <div class="tx__hd"><div><h2 id="procs-h" class="hd hd--l">Treatments</h2><p>Surgical and non-surgical care, planned and performed by Dr. Patel.</p></div><a class="link" href="/services/">All treatments ${ico.arrow}</a></div>
+  <div class="tx__grid">${svcs.map((s) => `<a class="txc" href="/services/${s.slug}/"><span class="txc__img">${img(SVC_IMG[s.slug], '', { w: 600, h: 750, sizes: '(max-width: 640px) 46vw, (max-width: 1100px) 30vw, 320px' })}</span><span class="txc__cat">${s.cat === 'Surgical' ? 'Surgical' : 'Non-surgical'}</span><h3>${s.name}</h3><span class="txc__tag">${s.tag}</span></a>`).join('')}<div class="txc txc--help"><h3>Not sure which you need?</h3><p>Tell the clinic what is bothering you. Dr. Patel will explain the options at your consultation.</p><a class="link" href="${SITE.social.whatsapp}" target="_blank" rel="noopener">Ask on WhatsApp ${ico.arrow}</a></div></div>
+</div></section>
+
 <section class="walk" aria-labelledby="walk-h"><div class="wrap">
-  <div class="walk__hd"><h2 id="walk-h" class="hd hd--l">Your first visit, <em>step by step.</em></h2>${cta('Book a consultation', 'btn--leaf')}</div>
+  <div class="walk__hd"><h2 id="walk-h" class="hd hd--l">Your first visit, <em>step by step.</em></h2></div>
   <ol class="vsteps">${PROCESS.map(([n, t, d], k) => { const [im, alt, w, h, tip] = STEPS[k]; return `<li class="step${k % 2 ? ' step--r' : ''}">
     <figure class="step__img">${img(im, alt, { w, h, sizes: '(max-width: 800px) 92vw, 560px' })}<span class="step__n" aria-hidden="true">${n}</span></figure>
     <div class="step__txt"><h3>${t}</h3><p>${d}</p></div>
@@ -64,7 +70,7 @@ export function homePage(h) {
   <div class="soc__grid">
     <div class="igp">
       <div class="igp__top">
-        <span class="igp__ava">${img('dr-portrait', 'Dr. Manish Patel', { w: 648, h: 796, sizes: '110px' })}</span>
+        <span class="igp__ava">${img('dr-arms', 'Dr. Manish Patel', { w: 1132, h: 1390, sizes: '110px' })}</span>
         <div class="igp__who"><span class="igp__plat">${ico.ig} Instagram</span><b>@drmanishp</b><span>Dr. Manish Patel, MCh (Plastic Surgery)</span></div>
       </div>
       <p class="igp__bio">Dr. Patel explains treatments in his own words: what they involve, how recovery goes and what to ask at your consultation.</p>
@@ -82,11 +88,16 @@ export function homePage(h) {
   </div>
 </div></section>
 
+<section class="gband" aria-label="Clinics in Goa">
+  <figure class="gband__bg">${img('goa-2', 'Palm trees along a beach in Goa', { w: 1600, h: 854, sizes: '100vw' })}</figure>
+  <div class="wrap gband__in"><p class="gband__t">Care close to home,<br><em>in South and North Goa.</em></p></div>
+</section>
+
 <section class="visit" id="enquire" aria-labelledby="talk-h"><div class="wrap">
   <div class="visit__hd">
     <p class="soc__kick">Two clinics in Goa</p>
     <h2 id="talk-h" class="hd">Have a question? Call, message or visit.</h2>
-    <p>Ask the clinic anything, or find a consultation time. Call either clinic, send a WhatsApp message, or use the Appointment button to request a time.</p>
+    <p>Ask the clinic anything, or find a consultation time. Call either clinic or send a WhatsApp message.</p>
   </div>
   <div class="visit__grid">
     <div class="visit__side">

@@ -159,7 +159,7 @@ const orgSchema = {
       '@type': ['Physician', 'Person'],
       '@id': docId,
       name: SITE.doctor,
-      image: SITE.domain + I('dr-portrait'),
+      image: SITE.domain + I('dr-arms'),
       ...(SITE.reg.no ? { identifier: { '@type': 'PropertyValue', propertyID: `${SITE.reg.council} registration`, value: SITE.reg.no } } : {}),
       jobTitle: 'Plastic and Cosmetic Surgeon',
       medicalSpecialty: 'PlasticSurgery',
@@ -239,8 +239,8 @@ ${noindex ? '<meta name="robots" content="noindex">' : '<meta name="robots" cont
 <meta name="geo.region" content="IN-GA">
 <meta name="geo.placename" content="Margao, Panaji, Goa">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="/assets/fonts/plus-jakarta-sans-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/instrument-serif-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/figtree-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/fonts.css">
 <link rel="stylesheet" href="/assets/css/style.css">
 <script>document.documentElement.className='js'</script>
@@ -259,7 +259,7 @@ ${schema.map(jsonld).join('\n')}
 </header>
 <aside class="drawer" id="drawer" aria-hidden="true">
   <div class="drawer__in">
-    <div class="drawer__doc"><img src="${I('dr-portrait-sm')}" alt="" width="56" height="56" loading="lazy" decoding="async"><div><strong>${SITE.doctor}</strong><span>MCh Plastic Surgery · 30+ yrs</span></div></div>
+    <div class="drawer__doc"><img src="${I('dr-arms-sm')}" alt="" width="56" height="56" loading="lazy" decoding="async"><div><strong>${SITE.doctor}</strong><span>MCh Plastic Surgery · 30+ yrs</span></div></div>
     <nav class="drawer__nav" aria-label="Mobile">${[['/', 'Home'], ...NAV].map(([h, t]) => `<a href="${h}"${p.startsWith(h) && (h !== '/' || p === '/') ? ' aria-current="page"' : ''}><span>${t}</span>${ico.arrow}</a>`).join('')}</nav>
     <div class="drawer__svc"><p>Popular</p><div>${SERVICES.slice(0, 6).map((s) => `<a href="/services/${s.slug}/">${s.name.replace(/ \(.*\)/, '')}</a>`).join('')}</div></div>
     <div class="drawer__foot">
@@ -274,16 +274,11 @@ ${body}
 </main>
 ${footer()}
 <a class="wa-float" href="${SITE.social.whatsapp}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">${ico.wa}</a>
-<nav class="mbar" aria-label="Quick actions">
-  <a href="tel:${M.phone}" class="mbar__i">${ico.phone}<span>Call</span></a>
-  <a href="${SITE.social.whatsapp}" target="_blank" rel="noopener" class="mbar__i">${ico.wa}<span>WhatsApp</span></a>
-  <a href="/contact/" class="mbar__book" data-book><span>Appointment</span>${ico.arrow}</a>
-</nav>
 <div class="book" id="book-modal" role="dialog" aria-modal="true" aria-labelledby="book-h" aria-hidden="true">
   <div class="book__scrim" data-close></div>
   <div class="book__panel">
     <button class="book__x" type="button" aria-label="Close" data-close><i></i><i></i></button>
-    <div class="book__head"><img src="${I('dr-portrait-sm')}" alt="" width="64" height="64" loading="lazy" decoding="async"><div><h2 id="book-h">Request an appointment</h2><p class="book__sub">${SITE.doctor} · ${REG}</p></div></div>
+    <div class="book__head"><img src="${I('dr-arms-sm')}" alt="" width="64" height="64" loading="lazy" decoding="async"><div><h2 id="book-h">Request an appointment</h2><p class="book__sub">${SITE.doctor} · ${REG}</p></div></div>
     ${bookForm('m')}
   </div>
 </div>
@@ -310,16 +305,6 @@ ${footer()}
 
 function footer() {
   return `<footer class="ftr">
-  <div class="wrap"><div class="fcta">
-    <figure class="fcta__img">${img('dr-hero', `${SITE.doctor} at the clinic`, { w: 1402, h: 1122, sizes: '(max-width: 860px) 92vw, 560px' })}<figcaption><b>${SITE.doctor}</b><span>MCh (Plastic Surgery) · Margao &amp; Panaji</span></figcaption></figure>
-    <div class="fcta__txt">
-      <p class="fcta__kick">Your first step</p>
-      <h2 class="fcta__h">Questions first.<br><em>Decisions later.</em></h2>
-      <p class="fcta__p">Every treatment starts with an unhurried consultation with Dr. Patel. Ask anything, see your options, and decide in your own time.</p>
-      <ul class="fcta__pts"><li>MBBS · MS · MCh (Plastic Surgery)</li><li>More than 30 years in practice</li><li>No pressure to decide on the day</li></ul>
-      <div class="fcta__btns">${cta('Book a consultation', 'btn--leaf')}<a class="fcta__wa" href="${SITE.social.whatsapp}" target="_blank" rel="noopener">${ico.waC}<span>Ask on WhatsApp</span></a></div>
-    </div>
-  </div></div>
   <div class="ftr__grid wrap">
     <div><img class="ftr__logo" src="/assets/img/logo.webp" alt="${esc(SITE.name)}" width="180" height="58" loading="lazy" decoding="async">
       <p class="ftr__about">Cosmetic and plastic surgery in Goa, led by ${SITE.doctor}, ${SITE.creds}.</p>
@@ -428,7 +413,7 @@ function write(p, html) {
 
 // ================================================================== ABOUT
 {
-  const body = `${pgHero({ eyebrow: 'About the surgeon', title: 'Dr. Manish<br><em>Patel</em>', lead: 'Plastic and cosmetic surgeon with more than three decades of experience, practising in Margao and Panaji, Goa.', crumbs: [['Home', '/'], ['About', '/about/']], image: 'dr-portrait', alt: 'Dr. Manish Patel' })}
+  const body = `${pgHero({ eyebrow: 'About the surgeon', title: 'Dr. Manish<br><em>Patel</em>', lead: 'Plastic and cosmetic surgeon with more than three decades of experience, practising in Margao and Panaji, Goa.', crumbs: [['Home', '/'], ['About', '/about/']], image: 'dr-arms', alt: 'Dr. Manish Patel' })}
 <section class="sec"><div class="wrap about">
   <div class="about__fig"><div class="leaf leaf--tall" data-reveal-img>${img('dr-laser', 'Dr. Manish Patel in his clinic', { w: 568, h: 568 })}</div></div>
   <div class="about__txt">
@@ -444,7 +429,6 @@ function write(p, html) {
     <h2 class="h3" data-reveal>Areas of practice</h2>
     <ul class="ticks ticks--2" data-reveal>${SERVICES.map((s) => `<li><a href="/services/${s.slug}/">${s.name}</a></li>`).join('')}</ul>
     <!-- TODO (Dr. Patel): fill SITE.reg.no in data.mjs; add society memberships and hospital affiliations with body and year. -->
-    <div class="about__cta" data-reveal>${cta()}</div>
   </div>
 </div></section>
 ${teamBlock()}
@@ -452,7 +436,7 @@ ${teamBlock()}
   ${[['Honest advice', 'You will hear what is realistic, including when surgery is not the right answer.'], ['Realistic expectations', 'A clear account of what a procedure can and cannot change for you.'], ['Assessment first', 'A full medical assessment before any procedure, with its risks explained.'], ['Personal care', 'Dr. Patel is involved from consultation through recovery.']].map(([t, d], i) => `<div class="val" data-reveal><span>0${i + 1}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}
 </div></section>
 ${locationsBlock()}`;
-  write('/about/', layout({ path: '/about/', title: 'About Dr. Manish Patel | MCh Plastic Surgeon in Goa', desc: 'Dr. Manish Patel: MBBS, MS (General Surgery), MCh (Plastic Surgery), Goa Medical Council registered, in practice for more than 30 years in Goa.', body, ogImg: 'dr-portrait', schema: [crumbSchema([['Home', '/'], ['About', '/about/']]), { '@context': 'https://schema.org', '@type': 'AboutPage', mainEntity: { '@id': docId } }] }));
+  write('/about/', layout({ path: '/about/', title: 'About Dr. Manish Patel | MCh Plastic Surgeon in Goa', desc: 'Dr. Manish Patel: MBBS, MS (General Surgery), MCh (Plastic Surgery), Goa Medical Council registered, in practice for more than 30 years in Goa.', body, ogImg: 'dr-arms', schema: [crumbSchema([['Home', '/'], ['About', '/about/']]), { '@context': 'https://schema.org', '@type': 'AboutPage', mainEntity: { '@id': docId } }] }));
 }
 
 // ================================================================== SERVICES HUB
@@ -520,7 +504,7 @@ ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
     : t === 'table' ? `<div class="prose__tbl" data-reveal><table><caption>${x.cap}</caption><thead><tr><th scope="col"></th>${x.head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${x.rows.map(([r, ...c]) => `<tr><th scope="row">${r}</th>${c.map((v, n) => `<td data-l="${x.head[n]}">${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`
     : t === 'fig' ? `<figure class="prose__fig" data-reveal>${img(x, c, { w: 1200, h: 800, sizes: '(max-width: 760px) 92vw, 780px' })}<figcaption>${c}</figcaption></figure>`
     : `<p data-reveal>${x}</p>`)).join('\n  ')}
-  <div class="byline" data-reveal><img src="${I('dr-portrait')}" alt="${SITE.doctor}" width="64" height="64" loading="lazy" decoding="async"><div><strong>${SITE.doctor}</strong><span>${SITE.creds}</span></div><span class="sig">Manish Patel</span></div>
+  <div class="byline" data-reveal><img src="${I('dr-arms')}" alt="${SITE.doctor}" width="64" height="64" loading="lazy" decoding="async"><div><strong>${SITE.doctor}</strong><span>${SITE.creds}</span></div><span class="sig">Manish Patel</span></div>
   ${svc ? `<div class="note" data-reveal>Related treatment: <a href="/services/${svc.slug}/">${svc.name} in Goa</a></div>` : ''}
   <p class="note" data-reveal>This article is general education, not medical advice. Please consult a qualified doctor about your situation.</p>
 </div></article>
@@ -537,12 +521,12 @@ ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
 
 // ================================================================== CONTACT
 {
-  const body = `${pgHero({ eyebrow: 'Contact', title: 'Contact and<br><em>appointments</em>.', lead: 'Tell the clinic what you would like to discuss. The team replies by phone or WhatsApp to arrange a time.', crumbs: [['Home', '/'], ['Contact', '/contact/']], image: 'dr-portrait', alt: 'Dr. Manish Patel' })}
+  const body = `${pgHero({ eyebrow: 'Contact', title: 'Contact and<br><em>appointments</em>.', lead: 'Tell the clinic what you would like to discuss. The team replies by phone or WhatsApp to arrange a time.', crumbs: [['Home', '/'], ['Contact', '/contact/']], image: 'dr-arms', alt: 'Dr. Manish Patel' })}
 <section class="sec"><div class="wrap contact">
   <div class="form" data-reveal>${bookForm('c', true)}</div>
   <div class="contact__side" data-stagger>${SITE.locations.map((l, i) => `<article class="loc"><div class="loc__img">${img(i ? 'goa-2' : 'goa-1', `Goa, near our ${l.city} clinic`, { w: 1200, h: 800 })}<span class="loc__city">${l.city}</span></div><div class="loc__b"><address>${l.street}<br>${l.locality}, ${l.region} ${l.postal}</address><div class="loc__a"><a class="btn btn--sm" href="tel:${l.phone}"><span>Call ${l.phoneShow}</span></a><a class="link" href="/locations/${l.slug}/">Directions ${ico.arrow}</a></div></div></article>`).join('')}</div>
 </div></section>`;
-  write('/contact/', layout({ path: '/contact/', title: 'Contact & Appointments | Dr. Manish Patel, Margao & Panaji', desc: 'Addresses, phone numbers and an enquiry form for Dr. Manish Patel’s clinics in Margao and Panaji, Goa. Call, WhatsApp or send the form.', body, ogImg: 'dr-portrait', schema: [crumbSchema([['Home', '/'], ['Contact', '/contact/']]), { '@context': 'https://schema.org', '@type': 'ContactPage', url: `${SITE.domain}/contact/` }] }));
+  write('/contact/', layout({ path: '/contact/', title: 'Contact & Appointments | Dr. Manish Patel, Margao & Panaji', desc: 'Addresses, phone numbers and an enquiry form for Dr. Manish Patel’s clinics in Margao and Panaji, Goa. Call, WhatsApp or send the form.', body, ogImg: 'dr-arms', schema: [crumbSchema([['Home', '/'], ['Contact', '/contact/']]), { '@context': 'https://schema.org', '@type': 'ContactPage', url: `${SITE.domain}/contact/` }] }));
 }
 
 // ================================================================== LOCATIONS

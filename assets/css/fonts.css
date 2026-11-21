@@ -1,5 +1,7 @@
-/* Self-hosted brand fonts (latin subset). */
-@font-face{font-family:"Jakarta";font-style:normal;font-weight:400 700;font-display:swap;src:url(../fonts/plus-jakarta-sans-normal.woff2) format("woff2")}
-@font-face{font-family:"Instrument";font-style:italic;font-weight:400;font-display:swap;src:url(../fonts/instrument-serif-italic.woff2) format("woff2")}
-@font-face{font-family:"Instrument";font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/instrument-serif-normal.woff2) format("woff2")}
+/* Self-hosted brand fonts (latin subset, OFL).
+   Newsreader: display serif for headings (optical sizes, like the paid serifs on One Medical, Maven, Cedars-Sinai).
+   Figtree: clean geometric sans for text and buttons. */
+@font-face{font-family:"Figtree";font-style:normal;font-weight:300 800;font-display:swap;src:url(../fonts/figtree-normal.woff2) format("woff2")}
+@font-face{font-family:"Newsreader";font-style:normal;font-weight:200 800;font-display:swap;src:url(../fonts/newsreader-normal.woff2) format("woff2")}
+@font-face{font-family:"Newsreader";font-style:italic;font-weight:200 800;font-display:swap;src:url(../fonts/newsreader-italic.woff2) format("woff2")}
 @font-face{font-family:"Signature";font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/allura-normal.woff2) format("woff2")}
