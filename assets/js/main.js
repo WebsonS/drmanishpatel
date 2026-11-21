@@ -293,4 +293,18 @@
     });
   });
 
+  // Treatments filter on the home page: All / Surgical / Non-surgical. Without JS every card shows.
+  var seg = document.querySelector('.seg'), grid = document.querySelector('[data-tx]');
+  if (seg && grid) {
+    seg.addEventListener('click', function (e) {
+      var b = e.target.closest('.seg__b'); if (!b) return;
+      var f = b.getAttribute('data-filter');
+      seg.querySelectorAll('.seg__b').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      grid.querySelectorAll('.txc').forEach(function (c) {
+        var k = c.getAttribute('data-cat');
+        c.hidden = f === 'all' ? false : (k === 'help' ? f === 'non' : k !== f);
+      });
+    });
+  }
+
 })();

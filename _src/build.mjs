@@ -225,7 +225,6 @@ function layout({ path: p, title, desc, body, schema = [], ogType = 'website', o
 <meta name="description" content="${esc(desc)}">
 ${noindex ? '' : `<link rel="canonical" href="${url}">`}
 ${noindex ? '<meta name="robots" content="noindex">' : '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">'}
-<meta name="theme-color" content="#285E80">
 <meta property="og:type" content="${ogType}">
 <meta property="og:site_name" content="${esc(SITE.name)}">
 <meta property="og:title" content="${esc(title)}">
@@ -238,7 +237,11 @@ ${noindex ? '<meta name="robots" content="noindex">' : '<meta name="robots" cont
 <meta name="twitter:card" content="summary_large_image">
 <meta name="geo.region" content="IN-GA">
 <meta name="geo.placename" content="Margao, Panaji, Goa">
-<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/assets/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0B3F7A">
 <link rel="preload" href="/assets/fonts/figtree-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/fonts.css">
@@ -586,5 +589,4 @@ fs.writeFileSync(MOD_FILE, JSON.stringify(Object.fromEntries(Object.keys(MOD).so
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE.domain}${u}</loc><lastmod>${(MOD[u] || {}).d || today}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\n\n# AI / answer-engine crawlers are welcome\nUser-agent: GPTBot\nAllow: /\nUser-agent: OAI-SearchBot\nAllow: /\nUser-agent: ChatGPT-User\nAllow: /\nUser-agent: PerplexityBot\nAllow: /\nUser-agent: ClaudeBot\nAllow: /\nUser-agent: Google-Extended\nAllow: /\nUser-agent: Applebot-Extended\nAllow: /\n\nSitemap: ${SITE.domain}/sitemap.xml\n`);
 fs.writeFileSync(path.join(ROOT, 'llms.txt'), `# ${SITE.name}\n\n> Cosmetic and plastic surgery clinic in Goa, India, led by ${SITE.doctor} (${SITE.creds}), with ${SITE.experience} of experience. Clinics in Margao and Panaji.\n\n## Key facts\n- Surgeon: ${SITE.doctor}, plastic surgeon. Qualifications: MBBS, MS (General Surgery), MCh (Plastic Surgery).\n- Registration: ${REG}.\n- Positions and teaching: Head, Department of Cosmetic Surgery, Wockhardt Institute of Aesthetics (2011); faculty at IAAPS AESURG 2022; faculty and trainer for Botox and fillers at the 7th FADS World Congress 2023, South Goa.\n- Content policy: following the National Medical Commission's Guidelines on Ethical Advertising and Public Communication (6 October 2026), the site publishes no patient testimonials, reviews or before-and-after images. Each treatment page lists recovery, possible risks and who the procedure may not suit.\n${SITE.locations.map((l) => `- ${l.name}: ${l.street}, ${l.locality}, ${l.region} ${l.postal}. Phone ${l.phoneShow}.`).join('\n')}\n- Treatments: ${SERVICES.map((s) => s.name).join(', ')}.\n\n## Pages\n- [Home](${SITE.domain}/)\n- [About Dr. Patel](${SITE.domain}/about/)\n- [Treatments](${SITE.domain}/services/)\n${SERVICES.map((s) => `- [${s.name}](${SITE.domain}/services/${s.slug}/): ${s.tag}`).join('\n')}\n- [Journal](${SITE.domain}/blog/)\n${POSTS.map((p) => `  - [${p.title}](${SITE.domain}/blog/${p.slug}/): ${p.desc}`).join('\n')}\n- [FAQ](${SITE.domain}/faq/)\n- [Contact](${SITE.domain}/contact/)\n- [Privacy](${SITE.domain}/privacy/)\n\n## Quick answers\n${FAQS.map(([q, ans]) => `### ${q}\n${ans}`).join('\n\n')}\n\n## Social\n- Last updated: ${today}\n- Instagram (Dr. Manish Patel): https://www.instagram.com/drmanishp/\n- Instagram (clinic): ${SITE.social.instagram}\n- Facebook: ${SITE.social.facebook}\n- YouTube: ${SITE.social.youtube}\n`);
-fs.writeFileSync(path.join(ROOT, 'assets/img/favicon.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#285E80"/><path d="M14 50C14 28 28 14 50 14c0 22-14 36-36 36z" fill="#6FBF7A"/><path d="M14 50L36 28" stroke="#F7F4EE" stroke-width="3"/></svg>`);
 console.log('Built', urls.length, 'pages');

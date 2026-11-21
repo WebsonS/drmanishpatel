@@ -16,7 +16,7 @@ export const SITE = {
     instagram: 'https://www.instagram.com/patelcosmeticsurgerycenter/',
     facebook: 'https://www.facebook.com/patelcosmetics/',
     youtube: 'https://www.youtube.com/channel/UCtR5g2NzDEiz4brCLceq9BQ',
-    whatsapp: 'https://wa.link/6nrqyg',
+    whatsapp: 'https://wa.me/919284562451?text=Hi%2C%20I%20would%20like%20to%20book%20a%20consultation%20with%20Dr.%20Manish%20Patel.',
   },
   locations: [
     {

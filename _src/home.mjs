@@ -20,6 +20,7 @@ const STEPS = [
 export function homePage(h) {
   const { SITE, SERVICES, FAQS, PROCESS, SVC_IMG, img, I, esc, ico, cta, faqBlock, locationsBlock, REG, bookForm } = h;
   const svcs = ORDER.map((s) => SERVICES.find((x) => x.slug === s)).filter(Boolean);
+  const surg = svcs.filter((s) => s.cat === 'Surgical'), non = svcs.filter((s) => s.cat !== 'Surgical');
   const V = (id) => `/assets/video/${id}.mp4`;
   const play = (o) => esc(JSON.stringify(o));
   const reels = EDU_REELS.map((s) => REELS.find((r) => r.slug === s)).filter(Boolean);
@@ -43,14 +44,32 @@ export function homePage(h) {
     <p class="fcta__kick">Your first step</p>
     <h2 id="fcta-h" class="fcta__h">Questions first.<br><em>Decisions later.</em></h2>
     <p class="fcta__p">Every treatment starts with an unhurried consultation with Dr. Patel. Ask anything, see your options, and decide in your own time.</p>
-    <ul class="fcta__pts"><li>MBBS · MS · MCh (Plastic Surgery)</li><li>More than 30 years in practice</li><li>No pressure to decide on the day</li></ul>
-    <div class="fcta__btns">${cta('Book a consultation', 'btn--leaf')}<a class="fcta__wa" href="${SITE.social.whatsapp}" target="_blank" rel="noopener">${ico.waC}<span>Ask on WhatsApp</span></a></div>
+    <p class="fcta__or">Reach the clinic directly</p>
+    <div class="fcta__alt">
+      <a class="pill pill--wa" href="${SITE.social.whatsapp}" target="_blank" rel="noopener">${ico.waC}<span>Message on WhatsApp</span></a>
+      ${SITE.locations.map((l) => `<a class="pill" href="tel:${l.phone}">${ico.phone}<span>Call ${l.city}</span></a>`).join('')}
+    </div>
   </div>
 </div></div></section>
 
 <section class="tx" aria-labelledby="procs-h"><div class="wrap">
-  <div class="tx__hd"><div><h2 id="procs-h" class="hd hd--l">Treatments</h2><p>Surgical and non-surgical care, planned and performed by Dr. Patel.</p></div><a class="link" href="/services/">All treatments ${ico.arrow}</a></div>
-  <div class="tx__grid">${svcs.map((s) => `<a class="txc" href="/services/${s.slug}/"><span class="txc__img">${img(SVC_IMG[s.slug], '', { w: 600, h: 750, sizes: '(max-width: 640px) 46vw, (max-width: 1100px) 30vw, 320px' })}</span><span class="txc__cat">${s.cat === 'Surgical' ? 'Surgical' : 'Non-surgical'}</span><h3>${s.name}</h3><span class="txc__tag">${s.tag}</span></a>`).join('')}<div class="txc txc--help"><h3>Not sure which you need?</h3><p>Tell the clinic what is bothering you. Dr. Patel will explain the options at your consultation.</p><a class="link" href="${SITE.social.whatsapp}" target="_blank" rel="noopener">Ask on WhatsApp ${ico.arrow}</a></div></div>
+  <div class="tx__hd"><div><h2 id="procs-h" class="hd hd--l">Treatments</h2><p>Surgical and non-surgical care, planned and performed by Dr.&nbsp;Patel.</p></div></div>
+  <div class="tx__bar">
+    <div class="seg" role="group" aria-label="Show treatments">${[['all', 'All', svcs.length], ['surg', 'Surgical', surg.length], ['non', 'Non-surgical', non.length]].map(([k, t, n], i) => `<button type="button" class="seg__b" data-filter="${k}" aria-pressed="${i ? 'false' : 'true'}">${t}<span class="seg__n">${n}</span></button>`).join('')}</div>
+    <a class="link" href="/services/">All treatment pages ${ico.arrow}</a>
+  </div>
+  <div class="tx__grid" data-tx>${[...surg, ...non].map((s) => `<a class="txc" data-cat="${s.cat === 'Surgical' ? 'surg' : 'non'}" href="/services/${s.slug}/"><span class="txc__img">${img(SVC_IMG[s.slug], '', { w: 600, h: 750, sizes: '(max-width: 640px) 46vw, (max-width: 1100px) 30vw, 320px' })}</span><span class="txc__cat">${s.cat === 'Surgical' ? 'Surgical' : 'Non-surgical'}</span><h3>${s.name}</h3><span class="txc__tag">${s.tag}</span></a>`).join('')}<div class="txc txc--help" data-cat="help">
+    <span class="help__ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.4-2.7 4"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/></svg></span>
+    <div class="help__b">
+      <p class="help__k">Not sure where to start?</p>
+      <h3>Tell us what is bothering you.</h3>
+      <p>Dr. Patel will explain which options suit you at your consultation.</p>
+    </div>
+    <div class="help__acts">
+      <a class="pill pill--wa help__wa" href="${SITE.social.whatsapp}" target="_blank" rel="noopener">${ico.waC}<span>Ask on WhatsApp</span></a>
+      <a class="help__call" href="tel:${SITE.locations[0].phone}">${ico.phone}<span>or call ${SITE.locations[0].phoneShow}</span></a>
+    </div>
+  </div></div>
 </div></section>
 
 <section class="walk" aria-labelledby="walk-h"><div class="wrap">

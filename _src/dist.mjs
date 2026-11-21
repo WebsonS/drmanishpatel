@@ -67,7 +67,7 @@ async function copy(rel) {
     for (const f of fs.readdirSync(src)) await copy(path.join(rel, f));
     return;
   }
-  if (!rel.includes(path.sep) && !/\.(html|txt|xml)$/.test(rel)) return; // root: only site files
+  if (!rel.includes(path.sep) && !/\.(html|txt|xml|ico|webmanifest)$/.test(rel)) return; // root: only site files
   fs.mkdirSync(path.dirname(dst), { recursive: true });
   const ext = path.extname(rel);
   if (ext === '.html') return fs.writeFileSync(dst, rewriteHtml(fs.readFileSync(src, 'utf8')));
