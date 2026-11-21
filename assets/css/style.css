@@ -1754,3 +1754,42 @@ body{letter-spacing:.003em}
 .hx2__link{border-bottom:0;padding-bottom:0;font-weight:600;white-space:nowrap}
 .hx2__link:hover{text-decoration:underline;text-underline-offset:4px}
 @media (max-width:420px){.hx2__btns{flex-wrap:wrap}}
+
+/* buttons never break their label; the row wraps instead */
+.btn{white-space:nowrap;flex:none}
+.hx2__btns{flex-wrap:wrap}
+@media (max-width:420px){.btn{white-space:normal}.hx2__btns .btn{width:100%;justify-content:center}}
+
+/* v13.3 phone system: one heading size, one label style, one rhythm, one edge */
+@media (max-width:640px){
+  /* rhythm: every section breathes the same */
+  .fsec,.tx,.walk,.soc,.visit,.home .sec{padding:3.25rem 0}
+  /* labels above headings: one style, no rule line */
+  .fcta__kick,.soc__kick,.eyebrow{font:600 .74rem/1.2 var(--sans)!important;letter-spacing:.16em!important;text-transform:uppercase;color:var(--leaf)!important;margin:0 0 .7rem!important;display:block}
+  .eyebrow::before{display:none}
+  /* section headings: one size */
+  .hd,.hd--l,.display,.display--l,.fcta__h,.tx__hd h2,.walk__hd .hd,.soc__hd .hd,.visit__hd .hd{font-size:2rem!important;line-height:1.12!important;letter-spacing:-.01em;margin:0}
+  .tx__hd p,.soc__hd p,.visit__hd p,.faq__head .lead,.fcta__p{font-size:1rem!important;line-height:1.6;margin-top:.8rem!important}
+  .tx__hd,.soc__hd,.visit__hd,.faq__head,.walk__hd{margin-bottom:1.6rem!important}
+  /* cards: inner text sits on the same 20px inset */
+  .fcta__txt{padding:1.6rem 1.25rem 1.75rem}
+  .fcta__pts li{font-size:.95rem}
+  .igp,.clin__b{padding-left:1.25rem!important;padding-right:1.25rem!important}
+  .clin__b h3{font-size:1.5rem!important}
+  /* first visit: photo on top, text full width below */
+  .step{flex-direction:column!important}
+  .step__img{aspect-ratio:16/9!important;width:100%}
+  .step__img img{width:100%;height:100%;object-fit:cover}
+  .step__n,.step--r .step__n{top:auto!important;bottom:-20px!important;left:1.25rem!important;right:auto!important;width:44px!important;height:44px!important;font-size:1.25rem!important}
+  .step__txt{padding:1.75rem 1.25rem 1.25rem!important;flex:none!important;min-height:0!important;height:auto!important}
+  .step__img{flex:none!important;height:auto!important}
+  .step__txt h3{font-size:1.25rem!important}
+  .step__txt p{font-size:.98rem!important;line-height:1.55}
+  /* treatments: equal title rhythm */
+  .txc h3{font-size:1.15rem;line-height:1.2}
+  .txc__cat{margin-top:.75rem}
+  /* hero text block */
+  .hx2__name{font-size:2.6rem}
+  .hx2__role{margin-top:1rem;padding-top:1rem}
+  .gband__t{font-size:1.9rem}
+}
