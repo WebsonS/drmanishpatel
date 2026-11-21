@@ -307,4 +307,6 @@
     });
   }
 
+  // keep --hdr-h equal to the real header height (it grows to two rows on phones)
+  if (hdr) { var setH = function () { document.documentElement.style.setProperty('--hdr-h', hdr.offsetHeight + 'px'); }; setH(); window.addEventListener('resize', setH); if (window.ResizeObserver) new ResizeObserver(setH).observe(hdr); }
 })();

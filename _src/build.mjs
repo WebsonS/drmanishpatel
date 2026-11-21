@@ -51,7 +51,7 @@ const SVC_META = {
 const POST_IMG = {
   'fue-vs-fut-hair-transplant-goa': 't-hair',
   'rhinoplasty-recovery-what-to-expect': 't-profile',
-  'how-to-choose-a-plastic-surgeon-in-goa': 'dr-laser',
+  'how-to-choose-a-plastic-surgeon-in-goa': 'dr-hero',
   'acne-scars-fractional-co2-laser': 't-co2',
 };
 for (const p of POSTS) if (p.img) POST_IMG[p.slug] = p.img;
@@ -128,7 +128,7 @@ const locSchema = (l) => ({
   name: `${SITE.name}, ${l.city}`,
   url: `${SITE.domain}/locations/${l.slug}/`,
   telephone: l.phone,
-  image: SITE.domain + I('dr-laser'),
+  image: SITE.domain + I('dr-hero'),
   medicalSpecialty: 'PlasticSurgery',
   parentOrganization: { '@id': orgId },
   address: { '@type': 'PostalAddress', streetAddress: l.street, addressLocality: l.locality, addressRegion: l.region, postalCode: l.postal, addressCountry: 'IN' },
@@ -146,7 +146,7 @@ const orgSchema = {
       alternateName: SITE.short,
       url: SITE.domain,
       logo: `${SITE.domain}/assets/img/logo.png`,
-      image: SITE.domain + I('dr-laser'),
+      image: SITE.domain + I('dr-hero'),
       description: 'Cosmetic and plastic surgery clinic in Goa led by Dr. Manish Patel (MBBS, MS, MCh Plastic Surgery), with clinics in Margao and Panaji.',
       medicalSpecialty: 'PlasticSurgery',
       areaServed: { '@type': 'AdministrativeArea', name: 'Goa' },
@@ -212,10 +212,11 @@ function bookForm(id, withMsg = false) {
 }
 
 // ================================================================== LAYOUT
-function layout({ path: p, title, desc, body, schema = [], ogType = 'website', ogImg = 'dr-laser', cls = '', noindex = false, service = '' }) {
+function layout({ path: p, title, desc, body, schema = [], ogType = 'website', ogImg = 'dr-hero', cls = '', noindex = false, service = '' }) {
   const url = SITE.domain + p;
   if (!noindex) urls.push(p);
-  const nav = NAV.map(([h, t]) => `<a href="${h}"${p.startsWith(h) ? ' aria-current="page"' : ''}>${t}</a>`).join('');
+  const homeLink = p === '/' ? '' : `<a class="nav-home" href="/" aria-label="Home"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9v11h4.5v-6h4v6h4.5V9"/></svg><span>Home</span></a>`;
+  const nav = homeLink + NAV.map(([h, t]) => `<a href="${h}"${p.startsWith(h) ? ' aria-current="page"' : ''}>${t}</a>`).join('');
   return `<!doctype html>
 <html lang="en-IN" class="no-js">
 <head>
@@ -257,6 +258,7 @@ ${schema.map(jsonld).join('\n')}
   <nav class="hdr__nav" aria-label="Primary">${nav}</nav>
   <div class="hdr__cta">
     <a class="hdr__tel" href="tel:${M.phone}">${M.phoneShow}</a>
+    <a class="hdr__call" href="tel:${M.phone}" aria-label="Call the clinic">${ico.phone}</a>
     <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><i></i><i></i></button>
   </div>
 </header>
@@ -418,7 +420,7 @@ function write(p, html) {
 {
   const body = `${pgHero({ eyebrow: 'About the surgeon', title: 'Dr. Manish<br><em>Patel</em>', lead: 'Plastic and cosmetic surgeon with more than three decades of experience, practising in Margao and Panaji, Goa.', crumbs: [['Home', '/'], ['About', '/about/']], image: 'dr-arms', alt: 'Dr. Manish Patel' })}
 <section class="sec"><div class="wrap about">
-  <div class="about__fig"><div class="leaf leaf--tall" data-reveal-img>${img('dr-laser', 'Dr. Manish Patel in his clinic', { w: 568, h: 568 })}</div></div>
+  <div class="about__fig"><div class="leaf leaf--tall" data-reveal-img>${img('dr-hero', 'Dr. Manish Patel at his clinic in Goa', { w: 1402, h: 1122 })}</div></div>
   <div class="about__txt">
     <p class="big" data-reveal>A surgeon’s job is as much about what he advises against as what he performs.</p>
     <p data-reveal>Dr. Manish Patel is a plastic surgeon in Goa, India, with clinics in Margao and Panaji. He holds MBBS, MS (General Surgery) and MCh (Plastic Surgery) degrees, is registered with the Goa Medical Council and has practised for more than 30 years. In 2011 he headed the Department of Cosmetic Surgery at the Wockhardt Institute of Aesthetics, and he has taught as faculty at IAAPS AESURG 2022 and as a Botox and fillers trainer at the 7th FADS World Congress 2023. His practice covers cosmetic and reconstructive surgery of the face, breast and body, hair transplant, and laser and skin treatments. He consults in English, Hindi and Konkani.</p>
