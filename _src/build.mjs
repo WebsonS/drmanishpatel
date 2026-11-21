@@ -55,17 +55,6 @@ const POST_IMG = {
   'acne-scars-fractional-co2-laser': 't-co2',
 };
 for (const p of POSTS) if (p.img) POST_IMG[p.slug] = p.img;
-const AWARDS = [
-  // captions as given in the gallery on the clinic's current About page
-  ['dr-world-congress', 'FADS World Congress 2023', 'On stage, Holiday Inn Resort, South Goa'],
-  ['team-fads-2023', '7th FADS World Congress', 'Faculty and trainer for Botox and fillers'],
-  ['dr-award-aesurg', 'AESURG 2022', 'Invited faculty · Certificate of Significant Appreciation, IAAPS'],
-  ['dr-aesurg-chair', 'AESURG 2022', 'Chairing the session on hair transplant'],
-  ['team-ot', 'Hair transplant workshop', 'Operative workshop with international faculty'],
-  ['dr-wockhardt-2011', 'Wockhardt Institute of Aesthetics, 2011', 'Inauguration, as Head of the Department of Cosmetic Surgery'],
-  ['dr-gimacon', 'IMA GIMACON 2023', 'Indian Medical Association conference'],
-  ['event-1', 'CosDermIndia Convention', 'Cosmetic dermatology convention'],
-];
 // Every image ships a 720px "-sm" variant so phones never download the 1600px file.
 const hasSm = (n) => fs.existsSync(path.join(ROOT, 'assets/img/p', `${n}-sm.webp`));
 // Real pixel width of a WebP (VP8, VP8L or VP8X header), so srcset descriptors tell the browser the truth.
@@ -254,20 +243,17 @@ ${noindex ? '<meta name="robots" content="noindex">' : '<meta name="robots" cont
 <link rel="preload" href="/assets/fonts/instrument-serif-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/fonts.css">
 <link rel="stylesheet" href="/assets/css/style.css">
-<script>document.documentElement.className='js';try{if(sessionStorage.getItem('pt')==='1')document.documentElement.classList.add('arriving');if(!sessionStorage.getItem('seen'))document.documentElement.classList.add('first')}catch(e){}</script>
+<script>document.documentElement.className='js'</script>
 ${jsonld(orgSchema)}
 ${schema.map(jsonld).join('\n')}
 </head>
 <body class="${cls}"${service ? ` data-service="${esc(service)}"` : ''}>
 <a class="skip" href="#main">Skip to content</a>
-<div class="loader" aria-hidden="true"><div class="loader__in"><img src="/assets/img/logo.webp" alt="" width="240" height="78"><span class="sig loader__sig">Manish Patel</span><span class="loader__bar"><i></i></span></div></div>
-<div class="wipe" aria-hidden="true"><span></span><span></span><span></span></div>
 <header class="hdr" id="hdr">
   <a class="hdr__logo" href="/" aria-label="${esc(SITE.name)} home"><img src="/assets/img/mark.webp" alt="" width="52" height="52"><span class="hdr__brand"><b>Patel Cosmetic</b><small>&amp; Plastic Surgery Center</small></span></a>
   <nav class="hdr__nav" aria-label="Primary">${nav}</nav>
   <div class="hdr__cta">
     <a class="hdr__tel" href="tel:${M.phone}">${M.phoneShow}</a>
-    <a class="btn btn--sm" href="/contact/" data-book data-magnetic><span>Appointments</span></a>
     <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><i></i><i></i></button>
   </div>
 </header>
@@ -317,9 +303,6 @@ ${footer()}
     <button class="pl__x" type="button" aria-label="Close video" data-pl-close><i></i><i></i></button>
   </div>
 </div>
-<script src="/assets/js/vendor/gsap.min.js" defer></script>
-<script src="/assets/js/vendor/ScrollTrigger.min.js" defer></script>
-<script src="/assets/js/vendor/lenis.min.js" defer></script>
 <script src="/assets/js/main.js" defer></script>
 </body>
 </html>`;
@@ -327,14 +310,16 @@ ${footer()}
 
 function footer() {
   return `<footer class="ftr">
-  <div class="ftr__cta wrap">
-    <div class="ftr__img" data-reveal-img>${img('dr-portrait', SITE.doctor, { w: 648, h: 796, sizes: '300px' })}</div>
-    <div>
-      <h2 class="display display--l" data-split>Questions first.<br><em>Decisions later.</em></h2>
-      <p class="ftr__p" data-reveal>Call either clinic to ask a question or arrange a consultation.</p>
-      <div class="ftr__btns" data-reveal>${SITE.locations.map((l) => `<a class="btn btn--line" href="tel:${l.phone}"><span>${l.city} · ${l.phoneShow}</span></a>`).join('')}</div>
+  <div class="wrap"><div class="fcta">
+    <figure class="fcta__img">${img('dr-hero', `${SITE.doctor} at the clinic`, { w: 1402, h: 1122, sizes: '(max-width: 860px) 92vw, 560px' })}<figcaption><b>${SITE.doctor}</b><span>MCh (Plastic Surgery) · Margao &amp; Panaji</span></figcaption></figure>
+    <div class="fcta__txt">
+      <p class="fcta__kick">Your first step</p>
+      <h2 class="fcta__h">Questions first.<br><em>Decisions later.</em></h2>
+      <p class="fcta__p">Every treatment starts with an unhurried consultation with Dr. Patel. Ask anything, see your options, and decide in your own time.</p>
+      <ul class="fcta__pts"><li>MBBS · MS · MCh (Plastic Surgery)</li><li>More than 30 years in practice</li><li>No pressure to decide on the day</li></ul>
+      <div class="fcta__btns">${cta('Book a consultation', 'btn--leaf')}<a class="fcta__wa" href="${SITE.social.whatsapp}" target="_blank" rel="noopener">${ico.waC}<span>Ask on WhatsApp</span></a></div>
     </div>
-  </div>
+  </div></div>
   <div class="ftr__grid wrap">
     <div><img class="ftr__logo" src="/assets/img/logo.webp" alt="${esc(SITE.name)}" width="180" height="58" loading="lazy" decoding="async">
       <p class="ftr__about">Cosmetic and plastic surgery in Goa, led by ${SITE.doctor}, ${SITE.creds}.</p>
@@ -370,15 +355,15 @@ const faqBlock = (faqs, title = 'Questions, <em>answered</em>.') => `<section cl
   <div class="faq__list">${faqs.map(([q, a]) => `<details class="qa" data-reveal><summary><span>${esc(q)}</span><i aria-hidden="true"></i></summary><div class="qa__a"><p>${esc(a)}</p></div></details>`).join('')}</div>
 </div></section>`;
 
-const cta = (t = 'Request an appointment', cls = '') => `<a class="btn ${cls}" href="/contact/" data-book data-magnetic><span>${t}</span>${ico.arrow}</a>`;
+const cta = (t = 'Request an appointment', cls = '') => `<a class="btn ${cls}" href="/contact/" data-book><span>${t}</span>${ico.arrow}</a>`;
 
-const tcard = (s, i) => `<a class="tcard" href="/services/${s.slug}/" data-cursor="View">
+const tcard = (s, i) => `<a class="tcard" href="/services/${s.slug}/">
   <div class="tcard__img">${img(SVC_IMG[s.slug], `${s.name} at Patel Cosmetic Surgery Center`, { w: 1000, h: 1000 })}</div>
   <div class="tcard__m"><span>${String(i + 1).padStart(2, '0')}</span><span>${s.cat}</span></div>
   <h3>${s.name}</h3><p>${s.tag}</p>
 </a>`;
 
-const postCard = (p) => `<a class="post" data-cat="${p.cat}" href="/blog/${p.slug}/" data-reveal data-cursor="Read"><div class="post__img">${img(POST_IMG[p.slug], p.title, { w: 1000, h: 667 })}</div><div class="post__m"><span>${p.cat}</span><span>${p.read} read</span></div><h3>${p.title}</h3><p>${p.desc}</p></a>`;
+const postCard = (p) => `<a class="post" data-cat="${p.cat}" href="/blog/${p.slug}/" data-reveal><div class="post__img">${img(POST_IMG[p.slug], p.title, { w: 1000, h: 667 })}</div><div class="post__m"><span>${p.cat}</span><span>${p.read} read</span></div><h3>${p.title}</h3><p>${p.desc}</p></a>`;
 
 const locationsBlock = () => `<section class="sec sec--sand"><div class="wrap">
   <div class="sec__head"><p class="eyebrow" data-reveal>Two clinics in Goa</p><h2 class="display display--l" data-split>Visit us in <em>Margao</em><br>or <em>Panaji</em>.</h2></div>
@@ -400,7 +385,6 @@ const memCard = ([n, name, role, cred, grp]) => `<figure class="mem"><div class=
 const teamBlock = () => `<section class="sec team-s" id="team" aria-labelledby="team-h"><div class="wrap">
   <div class="team-s__top">
     <h2 class="hd hd--l" id="team-h" data-reveal>The people <em>behind your care.</em></h2>
-    <figure class="team-s__ot" data-reveal-img>${img('team-ot', 'Operative workshop for hair transplant with international faculty', { w: 1600, h: 1200 })}<figcaption>Hair transplant operative workshop with international faculty</figcaption></figure>
   </div>
   <h3 class="team-s__g" data-reveal>Doctors</h3>
   <div class="team-s__row team-s__row--doc" data-stagger>${TEAM.filter((t) => t[4] === 'doc').map(memCard).join('')}</div>
@@ -433,7 +417,7 @@ function write(p, html) {
 
 // ================================================================== HOME
 {
-  const { body, schema } = homePage({ SITE, SERVICES, FAQS, RISKS, PROCESS, SVC_IMG, img, I, esc, ico, cta, faqBlock, locationsBlock, REG, bookForm, AWARDS });
+  const { body, schema } = homePage({ SITE, SERVICES, FAQS, RISKS, PROCESS, SVC_IMG, img, I, esc, ico, cta, faqBlock, locationsBlock, REG, bookForm });
   write('/', layout({
     path: '/',
     title: 'Dr. Manish Patel | Plastic & Cosmetic Surgeon in Goa',
@@ -455,16 +439,14 @@ function write(p, html) {
     <div class="about__sign" data-reveal><span class="sig">Manish Patel</span></div>
     <h2 class="h3" data-reveal>Qualifications</h2>
     <ul class="ticks" data-reveal><li>MBBS</li><li>MS, General Surgery</li><li>MCh, Plastic Surgery</li></ul>
+    <h2 class="h3" data-reveal>Positions and teaching</h2>
+    <ul class="ticks" data-reveal><li>Head, Department of Cosmetic Surgery, Wockhardt Institute of Aesthetics (2011)</li><li>Faculty, IAAPS AESURG 2022</li><li>Faculty and trainer, Botox and fillers, 7th FADS World Congress 2023</li></ul>
     <h2 class="h3" data-reveal>Areas of practice</h2>
     <ul class="ticks ticks--2" data-reveal>${SERVICES.map((s) => `<li><a href="/services/${s.slug}/">${s.name}</a></li>`).join('')}</ul>
     <!-- TODO (Dr. Patel): fill SITE.reg.no in data.mjs; add society memberships and hospital affiliations with body and year. -->
     <div class="about__cta" data-reveal>${cta()}</div>
   </div>
 </div></section>
-<section class="sec sec--forest rec">
-  <div class="wrap sec__head sec__head--row"><div><h2 class="display display--l" data-split>Teaching and<br><em>conferences</em>.</h2></div><p class="rec__hint" data-reveal>Drag to explore ${ico.arrow}</p></div>
-  <div class="drag" data-drag data-cursor="Drag"><div class="drag__track">${AWARDS.map(([n, t, d]) => `<figure class="award">${img(n, t, { w: 1024, h: 768 })}<figcaption><strong>${t}</strong><span>${d}</span></figcaption></figure>`).join('')}</div></div>
-</section>
 ${teamBlock()}
 <section class="sec sec--sand"><div class="wrap values">
   ${[['Honest advice', 'You will hear what is realistic, including when surgery is not the right answer.'], ['Realistic expectations', 'A clear account of what a procedure can and cannot change for you.'], ['Assessment first', 'A full medical assessment before any procedure, with its risks explained.'], ['Personal care', 'Dr. Patel is involved from consultation through recovery.']].map(([t, d], i) => `<div class="val" data-reveal><span>0${i + 1}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}
@@ -521,7 +503,7 @@ ${faqBlock(s.faqs, `${s.name}: <em>your questions</em>.`)}
   const [lead, ...rest] = POSTS;
   const body = `${pgHero({ eyebrow: 'The journal', title: 'Honest answers,<br><em>from the surgeon</em>.', lead: 'Clear, careful guidance on the questions patients ask most.', crumbs: [['Home', '/'], ['Journal', '/blog/']] })}
 <section class="sec sec--tight"><div class="wrap">
-  <a class="feat" href="/blog/${lead.slug}/" data-reveal data-cursor="Read"><div class="feat__img">${img(POST_IMG[lead.slug], lead.title, { w: 1000, h: 1000 })}</div><div class="feat__txt"><div class="post__m"><span>${lead.cat}</span><span>${fmtDate(lead.date)}</span></div><h2 class="display">${lead.title}</h2><p>${lead.desc}</p><span class="link">Read article ${ico.arrow}</span></div></a>
+  <a class="feat" href="/blog/${lead.slug}/" data-reveal><div class="feat__img">${img(POST_IMG[lead.slug], lead.title, { w: 1000, h: 1000 })}</div><div class="feat__txt"><div class="post__m"><span>${lead.cat}</span><span>${fmtDate(lead.date)}</span></div><h2 class="display">${lead.title}</h2><p>${lead.desc}</p><span class="link">Read article ${ico.arrow}</span></div></a>
   <div class="chips" role="group" aria-label="Filter articles by topic" data-filter>${['All', ...new Set(rest.map((p) => p.cat))].map((c, k) => `<button type="button" class="chip${k ? '' : ' is-on'}" data-f="${c}" aria-pressed="${k ? 'false' : 'true'}">${c}</button>`).join('')}</div>
   <div class="posts">${rest.map(postCard).join('')}</div>
 </div></section>`;

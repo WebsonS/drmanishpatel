@@ -19,7 +19,6 @@ export const POSTS2 = [
       ['h2', 'What can still change'],
       ['p', 'A transplant does not stop the underlying process. Native hair next to the grafted area may continue to thin over the years. If that is not planned for, a person can end up with a well-grown transplanted zone surrounded by thinning hair.'],
       ['ul', ['Your age and how fast your hair loss is progressing', 'Family history of hair loss', 'Whether medical treatment is used to protect existing hair', 'How much donor hair is available for the future']],
-      ['fig', 'team-ot', 'Hair transplant operative workshop with visiting faculty at the clinic.'],
       ['h2', 'The growth timeline'],
       ['p', 'Transplanted hairs commonly shed in the first weeks. This is expected: the follicle stays in place and starts a new growth cycle. New growth is usually seen from around three to four months, and the final look is judged at around a year, sometimes longer on the crown.'],
       ['h2', 'Questions worth asking before you decide'],
