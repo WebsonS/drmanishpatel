@@ -447,9 +447,21 @@ ${locationsBlock()}`;
 // ================================================================== SERVICES HUB
 {
   const body = `${pgHero({ eyebrow: 'Treatments', title: 'Eleven treatments,<br><em>explained plainly</em>.', lead: 'What each procedure involves, how recovery goes, what can go wrong and who it may not suit.', crumbs: [['Home', '/'], ['Treatments', '/services/']], image: 't-profile', alt: 'Facial profile' })}
-<section class="sec"><div class="wrap">
-${['Surgical', 'Non-surgical', 'Skin'].map((c) => `<div class="cat"><h2 class="eyebrow" data-reveal>${c}</h2></div><div class="tgrid" data-stagger>${SERVICES.filter((s) => s.cat === c).map((s) => tcard(s, SERVICES.indexOf(s))).join('')}</div>`).join('')}
-</div></section>
+${(() => {
+  const groups = [
+    ['surgery', 'Surgical', 'Surgery', 'Operations for the face, body, breast and hair, planned and performed by Dr.&nbsp;Patel.'],
+    ['non-surgical', 'Non-surgical', 'Non-surgical', 'Injections and laser treatments, usually with little or no downtime.'],
+    ['skin', 'Skin', 'Skin', 'Treatments for scars, pigmentation and the overall quality of the skin.'],
+  ].map(([id, cat, label, desc]) => ({ id, label, desc, items: SERVICES.filter((s) => s.cat === cat) }));
+  return `<section class="sec tl-sec"><div class="wrap">
+<nav class="tl-jump" aria-label="Treatment groups">${groups.map((g) => `<a href="#${g.id}">${g.label}<span>${g.items.length}</span></a>`).join('')}</nav>
+${groups.map((g) => `<div class="tl-grp" id="${g.id}">
+  <div class="tl-hd"><h2>${g.label}</h2><p>${g.desc}</p></div>
+  <ul class="txl">${g.items.map((s) => `<li><a class="tl__i" href="/services/${s.slug}/"><span class="tl__img">${img(SVC_IMG[s.slug], '', { w: 1000, h: 1000, sizes: '96px' })}</span><span class="tl__t"><b>${s.name}</b><small>${s.tag}</small></span>${ico.arrow}</a></li>`).join('')}</ul>
+</div>`).join('')}
+<div class="tl-help"><div><b>Not sure which treatment fits?</b><p>Tell the clinic what is bothering you. Dr.&nbsp;Patel will explain the options at your consultation.</p></div><a class="pill pill--wa" href="${SITE.social.whatsapp}" target="_blank" rel="noopener">${ico.waC}<span>Ask on WhatsApp</span></a></div>
+</div></section>`;
+})()}
 ${faqBlock(FAQS.slice(3, 6))}`;
   write('/services/', layout({ path: '/services/', title: 'Cosmetic & Plastic Surgery Treatments in Goa | Dr. Manish Patel', desc: 'Hair transplant, rhinoplasty, liposuction, breast and body surgery, facelift, Botox, fillers, laser and skin treatments in Margao and Panaji, Goa.', body, ogImg: 't-profile', schema: [crumbSchema([['Home', '/'], ['Treatments', '/services/']]), { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: SERVICES.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE.domain}/services/${s.slug}/`, name: s.name })) }] }));
 }

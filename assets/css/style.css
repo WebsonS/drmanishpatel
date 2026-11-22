@@ -1987,3 +1987,45 @@ body{letter-spacing:.003em}
   .fsec,.tx,.walk,.soc,.visit{padding-top:2.25rem!important;padding-bottom:2.25rem!important}
   .ftr__grid{padding-bottom:2.5rem!important}
 }
+
+/* Treatments hub: calm grouped list instead of eleven big cards */
+.tl-jump{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:clamp(1.8rem,3vw,2.6rem)}
+.tl-jump a{display:inline-flex;align-items:center;gap:.55rem;min-height:44px;padding:0 1.1rem;border-radius:999px;background:#fff;border:1px solid var(--line);font:600 .92rem/1 var(--sans);color:var(--forest);text-decoration:none}
+.tl-jump a:hover{border-color:var(--forest)}
+.tl-jump span{font-size:.74rem;background:var(--champ-l);color:var(--forest);border-radius:999px;padding:.22rem .5rem}
+.tl-grp{scroll-margin-top:calc(var(--hdr-h) + 1rem)}
+.tl-grp + .tl-grp{margin-top:clamp(2.4rem,4vw,3.6rem)}
+.tl-hd{display:flex;align-items:baseline;justify-content:space-between;gap:.4rem 2rem;flex-wrap:wrap;padding-bottom:.9rem;margin-bottom:1rem;border-bottom:1px solid var(--line)}
+.tl-hd h2{margin:0;font:400 clamp(1.75rem,1.2rem + 1.4vw,2.4rem)/1.1 var(--accent);color:var(--forest-3)}
+.tl-hd p{margin:0;max-width:54ch;font-size:.98rem;line-height:1.5;color:var(--muted)}
+.txl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.8rem 1.25rem}
+.tl__i{display:flex;align-items:center;gap:1rem;height:100%;padding:.7rem;border-radius:16px;background:#fff;border:1px solid var(--line);color:inherit;text-decoration:none;transition:border-color .2s,box-shadow .2s}
+.tl__i:hover,.tl__i:focus-visible{border-color:var(--leaf-2);box-shadow:0 10px 26px -18px rgba(11,63,122,.45)}
+.tl__img{flex:none;width:88px;height:88px;border-radius:12px;overflow:hidden;background:var(--sand)}
+.tl__img img{width:100%;height:100%;object-fit:cover}
+.tl__t{flex:1;min-width:0;display:flex;flex-direction:column;gap:.3rem}
+.tl__t b{font:600 1.06rem/1.25 var(--sans);color:var(--forest-3)}
+.tl__t small{font-size:.9rem;line-height:1.4;color:var(--muted)}
+.tl__i > svg{flex:none;width:20px;height:20px;margin-right:.35rem;color:var(--leaf)}
+.tl-help{display:flex;align-items:center;justify-content:space-between;gap:1rem 2rem;flex-wrap:wrap;margin-top:clamp(2.4rem,4vw,3.6rem);padding:clamp(1.3rem,2.6vw,1.9rem);border-radius:18px;background:var(--sand)}
+.tl-help b{display:block;font:400 clamp(1.35rem,1.1rem + .6vw,1.6rem)/1.2 var(--accent);color:var(--forest-3)}
+.tl-help p{margin:.35rem 0 0;font-size:.96rem;color:var(--ink-2);max-width:52ch}
+@media (max-width:760px){
+  .txl{grid-template-columns:1fr;gap:.65rem}
+  .tl__img{width:72px;height:72px}
+  .tl__t b{font-size:1rem}
+  .tl__t small{font-size:.86rem}
+  .tl-jump{gap:.5rem}
+  .tl-jump a{flex:1;justify-content:center;padding:0 .6rem}
+  .tl-help .pill{width:100%}
+}
+.tl-jump a{white-space:nowrap}
+@media (max-width:420px){.tl-jump a{padding:0 .5rem;font-size:.88rem;gap:.4rem}.tl-jump span{padding:.18rem .4rem}}
+
+/* Phone/tablet hero: photo melts into a soft white glow, like the original site */
+@media (max-width:900px){
+  .hx2{background:#fff!important}
+  .hx2__bg{overflow:hidden}
+  .hx2__bg::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:48%;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.55) 45%,rgba(255,255,255,.92) 78%,#fff 100%)}
+  .hx2__in{position:relative;z-index:1;margin-top:-3.2rem;padding-top:0!important}
+}
