@@ -419,9 +419,8 @@ function write(p, html) {
 
 // ================================================================== ABOUT
 {
-  const body = `${pgHero({ eyebrow: 'Plastic surgeon in Goa', title: 'Dr. Manish<br><em>Patel</em>', lead: 'Plastic and cosmetic surgeon with more than three decades of experience, practising in Margao and Panaji, Goa.', crumbs: [['Home', '/'], ['About', '/about/']], image: 'dr-arms', alt: 'Dr. Manish Patel' })}
-<section class="sec"><div class="wrap about">
-  <div class="about__fig"><div class="leaf leaf--tall" data-reveal-img>${img('dr-hero', 'Dr. Manish Patel at his clinic in Goa', { w: 1402, h: 1122 })}</div></div>
+  const body = `${pgHero({ eyebrow: 'Plastic surgeon in Goa', title: 'Dr. Manish<br><em>Patel</em>', lead: 'Plastic and cosmetic surgeon with more than three decades of experience, practising in Margao and Panaji, Goa.', crumbs: [['Home', '/'], ['About', '/about/']], image: 'dr-hero', alt: 'Dr. Manish Patel at his clinic in Goa' })}
+<section class="sec"><div class="wrap about about--solo">
   <div class="about__txt">
     <p class="big" data-reveal>A surgeon’s job is as much about what he advises against as what he performs.</p>
     <p data-reveal>Dr. Manish Patel is a plastic surgeon in Goa, India, with clinics in Margao and Panaji. He holds MBBS, MS (General Surgery) and MCh (Plastic Surgery) degrees, is registered with the Goa Medical Council and has practised for more than 30 years. In 2011 he headed the Department of Cosmetic Surgery at the Wockhardt Institute of Aesthetics, and he has taught as faculty at IAAPS AESURG 2022 and as a Botox and fillers trainer at the 7th FADS World Congress 2023. His practice covers cosmetic and reconstructive surgery of the face, breast and body, hair transplant, and laser and skin treatments. He consults in English, Hindi and Konkani.</p>
@@ -442,7 +441,7 @@ ${teamBlock()}
   ${[['Honest advice', 'You will hear what is realistic, including when surgery is not the right answer.'], ['Realistic expectations', 'A clear account of what a procedure can and cannot change for you.'], ['Assessment first', 'A full medical assessment before any procedure, with its risks explained.'], ['Personal care', 'Dr. Patel is involved from consultation through recovery.']].map(([t, d], i) => `<div class="val" data-reveal><span>0${i + 1}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}
 </div></section>
 ${locationsBlock()}`;
-  write('/about/', layout({ path: '/about/', title: 'About Dr. Manish Patel | MCh Plastic Surgeon in Goa', desc: 'Dr. Manish Patel: MBBS, MS (General Surgery), MCh (Plastic Surgery), Goa Medical Council registered, in practice for more than 30 years in Goa.', body, ogImg: 'dr-arms', schema: [crumbSchema([['Home', '/'], ['About', '/about/']]), { '@context': 'https://schema.org', '@type': 'AboutPage', mainEntity: { '@id': docId } }] }));
+  write('/about/', layout({ path: '/about/', title: 'About Dr. Manish Patel | MCh Plastic Surgeon in Goa', desc: 'Dr. Manish Patel: MBBS, MS (General Surgery), MCh (Plastic Surgery), Goa Medical Council registered, in practice for more than 30 years in Goa.', body, ogImg: 'dr-hero', schema: [crumbSchema([['Home', '/'], ['About', '/about/']]), { '@context': 'https://schema.org', '@type': 'AboutPage', mainEntity: { '@id': docId } }] }));
 }
 
 // ================================================================== SERVICES HUB

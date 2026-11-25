@@ -2043,3 +2043,4 @@ body{letter-spacing:.003em}
 .guides svg{grid-column:2;grid-row:1/3}
 .svc-d__txt .ticks + p{margin-top:1rem}
 .svc-d__txt h2.qh + p{margin-bottom:.9rem}
+.about--solo{grid-template-columns:1fr;max-width:760px}
